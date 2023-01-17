@@ -18,7 +18,6 @@ export default function RegistForm() {
     <Box
       justifyContent="center"
       sx={{
-        bgcolor: "#f2f2f2",
         display: "flex",
         flexWrap: "wrap",
         "& > :not(style)": {
@@ -50,7 +49,7 @@ export default function RegistForm() {
                 <h1>회원가입</h1>
               </div>
               <div style={{ display: "flex" }}>
-                <FullWidthTextField content="아이디" />
+                <FullWidthTextField content="이메일" />
                 <Button
                   variant="contained"
                   color="white"
