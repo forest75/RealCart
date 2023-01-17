@@ -1,16 +1,20 @@
 package com.ssafy.realcart.data.entity;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.util.Date;
+import com.ssafy.realcart.config.BaseTime;
+
+import lombok.Data;
 
 @Entity
 @Data
 @Table(name="USER_TB")
-public class User {
+public class User extends BaseTime{
     @Id
     @Column(name="USER_PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +25,7 @@ public class User {
     private String email;
     @Column(name="nickname", unique = true)
     private String nickname;
-    @Column(name="password", length = 1024)
+    @Column(name="password", length = 255)
     private String password;
     @Column(name="salt")
     private String salt;
@@ -29,14 +33,6 @@ public class User {
     private byte emailVerified;
     @Column(name="intro")
     private String intro;
-    @CreatedDate
-    @Column(name="reg_date")
-    private Date regDate;
-    @LastModifiedDate
-    @Column(name="modify_date")
-    private Date modifyDate;
-    @Column(name="auth_key")
-    private String authKey;
     @Column(name="profile_image_url")
     private String profileImageUrl;
     @Column(name="is_ban")

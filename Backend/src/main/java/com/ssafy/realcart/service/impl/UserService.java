@@ -41,8 +41,7 @@ public class UserService implements IUserService {
         user.setIntro(userDto.getIntro());
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
-        user.setPassword(sha256(userDto.getPassword(), salt));
-        LOGGER.info(user.getPassword()); // TO-DO MySql에 Password 넣기 Data Too Long
+        user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
         if(userDAO.createUser(user)){
             return true;
         }

@@ -1,26 +1,24 @@
 package com.ssafy.realcart.controller;
 
-import com.ssafy.realcart.data.dto.UserDto;
-import com.ssafy.realcart.data.entity.User;
-import com.ssafy.realcart.data.repository.IUserRepository;
-import com.ssafy.realcart.service.IUserService;
-import com.ssafy.realcart.service.impl.UserService;
-import lombok.extern.slf4j.Slf4j;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import com.ssafy.realcart.data.dto.UserDto;
+import com.ssafy.realcart.service.IUserService;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private IUserRepository userRepository;
 
     private IUserService userService = null;
 

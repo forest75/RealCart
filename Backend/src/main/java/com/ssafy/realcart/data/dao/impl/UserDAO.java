@@ -1,16 +1,16 @@
 package com.ssafy.realcart.data.dao.impl;
 
-import com.ssafy.realcart.data.dao.IUserDAO;
-import com.ssafy.realcart.data.entity.User;
-import com.ssafy.realcart.data.repository.IUserRepository;
-import com.ssafy.realcart.exception.NotUniqueException;
-import com.ssafy.realcart.service.impl.UserService;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.ssafy.realcart.data.dao.IUserDAO;
+import com.ssafy.realcart.data.entity.User;
+import com.ssafy.realcart.data.repository.IUserRepository;
+import com.ssafy.realcart.exception.NotUniqueException;
 @Component
 public class UserDAO implements IUserDAO {
 
