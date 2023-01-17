@@ -22,9 +22,7 @@ function AppHeader() {
       <Box>
         <RegistForm />
       </Box>
-      <Box>
-        <FindPassForm />
-      </Box>
+      <FindPassForm />
     </Box>
   );
 }
