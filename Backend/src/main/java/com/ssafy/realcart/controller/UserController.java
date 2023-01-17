@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.realcart.data.dto.UserDto;
-import com.ssafy.realcart.service.IUserService;
+import com.ssafy.realcart.service.inter.IUserService;
 
 @RestController
 @RequestMapping("/user")

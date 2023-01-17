@@ -1,4 +1,4 @@
-package com.ssafy.realcart.data.dao;
+package com.ssafy.realcart.data.dao.inter;
 
 import com.ssafy.realcart.data.entity.User;
 

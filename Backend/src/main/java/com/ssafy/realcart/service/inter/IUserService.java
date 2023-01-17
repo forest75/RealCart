@@ -1,4 +1,4 @@
-package com.ssafy.realcart.service;
+package com.ssafy.realcart.service.inter;
 
 import com.ssafy.realcart.data.dto.UserDto;
 import org.springframework.stereotype.Service;

@@ -1,13 +1,13 @@
-package com.ssafy.realcart.data.dao.impl;
+package com.ssafy.realcart.data.dao;
 
 import java.util.List;
 
+import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.realcart.data.dao.IUserDAO;
 import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.data.repository.IUserRepository;
 import com.ssafy.realcart.exception.NotUniqueException;

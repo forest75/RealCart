@@ -1,10 +1,10 @@
-package com.ssafy.realcart.service.impl;
+package com.ssafy.realcart.service;
 
-import com.ssafy.realcart.data.dao.IUserDAO;
+import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.UserDto;
 import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.exception.NickNameShortException;
-import com.ssafy.realcart.service.IUserService;
+import com.ssafy.realcart.service.inter.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
