@@ -33,8 +33,9 @@ export default function FormPropsTextFields() {
           direction="column"
           alignItems="center"
           justifyContent="center"
-          style={{ minHeight: "50vh" }}
+          style={{ minHeight: "30vh", minWidth: "60vh" }}
         >
+          <h2>비밀번호 찾기</h2>
           <ThemeProvider theme={theme}>
             <FullWidthTextField
               error

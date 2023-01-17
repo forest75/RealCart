@@ -24,7 +24,7 @@ function ButtonAppBar() {
         <Toolbar>
           <img src={logo} alt="logo" />
           <Typography
-            variant="h6"
+            variant="h7"
             component="div"
             color="secondary"
             sx={{ flexGrow: 1 }}
@@ -37,7 +37,7 @@ function ButtonAppBar() {
               horizontal: "right",
             }}
           >
-            Board
+            <p id="HeaderMenu">Board</p>
           </Button>
           <Button
             color="inherit"

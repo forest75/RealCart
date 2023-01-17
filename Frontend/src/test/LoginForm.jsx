@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Link } from "react-router-dom";
 import FullWidthTextField from "./FullWidthTextField";
 
 export default function FormPropsTextFields() {
@@ -34,8 +35,9 @@ export default function FormPropsTextFields() {
           direction="column"
           alignItems="center"
           justifyContent="center"
-          style={{ minHeight: "50vh" }}
+          style={{ minHeight: "70vh", minWidth: "60vh" }}
         >
+          <h1>로그인</h1>
           <ThemeProvider theme={theme}>
             <FullWidthTextField
               error
@@ -79,30 +81,35 @@ export default function FormPropsTextFields() {
                     </div>
                   </Button>
                 </div>
-                <div>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="white"
-                    sx={{
-                      width: 300,
-                      margin: 1,
-                    }}
-                  >
-                    <div style={{ width: "29%" }}>&nbsp;</div>
-
-                    <span style={{ width: "40%" }}>비밀번호 찾기</span>
-                    <div
-                      style={{
-                        width: "30%",
-                        textAlign: "right",
-                        color: "gray",
+                <Link
+                  to="/findPass"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <div>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      color="white"
+                      sx={{
+                        width: 300,
+                        margin: 1,
                       }}
                     >
-                      <ArrowForwardIcon />
-                    </div>
-                  </Button>
-                </div>
+                      <div style={{ width: "29%" }}> </div>
+
+                      <span style={{ width: "40%" }}>비밀번호 찾기</span>
+                      <div
+                        style={{
+                          width: "30%",
+                          textAlign: "right",
+                          color: "gray",
+                        }}
+                      >
+                        <ArrowForwardIcon />
+                      </div>
+                    </Button>
+                  </div>
+                </Link>
                 <div>
                   <Button
                     variant="contained"
@@ -137,28 +144,33 @@ export default function FormPropsTextFields() {
                   </Button>
                 </div>
                 <div>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="white"
-                    sx={{
-                      width: 300,
-                      margin: 1,
-                    }}
+                  <Link
+                    to="/regist"
+                    style={{ color: "black", textDecoration: "none" }}
                   >
-                    <div style={{ width: "33%" }}>&nbsp;</div>
-
-                    <span style={{ width: "33%" }}>회원가입</span>
-                    <div
-                      style={{
-                        width: "33%",
-                        textAlign: "right",
-                        color: "gray",
+                    <Button
+                      variant="contained"
+                      size="large"
+                      color="white"
+                      sx={{
+                        width: 300,
+                        margin: 1,
                       }}
                     >
-                      <ArrowForwardIcon />
-                    </div>
-                  </Button>
+                      <div style={{ width: "33%" }}> </div>
+
+                      <span style={{ width: "33%" }}>회원가입</span>
+                      <div
+                        style={{
+                          width: "33%",
+                          textAlign: "right",
+                          color: "gray",
+                        }}
+                      >
+                        <ArrowForwardIcon />
+                      </div>
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Box>

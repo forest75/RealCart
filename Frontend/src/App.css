@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "SUIT-ExtraLight";
+  src: url("./fonts/SUIT-ExtraLight.ttf") format("truetype");
+}
+
+#HeaderMenu {
+  font-family: "SUIT-ExtraLight";
+  font-size: 15px;
+}
