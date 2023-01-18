@@ -1,6 +1,7 @@
 import { Box, Grid, Paper } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 
 function MainPage() {
   // const webcamRef = useRef(null);
@@ -50,33 +51,34 @@ function MainPage() {
         justifyContent: "center",
       }}
     >
-      <div container style={{ marginBottom: "100px" }}>
-        <Paper elevation={3}>
-          <Grid
-            container
-            spacing={2}
-            style={{
-              minWidth: "90vh",
-              minHeight: "50vh",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <form>
-              <input type="text" value={inp} onChange={onChange} />
-            </form>
-            <Box
-              component="img"
-              alt="play"
-              tabIndex={-1}
-              src="http://172.30.192.150:8080/?action=stream"
-              onKeyDown={(event) => {
-                console.log(event.key);
+      <div style={{ marginBottom: "100px" }}>
+        <Link to="/spect" style={{ color: "black", textDecoration: "none" }}>
+          <Paper elevation={3}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                minWidth: "90vh",
+                minHeight: "50vh",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
-            {/* <img
+            >
+              <form>
+                <input type="text" value={inp} onChange={onChange} />
+              </form>
+              <Box
+                component="img"
+                alt="play"
+                tabIndex={-1}
+                src="http://172.30.192.150:8080/?action=stream"
+                onKeyDown={(event) => {
+                  console.log(event.key);
+                }}
+              />
+              {/* <img
               role="presentation"
               src="http://172.30.192.150:8080/?action=stream"
               alt="play"
@@ -85,8 +87,9 @@ function MainPage() {
                 console.log(event.key);
               }}
             /> */}
-          </Grid>
-        </Paper>
+            </Grid>
+          </Paper>
+        </Link>
       </div>
       <div
         style={{
