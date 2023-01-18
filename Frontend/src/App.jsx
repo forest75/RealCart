@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
 import ButtonAppBar from "./test/ButtonAppBar";
 import LoginForm from "./test/LoginForm";
@@ -8,13 +8,14 @@ import FindPassForm from "./test/FindPassForm";
 import AppFooter from "./test/AppFooter";
 import MainPage from "./test/MainPage";
 import MyPage from "./test/MyPage";
+import SpectatingPage from "./test/SpectatingPage";
 
 function App() {
   return (
     <Box>
       <Box
         sx={{
-          height: 250,
+          height: 140,
         }}
       >
         <ButtonAppBar />
@@ -26,6 +27,7 @@ function App() {
           <Route path="/regist" element={<RegistForm />} />
           <Route path="/findPass" element={<FindPassForm />} />
           <Route path="/myPage" element={<MyPage />} />
+          <Route path="/spect" element={<SpectatingPage />} />
         </Routes>
       </Box>
 
