@@ -54,4 +54,6 @@
 
 [Figma를 통해 스토리 보드 보기](https://www.figma.com/file/1CsDSrPjOCgIbFrGzz7rXX/SSAFY-%EA%B3%B5%ED%86%B5-PJT?node-id=0%3A1&t=x31VtcYOxlJEJpVD-0)
 
+## IoT 부품 리스트
 
+[Notion을 통해 부품 리스트 확인](https://www.notion.so/fa3c1da26ae44478a8a88b7f401fdb9d)
