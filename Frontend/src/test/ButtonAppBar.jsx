@@ -33,7 +33,7 @@ export default function ButtonAppBar() {
                 alt="logo"
                 src={logo}
                 sx={{
-                  height: 110,
+                  height: 70,
                   margin: 3,
                 }}
               />
