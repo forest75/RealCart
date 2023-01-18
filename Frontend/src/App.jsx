@@ -8,8 +8,7 @@ import FindPassForm from "./test/FindPassForm";
 import AppFooter from "./test/AppFooter";
 import MainPage from "./test/MainPage";
 import MyPage from "./test/MyPage";
-import SpectatingPage from "./test/SpectatingPage";
-import ChattingUi from "./test/ChattingUi";
+import SpectPage from "./SpectPage";
 
 function App() {
   return (
@@ -28,11 +27,8 @@ function App() {
           <Route path="/regist" element={<RegistForm />} />
           <Route path="/findPass" element={<FindPassForm />} />
           <Route path="/myPage" element={<MyPage />} />
-          <Route path="/spect" element={<SpectatingPage />} />
+          <Route path="/spect" element={<SpectPage />} />
         </Routes>
-      </Box>
-      <Box>
-        <ChattingUi />
       </Box>
       <Box>
         <AppFooter />

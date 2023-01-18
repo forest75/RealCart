@@ -21,7 +21,8 @@ function SpectatingPage() {
   const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
 
-  const bottomRef = useRef(null);
+  // const bottomRef = useRef(null);
+  const chatRef = useRef(null);
   const onChange = (event) => setChat(event.target.value);
   const onSubmit = (event) => {
     // preve;
@@ -32,9 +33,8 @@ function SpectatingPage() {
   };
 
   const [inputValue, setInputValue] = React.useState("");
-  const [valA, setValA] = React.useState(0);
-  const [valB, setValB] = React.useState(0);
-  const [widthA, setwidthA] = React.useState(100);
+  const [voteA, setVoteA] = React.useState(0);
+  const [voteB, setVoteB] = React.useState(0);
 
   const [valueA, setValueB] = React.useState("female");
 
@@ -42,11 +42,27 @@ function SpectatingPage() {
     setValueB(event.target.value);
   };
 
+  const totalVotes = voteA + voteB;
+  let proportionA;
+  let proportionB;
+  if (totalVotes === 0) {
+    proportionA = 0.5;
+    proportionB = 0.5;
+  } else {
+    proportionA = voteA / totalVotes;
+    proportionB = voteB / totalVotes;
+  }
+
+  // useEffect(() => {
+  //   bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  //   // window.scrollTo(0, document.body.scrollHeight);
+  //   // bottomRef.current?.scrollTo(0, document.body.scrollHeight);
+  // }, [chats]);
+
   useEffect(() => {
-    bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    // window.scrollTo(0, document.body.scrollHeight);
-    // bottomRef.current?.scrollTo(0, document.body.scrollHeight);
+    chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
+
   return (
     <Box
       display="flex"
@@ -207,19 +223,17 @@ function SpectatingPage() {
                     <Paper
                       elevation={3}
                       sx={{
-                        width: "30%",
+                        width: `${Math.max(proportionA * 70 + 30, 30)}%`,
+                        animation: "widthChange 0.5s ease-in-out",
                       }}
                     >
                       <Button
                         onClick={() => {
-                          setValA(valA + 1);
-                          setwidthA(
-                            valA + valB === 0
-                              ? 100
-                              : (valA / (valA + valB)) * 200
-                          );
-                          console.log(`valA : ${valA}`);
-                          console.log(widthA);
+                          setVoteA(voteA + 1);
+                        }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
                         }}
                       >
                         A
@@ -228,20 +242,17 @@ function SpectatingPage() {
                     <Paper
                       elevation={3}
                       sx={{
-                        width: "70%",
+                        width: `${Math.max(proportionB * 70 + 30, 30)}%`,
+                        animation: "widthChange 0.5s ease-in-out",
                       }}
                     >
                       <Button
                         onClick={() => {
-                          setValB(valB + 1);
-                          setwidthA(
-                            valA + valB === 0
-                              ? 100
-                              : (valA / (valA + valB)) * 200
-                          );
-                          console.log(`valB : ${valB}`);
-
-                          console.log(widthA);
+                          setVoteB(voteB + 1);
+                        }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
                         }}
                       >
                         B
@@ -256,7 +267,7 @@ function SpectatingPage() {
                       alignItems: "center",
                     }}
                   >
-                    {valA}명 {valB}명
+                    {voteA}명 {voteB}명
                   </Box>
                 </Stack>
                 <FormControl>
@@ -301,6 +312,7 @@ function SpectatingPage() {
                     maxHeight: 500,
                     overflow: "auto",
                   }}
+                  ref={chatRef}
                 >
                   채팅
                   <ul>
@@ -308,7 +320,6 @@ function SpectatingPage() {
                       <li key={item.id}>{item}</li>
                     ))}
                   </ul>
-                  <div ref={bottomRef} />
                 </Box>
                 <Box>
                   <form onSubmit={onSubmit}>
