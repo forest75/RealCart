@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.realcart.data.dto.UserDto;
 import com.ssafy.realcart.service.inter.IUserService;
@@ -34,6 +31,32 @@ public class UserController {
         LOGGER.info("getAllUsers 메서드가 userController에서 호출되었습니다.");
         List<UserDto> userList = userService.getAllUsers();
         return new ResponseEntity<List<UserDto>>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/checkemail")
+    public ResponseEntity<String> checkEmail(@RequestParam String email) {
+        LOGGER.info("checkEmail 메서드가 userController에서 호출되었습니다.");
+        if(userService.checkEmail(email)){
+            String msg = "Unique";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "Duplicate";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value="/checknickname")
+    public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+        LOGGER.info("checkNickname 메서드가 userController에서 호출되었습니다.");
+        if(userService.checkNickname(nickname)){
+            String msg = "Unique";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "Duplicate";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
     }
 
     @PostMapping(value="/register")

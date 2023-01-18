@@ -16,4 +16,6 @@ public interface IUserService {
     boolean deleteUser(String email);
     boolean banUser(String email);
     UserDto login(UserDto userDto) throws NoSuchAlgorithmException;
+    boolean checkEmail(String email);
+    boolean checkNickname(String nickname);
 }
