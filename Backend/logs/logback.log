@@ -574,3 +574,21 @@
 [2023-01-18 15:13:05:598907] DEBUG 14780 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
 [2023-01-18 15:13:05:598907] DEBUG 14780 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[UserDto(userId=0, username=null, email=ssafy@google.com, nickname=ssafy, password=null, salt=null,  (truncated)...]
 [2023-01-18 15:13:05:598908] DEBUG 14780 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2023-01-18 15:14:03:3705] DEBUG 3424 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 12 mappings in 'requestMappingHandlerMapping'
+[2023-01-18 15:14:03:3866] DEBUG 3424 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+[2023-01-18 15:14:03:3896] DEBUG 3424 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/swagger-ui/] in 'viewControllerHandlerMapping'
+[2023-01-18 15:14:03:3904] DEBUG 3424 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/webjars/**, /**, /swagger-ui/**] in 'resourceHandlerMapping'
+[2023-01-18 15:14:03:3904] DEBUG 3424 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+[2023-01-18 15:14:10:10622] INFO  3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@1d6dc2b8
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@3180131e
+[2023-01-18 15:14:10:10623] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+[2023-01-18 15:14:10:10623] INFO  3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+[2023-01-18 15:14:10:10636] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/user", parameters={}
+[2023-01-18 15:14:10:10643] DEBUG 3424 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ssafy.realcart.controller.UserController#getAllUsers()
+[2023-01-18 15:14:10:10822] DEBUG 3424 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+[2023-01-18 15:14:10:10846] DEBUG 3424 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[UserDto(userId=0, username=ssafyname, email=ssafy@google.com, nickname=ssafy, password=null, salt=n (truncated)...]
+[2023-01-18 15:14:10:10895] DEBUG 3424 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
