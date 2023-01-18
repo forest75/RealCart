@@ -96,6 +96,7 @@ public class UserService implements IUserService {
             userDto.setIntro(user.getIntro());
             userDto.setEmail(user.getEmail());
             userDto.setNickname(user.getNickname());
+            userDto.setUsername(user.getUsername());
             userDtoList.add(userDto);
         }
 
@@ -121,6 +122,10 @@ public class UserService implements IUserService {
     public UserDto login(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("로그인 메서드가 userService에서 호출되었습니다.");
         User user = userDAO.getUser(userDto.getEmail());
+        if(user == null){
+            LOGGER.info("email 주소가 존재하지 않습니다.");
+            throw new RuntimeException();
+        }
         // TO-DO: User가 isBan인 경우 BanList에 접근하여 Ban 지속 기간에 오늘이 포함되는지 확인할 것
         String tempPassword = sha256(userDto.getPassword(), user.getSalt().getBytes());
         if(user.getPassword().equals(tempPassword)){
@@ -131,7 +136,32 @@ public class UserService implements IUserService {
             return loginUser;
         }
         else{
+            LOGGER.info("비밀번호가 틀렸습니다.");
             return null;
+        }
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+        LOGGER.info("checkEmail 메서드가 userService에서 호출되었습니다.");
+        if(userDAO.getUser(email) != null){
+            LOGGER.info("중복 이메일 있음");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    @Override
+    public boolean checkNickname(String nickname) {
+        LOGGER.info("checkNickname 메서드가 userService에서 호출되었습니다.");
+        if(userDAO.checkNickname(nickname) != null){
+            LOGGER.info("중복 닉네임 있음");
+            return false;
+        }
+        else{
+            return true;
         }
     }
 }
