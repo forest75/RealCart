@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, Grid, Stack, Button, Paper } from "@mui/material";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import "bootstrap/dist/css/bootstrap.min.css";
 import tmp from "../assets/logo.png";
 
 function SpectatingPage() {
@@ -11,10 +18,35 @@ function SpectatingPage() {
   ];
   const [value, setValue] = React.useState(options[0]);
 
+  const [chat, setChat] = useState("");
+  const [chats, setChats] = useState([]);
+
+  const bottomRef = useRef(null);
+  const onChange = (event) => setChat(event.target.value);
+  const onSubmit = (event) => {
+    // preve;
+    event.preventDefault();
+    if (chat === "") return;
+    setChats((currentArray) => [...currentArray, chat]);
+    setChat("");
+  };
+
   const [inputValue, setInputValue] = React.useState("");
   const [valA, setValA] = React.useState(0);
   const [valB, setValB] = React.useState(0);
   const [widthA, setwidthA] = React.useState(100);
+
+  const [valueA, setValueB] = React.useState("female");
+
+  const handleChange = (event) => {
+    setValueB(event.target.value);
+  };
+
+  useEffect(() => {
+    bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    // window.scrollTo(0, document.body.scrollHeight);
+    // bottomRef.current?.scrollTo(0, document.body.scrollHeight);
+  }, [chats]);
   return (
     <Box
       display="flex"
@@ -227,6 +259,29 @@ function SpectatingPage() {
                     {valA}명 {valB}명
                   </Box>
                 </Stack>
+                <FormControl>
+                  <FormLabel id="demo-controlled-radio-buttons-group">
+                    Gender
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={valueA}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label="Female"
+                    />
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio />}
+                      label="Male"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <ProgressBar now={60} />
               </Paper>
             </Box>
             <Box
@@ -238,7 +293,35 @@ function SpectatingPage() {
               }}
               display="flex"
             >
-              채팅
+              <Stack>
+                <Box
+                  id="chat"
+                  sx={{
+                    height: 500,
+                    maxHeight: 500,
+                    overflow: "auto",
+                  }}
+                >
+                  채팅
+                  <ul>
+                    {chats.map((item) => (
+                      <li key={item.id}>{item}</li>
+                    ))}
+                  </ul>
+                  <div ref={bottomRef} />
+                </Box>
+                <Box>
+                  <form onSubmit={onSubmit}>
+                    <input
+                      onChange={onChange}
+                      value={chat}
+                      type="text"
+                      placeholder="채팅을 입력하세요"
+                    />
+                    <button type="submit">전송</button>
+                  </form>
+                </Box>
+              </Stack>
             </Box>
             <Box
               sx={{

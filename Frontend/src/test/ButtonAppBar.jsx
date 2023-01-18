@@ -33,8 +33,8 @@ export default function ButtonAppBar() {
                 alt="logo"
                 src={logo}
                 sx={{
-                  height: 70,
-                  margin: 3,
+                  height: 90,
+                  margin: 1,
                 }}
               />
             </Link>

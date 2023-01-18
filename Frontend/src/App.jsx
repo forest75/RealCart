@@ -9,13 +9,14 @@ import AppFooter from "./test/AppFooter";
 import MainPage from "./test/MainPage";
 import MyPage from "./test/MyPage";
 import SpectatingPage from "./test/SpectatingPage";
+import ChattingUi from "./test/ChattingUi";
 
 function App() {
   return (
     <Box>
       <Box
         sx={{
-          height: 140,
+          height: 130,
         }}
       >
         <ButtonAppBar />
@@ -30,7 +31,9 @@ function App() {
           <Route path="/spect" element={<SpectatingPage />} />
         </Routes>
       </Box>
-
+      <Box>
+        <ChattingUi />
+      </Box>
       <Box>
         <AppFooter />
       </Box>

@@ -51,7 +51,7 @@ function MainPage() {
         justifyContent: "center",
       }}
     >
-      <div style={{ marginBottom: "100px" }}>
+      <div style={{ marginBottom: "50px", marginTop: "30px" }}>
         <Link to="/spect" style={{ color: "black", textDecoration: "none" }}>
           <Paper elevation={3}>
             <Grid
@@ -95,7 +95,7 @@ function MainPage() {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          margin: "0px 100px 100px 100px",
+          margin: "0px 10px 20px 100px",
         }}
       >
         <Box sx={{ width: 1000 }}>
@@ -109,7 +109,7 @@ function MainPage() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                padding: "30px",
+                padding: "10px",
               }}
             >
               <h1>공지사항</h1>
@@ -117,7 +117,7 @@ function MainPage() {
             </Grid>
           </Paper>
         </Box>
-        <Box sx={{ width: 1000, marginLeft: 10 }}>
+        <Box sx={{ width: 1000, marginLeft: 5 }}>
           <Paper elevation={3}>
             <Grid
               container
