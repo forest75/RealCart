@@ -8,8 +8,9 @@ import {
   List,
   ListItem,
   ListItemText,
+  Modal,
 } from "@mui/material";
-import tmpmain from "./assets/tmpmain.jpg";
+import tmpmain from "./assets/map_keyboard.png";
 
 function SpectPage() {
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
@@ -24,6 +25,8 @@ function SpectPage() {
   const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
+
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   const totalVotes = voteA + voteB;
   let proportionA;
@@ -55,6 +58,9 @@ function SpectPage() {
     setChats((currentArray) => [...currentArray, chat]);
     setChat("");
   };
+
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
 
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
@@ -130,7 +136,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>지존ㅎHzㅣㄴ</h1>
+                <h1>B 지존ㅎHzㅣㄴ</h1>
               </Box>
             </Paper>
           </Box>
@@ -157,7 +163,6 @@ function SpectPage() {
                 component="nav"
                 // aria-label="Device settings"
                 sx={{
-                  bgcolor: "background.paper",
                   width: "70%",
                   height: "60%",
                 }}
@@ -170,6 +175,10 @@ function SpectPage() {
                   // aria-label="when device is locked"
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClickListItem}
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                  }}
                 >
                   <ListItemText primary={options[selectedIndex]} />
                 </ListItem>
@@ -204,7 +213,7 @@ function SpectPage() {
             height: "85%",
           }}
         >
-          <Box
+          {/* <Box
             component="img"
             alt="tmp"
             src={tmpmain}
@@ -212,7 +221,45 @@ function SpectPage() {
               width: "100%",
               height: "100%",
             }}
-          />
+          /> */}
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              position: "relative",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+              }}
+            >
+              <Box
+                component="img"
+                alt="tmp"
+                src={tmpmain}
+                sx={{
+                  width: "10%",
+                  height: "10%",
+                  position: "absolute",
+                  top: "100%",
+                  left: "100%",
+                  transform: "translate(-100%, -100%)",
+                }}
+              />
+            </Box>
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/p7ozHbyOQBY"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </Box>
         </Box>
       </Box>
       <Box
@@ -242,109 +289,118 @@ function SpectPage() {
           </Button>
         </Box>
         <Box
+          display="flex"
           sx={{
             width: "100%",
             height: "25%",
+            justifyContent: "center",
           }}
         >
-          <Box
-            display="flex"
+          <Paper
             sx={{
-              width: "100%",
-              height: "30%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            배팅상황
-          </Box>
-          <Box
-            display="flex"
-            sx={{
-              width: "100%",
-              height: "40%",
-              alignItems: "center",
-              justifyContent: "center",
+              width: "80%",
+              height: "90%",
             }}
           >
             <Box
               display="flex"
               sx={{
-                width: "80%",
-                height: "100%",
+                width: "100%",
+                height: "30%",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Paper
-                elevation={3}
-                sx={{
-                  width: `${Math.max(proportionA * 70 + 30, 30)}%`,
-                }}
-              >
-                <Button
-                  onClick={() => {
-                    setVoteA(voteA + 1);
-                  }}
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  A
-                </Button>
-              </Paper>
-              <Paper
-                elevation={3}
-                sx={{
-                  width: `${Math.max(proportionB * 70 + 30, 30)}%`,
-                  animation: "widthChange 0.5s ease-in-out",
-                }}
-              >
-                <Button
-                  onClick={() => {
-                    setVoteB(voteB + 1);
-                  }}
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  B
-                </Button>
-              </Paper>
+              배팅상황
             </Box>
-          </Box>
-          <Box
-            display="flex"
-            sx={{
-              width: "100%",
-              height: "30%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
             <Box
               display="flex"
               sx={{
-                width: "50%",
-                height: "100%",
+                width: "100%",
+                height: "40%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box
+                display="flex"
+                sx={{
+                  width: "80%",
+                  height: "100%",
+                }}
+              >
+                <Paper
+                  elevation={3}
+                  sx={{
+                    width: `${Math.max(proportionA * 70 + 30, 30)}%`,
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setVoteA(voteA + 1);
+                    }}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    A
+                  </Button>
+                </Paper>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    width: `${Math.max(proportionB * 70 + 30, 30)}%`,
+                    animation: "widthChange 0.5s ease-in-out",
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setVoteB(voteB + 1);
+                    }}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    B
+                  </Button>
+                </Paper>
+              </Box>
+            </Box>
+            <Box
+              display="flex"
+              sx={{
+                width: "100%",
+                height: "30%",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              {voteA}명
+              <Box
+                display="flex"
+                sx={{
+                  width: "50%",
+                  height: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {voteA}명
+              </Box>
+              <Box
+                display="flex"
+                sx={{
+                  width: "50%",
+                  height: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {voteB}명
+              </Box>
             </Box>
-            <Box
-              display="flex"
-              sx={{
-                width: "50%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {voteB}명
-            </Box>
-          </Box>
+          </Paper>
         </Box>
         <Box
           display="flex"
@@ -414,84 +470,119 @@ function SpectPage() {
               bgcolor: "white",
               color: "black",
             }}
+            onClick={handleModalOpen}
           >
             버그 및 문제신고
           </Button>
+          <Modal
+            open={modalOpen}
+            onClose={handleModalClose}
+            // BackdropProps={{
+            //   style: {
+            //     backgroundColor: "transparent",
+            //     boxShadow: "none",
+            //   },
+            // }}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                bgcolor: "background.paper",
+                width: "25%",
+                height: "25%",
+              }}
+            >
+              <Box
+                display="flex"
+                sx={{
+                  width: "100%",
+                  height: "55%",
+                  justifyContent: "center",
+                  alignItems: "end",
+                }}
+              >
+                <h1>현재 대기자 수는 7 명입니다.</h1>
+              </Box>
+              <Box
+                display="flex"
+                sx={{
+                  width: "100%",
+                  height: "45%",
+                }}
+              >
+                <Box
+                  display="flex"
+                  sx={{
+                    width: "50%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: "50%",
+                      height: "35%",
+                      bgcolor: "white",
+                      color: "black",
+                    }}
+                  >
+                    대기하기
+                  </Button>
+                </Box>
+                <Box
+                  display="flex"
+                  sx={{
+                    width: "50%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: "50%",
+                      height: "35%",
+                      bgcolor: "white",
+                      color: "black",
+                    }}
+                  >
+                    취소
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+            {/* <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Text in a modal
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+              </Typography>
+            </Box> */}
+          </Modal>
         </Box>
       </Box>
     </Box>
-    // <Box
-    //   display="flex"
-    //   sx={{
-    //     justifyContent: "center",
-    //     justifyItems: "center",
-    //     justifyTracks: "center",
-    //     justifySelf: "center",
-    //     alignItems: "center",
-    //     alignContent: "center",
-    //     alignSelf: "center",
-    //     bgcolor: "gray",
-    //   }}
-    // >
-    //   <Grid container>
-    //     <Grid
-    //       item
-    //       xs={9}
-    //       sx={{
-    //         height: 700,
-    //       }}
-    //     >
-    //       <Stack>
-    //         <Box
-    //           sx={{
-    //             height: 100,
-    //           }}
-    //         >
-    //           <Grid container>
-    //             <Grid
-    //               item
-    //               xs={8}
-    //               sx={{
-    //                 height: 600,
-    //                 bgcolor: "red",
-    //               }}
-    //             >
-    //               a
-    //             </Grid>
-    //             <Grid
-    //               item
-    //               xs={4}
-    //               sx={{
-    //                 height: 600,
-    //                 bgcolor: "orange",
-    //               }}
-    //             >
-    //               b
-    //             </Grid>
-    //           </Grid>
-    //         </Box>
-    //         <Box
-    //           sx={{
-    //             height: 600,
-    //             bgcolor: "yellow",
-    //           }}
-    //         >
-    //           c
-    //         </Box>
-    //       </Stack>
-    //     </Grid>
-    //     <Grid
-    //       item
-    //       xs={2}
-    //       sx={{
-    //         height: 700,
-    //         bgcolor: "green",
-    //       }}
-    //     >
-    //       d
-    //     </Grid>
-    //   </Grid>
-    // </Box>
   );
 }
 

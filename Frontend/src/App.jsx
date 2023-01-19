@@ -6,10 +6,10 @@ import LoginForm from "./test/LoginForm";
 import RegistForm from "./test/RegistForm";
 import FindPassForm from "./test/FindPassForm";
 import AppFooter from "./test/AppFooter";
-import MainPage from "./test/MainPage";
+import MainPage from "./MainPage";
 import MyPage from "./test/MyPage";
 import SpectPage from "./SpectPage";
-import PlayPage from "./PlayPage";
+import PlayPage from "./test/PlayPage";
 
 function App() {
   return (

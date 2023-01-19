@@ -47,18 +47,20 @@ export default function ButtonAppBar() {
               style={{ color: "black", textDecoration: "none" }}
             >
               <Button color="inherit" sx={{ width: 150, height: 70 }}>
-                <h4>RACE</h4>
+                <span>RACE</span>
               </Button>
             </Link>
-            <Button color="inherit" sx={{ width: 150, height: 70 }}>
-              <h4>Board</h4>
-            </Button>
+            <Link to="/play" style={{ color: "black", textDecoration: "none" }}>
+              <Button color="inherit" sx={{ width: 150, height: 70 }}>
+                <span>Board</span>
+              </Button>
+            </Link>
             <Link
               to="/myPage"
               style={{ color: "black", textDecoration: "none" }}
             >
               <Button color="inherit" sx={{ width: 150, height: 70 }}>
-                <h4>About</h4>
+                <span>About</span>
               </Button>
             </Link>
             <Link
@@ -66,7 +68,7 @@ export default function ButtonAppBar() {
               style={{ color: "black", textDecoration: "none" }}
             >
               <Button color="inherit" sx={{ width: 150, height: 70 }}>
-                <h4>Login</h4>
+                <span>Login</span>
               </Button>
             </Link>
           </Toolbar>
