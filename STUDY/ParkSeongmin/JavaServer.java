@@ -78,7 +78,7 @@ class ReceiveThread extends Thread{
                 for(int i=0; i<imageLen; i++){
                     decImage += (char) br.read();
                 }
-                System.out.println(decImage);
+                System.out.println(decImage.substring(0,30));
             }
             System.out.println(br != null);
             System.out.println("brbr");
