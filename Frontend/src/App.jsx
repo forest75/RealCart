@@ -9,6 +9,7 @@ import AppFooter from "./test/AppFooter";
 import MainPage from "./test/MainPage";
 import MyPage from "./test/MyPage";
 import SpectPage from "./SpectPage";
+import PlayPage from "./PlayPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/findPass" element={<FindPassForm />} />
           <Route path="/myPage" element={<MyPage />} />
           <Route path="/spect" element={<SpectPage />} />
+          <Route path="/play" element={<PlayPage />} />
         </Routes>
       </Box>
       <Box>

@@ -42,9 +42,14 @@ export default function ButtonAppBar() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               &nbsp;
             </Typography>
-            <Button color="inherit" sx={{ width: 150, height: 70 }}>
-              <h4>RACE</h4>
-            </Button>
+            <Link
+              to="/spect"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Button color="inherit" sx={{ width: 150, height: 70 }}>
+                <h4>RACE</h4>
+              </Button>
+            </Link>
             <Button color="inherit" sx={{ width: 150, height: 70 }}>
               <h4>Board</h4>
             </Button>

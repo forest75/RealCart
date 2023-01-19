@@ -143,59 +143,44 @@ function SpectPage() {
               justifyContent: "center",
             }}
           >
-            <Paper
-              elevation={3}
-              sx={{
-                display: "flex",
-                height: "60%",
-                width: "95%",
-                alignItems: "center",
-                justifyContent: "center",
+            <List
+              component="nav"
+              // aria-label="Device settings"
+              sx={{ bgcolor: "background.paper", width: "70%" }}
+            >
+              <ListItem
+                button
+                id="lock-button"
+                // aria-haspopup="listbox"
+                // aria-controls="lock-menu"
+                // aria-label="when device is locked"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClickListItem}
+              >
+                <ListItemText primary={options[selectedIndex]} />
+              </ListItem>
+            </List>
+            <Menu
+              id="lock-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                // "aria-labelledby": "lock-button",
+                role: "listbox",
               }}
             >
-              <List
-                component="nav"
-                // aria-label="Device settings"
-                sx={{
-                  bgcolor: "background.paper",
-                  width: "70%",
-                  height: "60%",
-                }}
-              >
-                <ListItem
-                  button
-                  id="lock-button"
-                  // aria-haspopup="listbox"
-                  // aria-controls="lock-menu"
-                  // aria-label="when device is locked"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClickListItem}
+              {options.map((option, index) => (
+                <MenuItem
+                  key={option.id}
+                  disabled={index === selectedIndex}
+                  selected={index === selectedIndex}
+                  onClick={(event) => handleMenuItemClick(event, index)}
                 >
-                  <ListItemText primary={options[selectedIndex]} />
-                </ListItem>
-              </List>
-              <Menu
-                id="lock-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  // "aria-labelledby": "lock-button",
-                  role: "listbox",
-                }}
-              >
-                {options.map((option, index) => (
-                  <MenuItem
-                    key={option.id}
-                    disabled={index === selectedIndex}
-                    selected={index === selectedIndex}
-                    onClick={(event) => handleMenuItemClick(event, index)}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Paper>
+                  {option}
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </Box>
         <Box
@@ -357,14 +342,15 @@ function SpectPage() {
         >
           <Box
             sx={{
-              width: "90%",
+              width: "100%",
               height: "100%",
+              bgcolor: "red",
             }}
           >
             <Box
               id="chat"
               sx={{
-                width: "100%",
+                width: "90%",
                 height: "90%",
                 // maxHeight: 500,
                 overflow: "auto",
