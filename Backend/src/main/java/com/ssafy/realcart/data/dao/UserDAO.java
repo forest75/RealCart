@@ -53,6 +53,12 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
+    public User checkNickname(String nickname) {
+        LOGGER.info("checkNickname 메서드가 userDAO에서 호출되었습니다.");
+        return userRepository.findByNickname(nickname);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         LOGGER.info("getAllUsers 메서드가 userDAO에서 호출되었습니다.");
         return (List<User>) userRepository.findAll();
