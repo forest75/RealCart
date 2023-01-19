@@ -8,8 +8,17 @@ import com.ssafy.realcart.service.inter.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -22,9 +31,17 @@ public class UserService implements IUserService {
     private IUserDAO userDAO;
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
+    private JavaMailSender mailSender;
+
+
+
+    @Value("${spring.mail.username}")
+    String sendFrom;
+
     @Autowired
-    public UserService(IUserDAO userDAO){
+    public UserService(IUserDAO userDAO, JavaMailSender mailSender){
         this.userDAO = userDAO;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -43,10 +60,41 @@ public class UserService implements IUserService {
         user.setUsername(userDto.getUsername());
         user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
         if(userDAO.createUser(user)){
+            StringBuilder sb = new StringBuilder();
+            byte[] emailSalt = getSalt();
+            sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
+                            .append("\n").append("http://70.12.246.220:8080/user/verifyemail/").append(bytesToHex(emailSalt));
+            sendMail(user.getEmail(), "RealCart Email Verification", sb.toString());
             return true;
         }
         else{
             return false;
+        }
+    }
+
+    private void sendMail(String email, String title, String content) {
+
+
+        String sendTo = email;
+        String mailTitle = title;
+        String mailContent = content;
+
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                final MimeMessageHelper message = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+                message.setTo(sendTo);
+                message.setFrom(sendFrom);
+                message.setSubject(mailTitle);
+                message.setText(mailContent, true);
+
+            }
+        };
+        try{
+            mailSender.send(preparator);
+        }
+        catch(MailException e){
+            e.printStackTrace();
         }
     }
 
