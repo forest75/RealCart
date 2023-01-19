@@ -46,6 +46,7 @@ public class UserController {
         }
     }
 
+
     @GetMapping(value="/checknickname")
     public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
         LOGGER.info("checkNickname 메서드가 userController에서 호출되었습니다.");
