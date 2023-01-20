@@ -15,6 +15,7 @@ class ClientSocket:
         self.connectServer()
 
     def connectServer(self):
+        print("initial connecting...")
         try:
             self.sock = socket.socket()
             self.sock.connect((self.TCP_SERVER_IP, self.TCP_SERVER_PORT))
@@ -38,6 +39,7 @@ class ClientSocket:
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 315)
         try:
+            self.sock.send(b'2')
             while capture.isOpened():
                 ret, frame = capture.read()
                 resize_frame = cv2.resize(frame, dsize=(480, 315), interpolation=cv2.INTER_AREA)
@@ -54,11 +56,8 @@ class ClientSocket:
                 self.sock.send(stringData)
                 #self.sock.send(stime.encode('utf-8').ljust(64))
                 print(u'send images %d' % (cnt))
-                print(length.encode('utf-8').ljust(64))
-                print(stringData)
-                print(stime.encode('utf-8').ljust(64))
                 cnt += 1
-                time.sleep(0.095)
+                time.sleep(0.15)
         except Exception as e:
             print(e)
             self.sock.close()

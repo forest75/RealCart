@@ -4,13 +4,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.net.http.WebSocket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.java_websocket.WebSocket;
+import org.java_websocket.WebSocketImpl;
+import org.java_websocket.server.WebSocketServer;
+
 
 public class JavaServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         JavaServer javaServer = new JavaServer();
         javaServer.start();
     }
@@ -18,17 +25,27 @@ public class JavaServer {
     public void start(){
         ServerSocket serverSocket = null;
         Socket socket = null;
+        int rcNum = 0;
         try {
+            // binding server socket
             serverSocket = new ServerSocket(8080);
-            while (true) {
-                System.out.println("waiting for client...");
-                socket = serverSocket.accept();
 
-                // 클라이언트가 접속할 때마다 새로운 스레드 생성
-                ReceiveThread receiveThread = new ReceiveThread(socket);
-                receiveThread.start();
+            // Initialize WebSocket server
+            int wsPort = 8081;
+            WebSocketServer wsServer = new org.example.WSHandler(wsPort);
+            wsServer.start();
+            System.out.println("WebSocket server started on port " + wsPort);
+
+            while (true) {
+                System.out.println("waiting for raspberry pi..." + Integer.toString(rcNum));
+                // bind raspberry socket server
+                socket = serverSocket.accept();
+                rcNum++;
+                // Create Thread when client(Frontend react server) accepted !
+                PassingThread passingThread = new PassingThread(socket);
+                passingThread.start();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (serverSocket != null){
@@ -44,7 +61,7 @@ public class JavaServer {
     }
 }
 
-class ReceiveThread extends Thread{
+class PassingThread extends Thread{
     // PrintWriter는 object를 text-output으로 출력한다.
     // synchronizedList는 병렬 스레드 환경에서 동기화된 처리를 하기 위해
     static List<PrintWriter> list = Collections.synchronizedList(new ArrayList<PrintWriter>());
@@ -53,11 +70,12 @@ class ReceiveThread extends Thread{
     BufferedReader br = null;
     PrintWriter pw = null;
 
-    public ReceiveThread (Socket socket) {
+    public PassingThread (Socket socket) {
         this.socket = socket;
         try {
+            System.out.println(socket);
             pw = new PrintWriter(socket.getOutputStream());
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ASCII"), 64);
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
             list.add(pw);
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,26 +84,49 @@ class ReceiveThread extends Thread{
 
     @Override
     public void run(){
-        System.out.println("run");
         try {
-            while(br != null) {
-                String imageLenStr = "";
-                for(int i=0; i<64; i++){
-                    imageLenStr += (char) br.read();
-                }
-                int imageLen = Integer.parseInt(imageLenStr.trim());
-                String decImage = "";
-                for(int i=0; i<imageLen; i++){
-                    decImage += (char) br.read();
-                }
-                System.out.println(decImage);
+            int flag = br.read();
+            System.out.println(flag);
+            if( flag == 50) {
+                fnForRasp();
+            } else {
+                fnForFront();
             }
-            System.out.println(br != null);
-            System.out.println("brbr");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             System.out.println("run이 종료되었습니다.");
+        }
+    }
+
+    private void fnForRasp() throws IOException {
+        while(br != null) {
+            String imageLenStr = "";
+            for(int i=0; i<64; i++){
+                imageLenStr += (char) br.read();
+            }
+            int imageLen = Integer.parseInt(imageLenStr.trim());
+            String decImage = "";
+            for(int i=0; i<imageLen; i++){
+                decImage += (char) br.read();
+            }
+            System.out.println(decImage);
+        }
+    }
+
+    private void fnForFront() throws IOException {
+        while(br != null) {
+            String imageLenStr = "";
+            for(int i=0; i<256; i++){
+                int read = br.read();
+                if(read >= 0){
+                    imageLenStr += (char) br.read();
+                }
+            }
+            if (!imageLenStr.equals("")){
+                System.out.println(imageLenStr);
+            }
+            String decImage = "";
         }
     }
 
@@ -96,4 +137,45 @@ class ReceiveThread extends Thread{
             out.flush();
         }
     }
+}
+
+class SocketHandler implements Runnable {
+    private Socket socket;
+    public SocketHandler(Socket socket) {
+        this.socket = socket;
+    }
+    public void run() {
+
+    }
+}
+
+class WSHandler extends WebSocketServer {
+    public WSHandler(int port) {
+        super(new java.net.InetSocketAddress(port));
+    }
+    @Override
+    public void onOpen(WebSocket conn, org.java_websocket.handshake.ClientHandshake handshake) {
+        System.out.println("on Open");
+    }
+
+    @Override
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, String message) {
+
+    }
+
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+    // other WebSocket methods (onClose, onMessage, onError)
 }
