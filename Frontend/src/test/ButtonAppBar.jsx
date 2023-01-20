@@ -24,7 +24,7 @@ export default function ButtonAppBar() {
   });
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ border: 1 }}>
         <AppBar color="secondary">
           <Toolbar>
             <Link to="/">

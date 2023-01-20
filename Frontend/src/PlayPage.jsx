@@ -8,7 +8,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Modal,
 } from "@mui/material";
 import toturial from "./assets/toturial.png";
 import car from "./assets/car.jpg";
@@ -26,8 +25,6 @@ function SpectPage() {
   const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
-
-  const [modalOpen, setModalOpen] = React.useState(false);
 
   const totalVotes = voteA + voteB;
   let proportionA;
@@ -60,9 +57,6 @@ function SpectPage() {
     setChat("");
   };
 
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
-
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
@@ -72,12 +66,14 @@ function SpectPage() {
       display="flex"
       sx={{
         justifyContent: "center",
+        bgcolor: "gray",
       }}
     >
       <Box
         sx={{
           width: "70%",
           height: 700,
+          bgcolor: "red",
         }}
       >
         <Box
@@ -85,6 +81,7 @@ function SpectPage() {
           sx={{
             width: "100%",
             height: "15%",
+            bgcolor: "blue",
           }}
         >
           <Box
@@ -94,6 +91,7 @@ function SpectPage() {
               height: "100%",
               justifyContent: "center",
               alignItems: "center",
+              bgcolor: "yellow",
             }}
           >
             <Paper
@@ -104,6 +102,7 @@ function SpectPage() {
                 width: "95%",
                 alignItems: "center",
                 justifyContent: "center",
+                bgcolor: "green",
               }}
             >
               <Box
@@ -113,6 +112,7 @@ function SpectPage() {
                   width: "45%",
                   alignItems: "center",
                   justifyContent: "center",
+                  bgcolor: "pink",
                 }}
               >
                 <h1>A 의권짱짱33</h1>
@@ -124,6 +124,7 @@ function SpectPage() {
                   width: "10%",
                   alignItems: "center",
                   justifyContent: "center",
+                  bgcolor: "pink",
                 }}
               >
                 <h1>vs</h1>
@@ -135,6 +136,7 @@ function SpectPage() {
                   width: "45%",
                   alignItems: "center",
                   justifyContent: "center",
+                  bgcolor: "pink",
                 }}
               >
                 <h1>B 지존ㅎHzㅣㄴ</h1>
@@ -148,6 +150,7 @@ function SpectPage() {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
+              bgcolor: "yellow",
             }}
           >
             <Paper
@@ -158,6 +161,7 @@ function SpectPage() {
                 width: "95%",
                 alignItems: "center",
                 justifyContent: "center",
+                bgcolor: "green",
               }}
             >
               <List
@@ -212,6 +216,7 @@ function SpectPage() {
           sx={{
             width: "100%",
             height: "85%",
+            bgcolor: "blue",
           }}
         >
           {/* <Box
@@ -270,6 +275,7 @@ function SpectPage() {
         sx={{
           width: "20%",
           height: 700,
+          bgcolor: "yellow",
         }}
       >
         <Box
@@ -279,6 +285,7 @@ function SpectPage() {
             height: "15%",
             justifyContent: "center",
             alignItems: "center",
+            bgcolor: "pink",
           }}
         >
           <Button
@@ -298,12 +305,14 @@ function SpectPage() {
             width: "100%",
             height: "25%",
             justifyContent: "center",
+            bgcolor: "pink",
           }}
         >
           <Paper
             sx={{
               width: "80%",
               height: "90%",
+              bgcolor: "green",
             }}
           >
             <Box
@@ -313,6 +322,7 @@ function SpectPage() {
                 height: "30%",
                 alignItems: "center",
                 justifyContent: "center",
+                bgcolor: "pink",
               }}
             >
               배팅상황
@@ -324,6 +334,7 @@ function SpectPage() {
                 height: "40%",
                 alignItems: "center",
                 justifyContent: "center",
+                bgcolor: "pink",
               }}
             >
               <Box
@@ -331,6 +342,7 @@ function SpectPage() {
                 sx={{
                   width: "80%",
                   height: "100%",
+                  bgcolor: "green",
                 }}
               >
                 <Paper
@@ -474,96 +486,9 @@ function SpectPage() {
               bgcolor: "white",
               color: "black",
             }}
-            onClick={handleModalOpen}
           >
             버그 및 문제신고
           </Button>
-          <Modal
-            open={modalOpen}
-            onClose={handleModalClose}
-            // BackdropProps={{
-            //   style: {
-            //     backgroundColor: "transparent",
-            //     boxShadow: "none",
-            //   },
-            // }}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                bgcolor: "background.paper",
-                width: "25%",
-                height: "25%",
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{
-                  width: "100%",
-                  height: "55%",
-                  justifyContent: "center",
-                  alignItems: "end",
-                }}
-              >
-                <h1>현재 대기자 수는 7 명입니다.</h1>
-              </Box>
-              <Box
-                display="flex"
-                sx={{
-                  width: "100%",
-                  height: "45%",
-                }}
-              >
-                <Box
-                  display="flex"
-                  sx={{
-                    width: "50%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "50%",
-                      height: "35%",
-                      bgcolor: "white",
-                      color: "black",
-                    }}
-                  >
-                    대기하기
-                  </Button>
-                </Box>
-                <Box
-                  display="flex"
-                  sx={{
-                    width: "50%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "50%",
-                      height: "35%",
-                      bgcolor: "white",
-                      color: "black",
-                    }}
-                  >
-                    취소
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Modal>
         </Box>
       </Box>
     </Box>

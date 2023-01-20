@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
 import ButtonAppBar from "./test/ButtonAppBar";
-import LoginForm from "./test/LoginForm";
+import LoginForm from "./LoginForm";
 import RegistForm from "./test/RegistForm";
 import FindPassForm from "./test/FindPassForm";
 import AppFooter from "./test/AppFooter";

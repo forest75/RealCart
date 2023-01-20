@@ -8,12 +8,14 @@ function PlayPage() {
       sx={{
         display: "flex",
         justifyContent: "center",
+        bgcolor: "red",
       }}
     >
       <Box
         sx={{
           width: "70%",
           height: 700,
+          bgcolor: "yellow",
         }}
       >
         <Box
@@ -21,6 +23,7 @@ function PlayPage() {
             width: "100%",
             height: "15%",
             display: "flex",
+            bgcolor: "pink",
           }}
         >
           <Box
@@ -30,6 +33,7 @@ function PlayPage() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              bgcolor: "orange",
             }}
           >
             <Paper
@@ -38,6 +42,7 @@ function PlayPage() {
                 width: "95%",
                 height: "90%",
                 display: "flex",
+                bgcolor: "purple",
               }}
             >
               <Box
@@ -45,6 +50,7 @@ function PlayPage() {
                   width: "100%",
                   height: "100%",
                   display: "flex",
+                  bgcolor: "black",
                 }}
               >
                 <Box
@@ -54,6 +60,7 @@ function PlayPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    bgcolor: "white",
                   }}
                 >
                   <Box
@@ -63,6 +70,7 @@ function PlayPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      bgcolor: "black",
                     }}
                   >
                     <h1>A 의권짱짱33</h1>
@@ -74,6 +82,7 @@ function PlayPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      bgcolor: "black",
                     }}
                   >
                     랭킹 2위
@@ -86,6 +95,7 @@ function PlayPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    bgcolor: "black",
                   }}
                 >
                   <h1>vs</h1>
@@ -97,6 +107,7 @@ function PlayPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    bgcolor: "red",
                   }}
                 >
                   <Box
@@ -106,6 +117,7 @@ function PlayPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      bgcolor: "green",
                     }}
                   >
                     <h1>B 지존ㅎHzㅣㄴ</h1>
@@ -117,6 +129,7 @@ function PlayPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      bgcolor: "blue",
                     }}
                   >
                     랭킹 3위
@@ -132,6 +145,7 @@ function PlayPage() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              bgcolor: "orange",
             }}
           >
             <Paper
@@ -139,6 +153,7 @@ function PlayPage() {
               sx={{
                 width: "95%",
                 height: "90%",
+                bgcolor: "purple",
               }}
             >
               <Box
@@ -148,6 +163,7 @@ function PlayPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  bgcolor: "olive",
                 }}
               >
                 <h1>배팅현황</h1>
@@ -159,6 +175,7 @@ function PlayPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  bgcolor: "yellow",
                 }}
               >
                 <Paper
