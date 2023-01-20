@@ -29,6 +29,8 @@ public class User extends BaseTime{
     private String password;
     @Column(name="salt")
     private String salt;
+    @Column(name="email_salt")
+    private String emailSalt;
     @Column(name="email_verified")
     private byte emailVerified;
     @Column(name="intro")

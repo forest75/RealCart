@@ -59,11 +59,13 @@ public class UserService implements IUserService {
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
         user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
+        byte[] emailSalt = getSalt();
+        user.setEmailSalt(bytesToHex(emailSalt));
         if(userDAO.createUser(user)){
             StringBuilder sb = new StringBuilder();
-            byte[] emailSalt = getSalt();
+
             sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
-                            .append("\n").append("http://70.12.246.220:8080/user/verifyemail/").append(bytesToHex(emailSalt));
+                            .append("\n").append("http://3.34.23.91/:8080/user/verifyemail/").append(user.getEmail()).append("/").append(bytesToHex(emailSalt));
             sendMail(user.getEmail(), "RealCart Email Verification", sb.toString());
             return true;
         }
@@ -211,5 +213,11 @@ public class UserService implements IUserService {
         else{
             return true;
         }
+    }
+
+    @Override
+    public boolean verifyEmail(String email, String salt) {
+        return userDAO.verifyEmail(email, salt);
+
     }
 }

@@ -60,6 +60,19 @@ public class UserController {
         }
     }
 
+    @GetMapping(value="/verifyemail/{email}/{salt}")
+    public ResponseEntity<String> verifyEmail(@PathVariable("email") String email, @PathVariable("salt") String salt) {
+        LOGGER.info("verifyemail 메서드가 userController에서 호출되었습니다.");
+        if(userService.verifyEmail(email, salt)){
+            String msg = "회원가입 성공!";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "유효한 코드가 아닙니다.";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+    }
+
     @PostMapping(value="/register")
     public ResponseEntity createUser(UserDto userDto){
         LOGGER.info("createUser 메서드가 userController에서 호출되었습니다.");

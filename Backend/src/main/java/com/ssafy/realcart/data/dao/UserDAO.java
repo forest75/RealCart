@@ -79,4 +79,15 @@ public class UserDAO implements IUserDAO {
         return false;
     }
 
+    @Override
+    public boolean verifyEmail(String email, String salt) {
+        User selectedUser = userRepository.findByEmail(email);
+        if(selectedUser != null && salt.equals(selectedUser.getEmailSalt())){
+            selectedUser.setIsBan((byte)1);
+            userRepository.save(selectedUser);
+            return true;
+        }
+        return false;
+    }
+
 }
