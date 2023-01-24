@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import FullWidthTextField from "./FullWidthTextField";
+import FullWidthTextField from "../test/FullWidthTextField";
 
 export default function RegistForm() {
   const theme = createTheme({

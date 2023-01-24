@@ -10,7 +10,9 @@ import {
   ListItemText,
   Modal,
 } from "@mui/material";
-import tmpmain from "./assets/map_keyboard.png";
+import { Link } from "react-router-dom";
+import car from "../assets/car.jpg";
+import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
@@ -76,7 +78,7 @@ function SpectPage() {
       <Box
         sx={{
           width: "70%",
-          height: 700,
+          height: 800,
         }}
       >
         <Box
@@ -169,6 +171,7 @@ function SpectPage() {
               >
                 <ListItem
                   button
+                  key={options[selectedIndex].id}
                   id="lock-button"
                   // aria-haspopup="listbox"
                   // aria-controls="lock-menu"
@@ -250,7 +253,16 @@ function SpectPage() {
                 }}
               />
             </Box>
-            <iframe
+            <Box
+              component="img"
+              alt="car"
+              src={car}
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+            {/* <iframe
               width="100%"
               height="100%"
               src="https://www.youtube.com/embed/p7ozHbyOQBY"
@@ -258,7 +270,7 @@ function SpectPage() {
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-            />
+            /> */}
           </Box>
         </Box>
       </Box>
@@ -277,16 +289,18 @@ function SpectPage() {
             alignItems: "center",
           }}
         >
-          <Button
-            sx={{
-              height: 60,
-              width: 150,
-              bgcolor: "#043774",
-              color: "white",
-            }}
-          >
-            Play
-          </Button>
+          <Link to="/play" style={{ textDecoration: "none" }}>
+            <Button
+              sx={{
+                height: 60,
+                width: 150,
+                bgcolor: "#043774",
+                color: "white",
+              }}
+            >
+              Play
+            </Button>
+          </Link>
         </Box>
         <Box
           display="flex"

@@ -1,52 +1,37 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-function ArrowButton({
-  buttonContent,
-  buttonWidth,
-  buttonHeight,
-  bgColor,
-  buttonColor,
-  bMargin,
-}) {
+function ArrowButton({ children, sx, ...otherProps }) {
+  const mergedSx = {
+    ...{ bgcolor: "white", color: "black", border: 1 },
+    ...sx,
+  };
   return (
     <Button
-      sx={{
-        width: buttonWidth,
-        height: buttonHeight,
-        display: "flex",
-        bgcolor: bgColor,
-        color: buttonColor,
-        border: 1,
-        margin: bMargin,
-      }}
+      sx={mergedSx}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...otherProps}
     >
       <Box
         sx={{
-          width: "33.3%",
-          height: "100%",
+          width: "10%",
         }}
       />
       <Box
         sx={{
-          width: "33.3%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: "80%",
         }}
       >
-        {buttonContent}
+        {children}
       </Box>
       <Box
         sx={{
-          width: "33.3%",
-          height: "100%",
+          width: "10%",
           display: "flex",
-          justifyContent: "end",
-          alignItems: "center",
+          justifyContent: "flex-end",
         }}
       >
         <ArrowForwardIcon />
@@ -56,20 +41,14 @@ function ArrowButton({
 }
 
 ArrowButton.defaultProps = {
-  buttonWidth: 200,
-  buttonHeight: 60,
-  bgColor: "white",
-  buttonColor: "black",
-  bMargin: 0,
+  sx: {},
+  children: "",
 };
 
 ArrowButton.propTypes = {
-  buttonContent: PropTypes.string.isRequired,
-  buttonWidth: PropTypes.string,
-  buttonHeight: PropTypes.string,
-  bgColor: PropTypes.string,
-  buttonColor: PropTypes.string,
-  bMargin: PropTypes.number,
+  // eslint-disable-next-line react/forbid-prop-types
+  sx: PropTypes.object,
+  children: PropTypes.string,
 };
 
 export default ArrowButton;

@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import logo from "./assets/logo.png";
+import logo from "../assets/logo.png";
 import PrimarySearchAppBar from "./HeaderTest1";
 
 function ButtonAppBar() {

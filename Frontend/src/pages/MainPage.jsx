@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Paper } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
-import car from "./assets/car.jpg";
+import car from "../assets/car.jpg";
 
 function MainPage() {
   const columns = [
@@ -25,7 +26,7 @@ function MainPage() {
       sx={{
         display: "flex",
         justifyContent: "center",
-        height: 1200,
+        height: 1500,
       }}
     >
       <Box
@@ -37,7 +38,7 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "50%",
+            height: "30%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -45,7 +46,7 @@ function MainPage() {
         >
           <Paper
             sx={{
-              width: "90%",
+              width: "50%",
               height: "90%",
               display: "flex",
               justifyContent: "center",
@@ -66,7 +67,7 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "50%",
+            height: "70%",
             display: "flex",
           }}
         >
@@ -87,14 +88,21 @@ function MainPage() {
             >
               <Box
                 sx={{
-                  height: "10%",
+                  height: "5%",
                 }}
               >
-                이름
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  공지사항
+                </Typography>
               </Box>
               <DataGrid
                 sx={{
-                  height: "40%",
+                  height: "42.5%",
                 }}
                 rows={ranking}
                 columns={columns}
@@ -104,14 +112,26 @@ function MainPage() {
               />
               <Box
                 sx={{
-                  height: "10%",
+                  height: "5%",
+                }}
+              />
+              <Box
+                sx={{
+                  height: "5%",
                 }}
               >
-                이름
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  게시글
+                </Typography>
               </Box>
               <DataGrid
                 sx={{
-                  height: "40%",
+                  height: "42.5%",
                 }}
                 rows={ranking}
                 columns={columns}
@@ -138,14 +158,21 @@ function MainPage() {
             >
               <Box
                 sx={{
-                  height: "10%",
+                  height: "5%",
                 }}
               >
-                이름
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  Ranking
+                </Typography>
               </Box>
               <DataGrid
                 sx={{
-                  height: "90%",
+                  height: "95%",
                 }}
                 rows={ranking}
                 columns={columns}
