@@ -399,3 +399,39 @@
 [2023-01-25 16:28:10:141088] DEBUG 8016 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
 [2023-01-25 16:28:10:141088] DEBUG 8016 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [BoardDto(id=2, hit=0, title=sss, content=제곧내, createdTime=2023-01-25T15:55:19.391767, modifiedTime=2 (truncated)...]
 [2023-01-25 16:28:10:141090] DEBUG 8016 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2023-01-25 16:37:30:3950] DEBUG 10596 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 52 mappings in 'requestMappingHandlerMapping'
+[2023-01-25 16:37:31:4122] DEBUG 10596 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+[2023-01-25 16:37:31:4149] DEBUG 10596 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/swagger-ui/] in 'viewControllerHandlerMapping'
+[2023-01-25 16:37:31:4154] DEBUG 10596 --- [           main] o.s.w.s.h.SimpleUrlHandlerMapping        : Patterns [/webjars/**, /**, /swagger-ui/**] in 'resourceHandlerMapping'
+[2023-01-25 16:37:31:4154] DEBUG 10596 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+[2023-01-25 16:38:12:45529] INFO  10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-01-25 16:38:12:45530] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+[2023-01-25 16:38:12:45530] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+[2023-01-25 16:38:12:45530] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+[2023-01-25 16:38:12:45532] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@687d31a9
+[2023-01-25 16:38:12:45532] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@d164938
+[2023-01-25 16:38:12:45532] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+[2023-01-25 16:38:12:45532] INFO  10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[2023-01-25 16:38:12:45544] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/swagger-ui/index.html", parameters={}
+[2023-01-25 16:38:12:45553] DEBUG 10596 --- [nio-8080-exec-1] o.s.w.s.h.SimpleUrlHandlerMapping        : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/springfox-swagger-ui/]]
+[2023-01-25 16:38:12:45559] DEBUG 10596 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 304 NOT_MODIFIED
+[2023-01-25 16:38:12:45675] DEBUG 10596 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/swagger-resources/configuration/ui", parameters={}
+[2023-01-25 16:38:12:45676] DEBUG 10596 --- [nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to springfox.documentation.swagger.web.ApiResourceController#uiConfiguration()
+[2023-01-25 16:38:12:45689] DEBUG 10596 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json]
+[2023-01-25 16:38:12:45716] DEBUG 10596 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [springfox.documentation.swagger.web.UiConfiguration@3491f639]
+[2023-01-25 16:38:12:45735] DEBUG 10596 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2023-01-25 16:38:12:45737] DEBUG 10596 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/swagger-resources/configuration/security", parameters={}
+[2023-01-25 16:38:12:45737] DEBUG 10596 --- [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to springfox.documentation.swagger.web.ApiResourceController#securityConfiguration()
+[2023-01-25 16:38:12:45738] DEBUG 10596 --- [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json]
+[2023-01-25 16:38:12:45740] DEBUG 10596 --- [nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [springfox.documentation.swagger.web.SecurityConfiguration@328b76e9]
+[2023-01-25 16:38:12:45742] DEBUG 10596 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2023-01-25 16:38:12:45744] DEBUG 10596 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/swagger-resources", parameters={}
+[2023-01-25 16:38:12:45744] DEBUG 10596 --- [nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to springfox.documentation.swagger.web.ApiResourceController#swaggerResources()
+[2023-01-25 16:38:12:45745] DEBUG 10596 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json]
+[2023-01-25 16:38:12:45747] DEBUG 10596 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[springfox.documentation.swagger.web.SwaggerResource@4fcada0f]]
+[2023-01-25 16:38:12:45749] DEBUG 10596 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[2023-01-25 16:38:12:45768] DEBUG 10596 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/v3/api-docs", parameters={}
+[2023-01-25 16:38:12:45769] DEBUG 10596 --- [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to springfox.documentation.oas.web.OpenApiControllerWebMvc#getDocumentation(String, HttpServletRequest)
+[2023-01-25 16:38:12:45903] DEBUG 10596 --- [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, */*] and supported [application/json, application/hal+json]
+[2023-01-25 16:38:12:45903] DEBUG 10596 --- [nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [springfox.documentation.spring.web.json.Json@1fc9c5f2]
+[2023-01-25 16:38:12:45906] DEBUG 10596 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
