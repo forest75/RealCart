@@ -48,7 +48,7 @@ function MyPage() {
             <h1>My Page</h1>
           </Box>
           <Divider />
-          <Paper container>
+          <Paper>
             <Box>
               <h1>실시간 랭킹</h1>
             </Box>
@@ -66,7 +66,7 @@ function MyPage() {
         <br />
         <Grid item xs={12}>
           <Divider />
-          <Paper container>
+          <Paper>
             <Box>
               <h1>히스토리</h1>
             </Box>

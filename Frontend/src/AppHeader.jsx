@@ -13,7 +13,7 @@ function AppHeader() {
       </Box>
       <Box
         sx={{
-          padding: 35,
+          padding: 25,
         }}
         bgcolor="#f2f2f2"
       >

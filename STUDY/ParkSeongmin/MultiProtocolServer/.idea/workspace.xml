@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7d8fcaa7-d8ad-4d13-b20e-51c87a7a9688" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../TransferServer/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TransferServer/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TransferServer/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TransferServer/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TransferServer/src/main/java/org/example/MultiProtocolServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/public/robots.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/App.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/Counter.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/Counter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/Webcam.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/Webcam.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/a.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/a.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/reportWebVitals.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/reportWebVitals.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/input_test/src/setupTests.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/input_test/src/setupTests.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/public/robots.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/AppHeader.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/AppHeader.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/ButtonAppBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/ButtonAppBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/HeaderTest1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/HeaderTest1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/VanillaHeader.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/VanillaHeader.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/AppFooter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/AppFooter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/ButtonAppBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/ButtonAppBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/ChattingUi.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/ChattingUi.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/FindPassForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/FindPassForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/FullWidthTextField.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/FullWidthTextField.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/LoginForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/LoginForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/MainPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/MyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/MyPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/RegistForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/RegistForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/SpectatingPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/SpectatingPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Frontend/src/test/TestComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Frontend/src/test/TestComponent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../clientsocket.py" beforeDir="false" afterPath="$PROJECT_DIR$/../clientsocket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../serversocket.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2KZivE6nHlGUih57MZFgECfeLtE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7d8fcaa7-d8ad-4d13-b20e-51c87a7a9688" name="Changes" comment="" />
+      <created>1674188737474</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1674188737474</updated>
+      <workItem from="1674188738786" duration="174000" />
+      <workItem from="1674188938280" duration="243000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

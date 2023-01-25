@@ -25,7 +25,7 @@ export default function RegistForm() {
         },
       }}
     >
-      <Paper justifyContent="center" elevation={3}>
+      <Paper elevation={3}>
         <Box>
           <ThemeProvider theme={theme}>
             <Grid
@@ -101,7 +101,9 @@ export default function RegistForm() {
                     >
                       <div style={{ width: "33%" }}> </div>
 
-                      <span style={{ width: "33%" }}>회원가입</span>
+                      <span style={{ width: "33%", textAlign: "center" }}>
+                        회원가입
+                      </span>
                       <div
                         style={{
                           width: "33%",
