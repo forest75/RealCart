@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PostMapping(value="/register")
-    public ResponseEntity createUser(UserDto userDto){
+    public ResponseEntity createUser(@RequestBody UserDto userDto){
         LOGGER.info("createUser 메서드가 userController에서 호출되었습니다.");
         try {
             if(userService.createUser(userDto)){
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity login(UserDto userDto){
+    public ResponseEntity login(@RequestBody UserDto userDto){
         LOGGER.info("Login 메서드가 userController에서 호출되었습니다.");
         try {
             UserDto loginUser = userService.login(userDto);
