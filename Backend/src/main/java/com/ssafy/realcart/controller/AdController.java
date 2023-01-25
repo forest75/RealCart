@@ -39,13 +39,13 @@ public class AdController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createAd(@RequestParam String owner, @RequestParam String content, @RequestParam String type){
+    public ResponseEntity<String> createAd(@RequestBody AdDto adDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("광고 생성 완료");
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<String> changeAd(@PathVariable("id") int id, @RequestParam String owner, @RequestParam String content, @RequestParam String type){
+    public ResponseEntity<String> changeAd(@PathVariable("id") int id, @RequestBody AdDto adDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("광고 수정 완료");
     }
