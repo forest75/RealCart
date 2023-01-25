@@ -119,7 +119,6 @@ class PassingThread extends Thread{
             for(WebSocket client : webSocket){
                 client.send(decImage);
             }
-            System.out.println(1);
         }
     }
 
@@ -140,7 +139,6 @@ class WSHandler extends WebSocketServer {
 
     @Override
     public void onOpen(org.java_websocket.WebSocket conn, ClientHandshake handshake) {
-        System.out.println("onOpen");
     }
 
     @Override

@@ -16,7 +16,6 @@ function PlayPage() {
     ws.onmessage = function ({ data }) {
       const url = `data:image/jpeg;base64,${data}`;
       setImgSrc(url);
-      console.log(data);
     };
   };
 
