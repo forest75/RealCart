@@ -36,13 +36,13 @@ public class ItemController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createItem(@RequestParam String name, @RequestParam String desc, @RequestParam int defaultQuantity){
+    public ResponseEntity<String> createItem(@RequestBody ItemDto itemDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("아이템 생성 완료");
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<String> changeItem(@PathVariable("id") int id, @RequestParam String name, @RequestParam String desc, @RequestParam int defaultQuantity){
+    public ResponseEntity<String> changeItem(@PathVariable("id") int id, @RequestBody ItemDto itemDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("아이템 수정 완료");
     }

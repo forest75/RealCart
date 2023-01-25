@@ -1,6 +1,7 @@
 package com.ssafy.realcart.controller;
 
 import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.DeviceDto;
 import com.ssafy.realcart.data.dto.GameDto;
 import com.ssafy.realcart.data.dto.UserDto;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,14 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
     }
 
+    @PostMapping()
+    public ResponseEntity<String> createGame(@RequestBody GameDto gameDto){
+
+        return ResponseEntity.status(HttpStatus.OK).body("게임 생성 완료");
+    }
+
     @PutMapping()
-    public ResponseEntity<String> changeGame(GameDto gameDto){
+    public ResponseEntity<String> changeGame(@RequestBody GameDto gameDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("게임 수정 완료");
 
