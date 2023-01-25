@@ -13,7 +13,7 @@ import {
 
 function SpectPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://localhost:8081");
+  const ws = new WebSocket("ws://43.201.27.53:8081");
 
   window.addEventListener("keydown", (event) => {
     ws.send(event.keyCode);
@@ -26,8 +26,6 @@ function SpectPage() {
   ws.onmessage = function ({ data }) {
     const url = `data:image/jpeg;base64,${data}`;
     setImgSrc(url);
-    console.log(url);
-    console.log(data);
   };
 
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
