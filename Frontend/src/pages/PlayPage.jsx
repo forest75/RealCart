@@ -6,17 +6,16 @@ function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
   const ws = new WebSocket("ws://43.201.27.53:8081");
 
-  window.addEventListener("keydown", (event) => {
-    ws.send(event.keyCode);
-    console.log(event.keyCode);
-  });
-
   ws.onopen = function () {
     console.log("on open");
     ws.onmessage = function ({ data }) {
       const url = `data:image/jpeg;base64,${data}`;
       setImgSrc(url);
     };
+    window.addEventListener("keydown", (event) => {
+      ws.send(event.keyCode);
+      console.log(event.keyCode);
+    });
   };
 
   return (
