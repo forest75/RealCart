@@ -12,4 +12,6 @@ public interface IUserDAO {
     boolean updateUser(String email);
     boolean deleteUser(String email);
     boolean banUser(String email);
+
+    boolean verifyEmail(String email, String salt);
 }

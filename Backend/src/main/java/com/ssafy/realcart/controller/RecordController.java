@@ -34,10 +34,8 @@ public class RecordController {
     }
 
     @PutMapping()
-    public ResponseEntity<Boolean> updateRecord(@RequestParam String nickname, @RequestParam String lapTime){
-        RecordDto recordDto = new RecordDto();
-        recordDto.setNickname(nickname);
-        recordDto.setLapTime(lapTime);
+    public ResponseEntity<Boolean> updateRecord(@RequestBody RecordDto recordDto){
+
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 

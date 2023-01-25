@@ -10,9 +10,7 @@ public class UserDto {
     private String nickname;
     private String password;
     private String salt;
-    private byte emailVerified;
     private String intro;
     private String profileImageUrl;
-    private byte isBan;
     private String refreshToken;
 }

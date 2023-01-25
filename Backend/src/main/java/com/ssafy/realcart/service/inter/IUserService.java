@@ -18,4 +18,5 @@ public interface IUserService {
     UserDto login(UserDto userDto) throws NoSuchAlgorithmException;
     boolean checkEmail(String email);
     boolean checkNickname(String nickname);
+    boolean verifyEmail(String email, String salt);
 }
