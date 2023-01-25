@@ -132,52 +132,6 @@ class PassingThread extends Thread{
     }
 
 }
-/*
-class SocketHandler implements Runnable {
-    static List<PrintWriter> list = Collections.synchronizedList(new ArrayList<PrintWriter>());
-    Socket socket = null;
-    BufferedReader br = null;
-    PrintWriter pw = null;
-    public SocketHandler(Socket socket) {
-        this.socket = socket;
-        try {
-            pw = new PrintWriter(socket.getOutputStream());
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
-            list.add(pw);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void run(){
-        try {
-            int flag = br.read();
-            if( flag == 50) {
-                fnForRasp();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("Thread ended");
-        }
-    }
-
-    private void fnForRasp() throws IOException {
-        while(br != null) {
-            String imageLenStr = "";
-            for(int i=0; i<64; i++){
-                imageLenStr += (char) br.read();
-            }
-            int imageLen = Integer.parseInt(imageLenStr.trim());
-            String decImage = "";
-            for(int i=0; i<imageLen; i++){
-                decImage += (char) br.read();
-            }
-            System.out.println(decImage);
-        }
-    }
-}
-*/
 
 class WSHandler extends WebSocketServer {
     public WSHandler(int port) {
