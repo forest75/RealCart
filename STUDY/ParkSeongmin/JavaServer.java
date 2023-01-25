@@ -16,9 +16,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletionStage;
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import org.java_websocket.WebSocket;
+import org.java_websocket.WebSocketImpl;
+import org.java_websocket.server.WebSocketServer;
+
 
 public class JavaServer {
 
@@ -30,14 +31,22 @@ public class JavaServer {
     public void start(){
         ServerSocket serverSocket = null;
         Socket socket = null;
+        int rcNum = 0;
         try {
             // binding server socket
             serverSocket = new ServerSocket(8080);
 
+            // Initialize WebSocket server
+            int wsPort = 8081;
+            WebSocketServer wsServer = new org.example.WSHandler(wsPort);
+            wsServer.start();
+            System.out.println("WebSocket server started on port " + wsPort);
+
             while (true) {
-                System.out.println("waiting for raspberry pi...");
+                System.out.println("waiting for raspberry pi..." + Integer.toString(rcNum));
                 // bind raspberry socket server
                 socket = serverSocket.accept();
+                rcNum++;
                 // Create Thread when client(Frontend react server) accepted !
                 PassingThread passingThread = new PassingThread(socket);
                 passingThread.start();
@@ -70,6 +79,7 @@ class PassingThread extends Thread{
     public PassingThread (Socket socket) {
         this.socket = socket;
         try {
+            System.out.println(socket);
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
             list.add(pw);
@@ -111,9 +121,18 @@ class PassingThread extends Thread{
     }
 
     private void fnForFront() throws IOException {
-        while(true) {
-            String str = br.readLine();
-            System.out.println(str);
+        while(br != null) {
+            String imageLenStr = "";
+            for(int i=0; i<256; i++){
+                int read = br.read();
+                if(read >= 0){
+                    imageLenStr += (char) br.read();
+                }
+            }
+            if (!imageLenStr.equals("")){
+                System.out.println(imageLenStr);
+            }
+            String decImage = "";
         }
     }
 
@@ -124,4 +143,45 @@ class PassingThread extends Thread{
             out.flush();
         }
     }
+}
+
+class SocketHandler implements Runnable {
+    private Socket socket;
+    public SocketHandler(Socket socket) {
+        this.socket = socket;
+    }
+    public void run() {
+
+    }
+}
+
+class WSHandler extends WebSocketServer {
+    public WSHandler(int port) {
+        super(new java.net.InetSocketAddress(port));
+    }
+    @Override
+    public void onOpen(WebSocket conn, org.java_websocket.handshake.ClientHandshake handshake) {
+        System.out.println("on Open");
+    }
+
+    @Override
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, String message) {
+
+    }
+
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+    // other WebSocket methods (onClose, onMessage, onError)
 }
