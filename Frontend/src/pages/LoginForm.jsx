@@ -1,33 +1,56 @@
 import React from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { login } from "../store/loginSlice";
 import RegistForm from "../components/AppForm";
 import ArrowButton from "../components/ArrowButton";
 
 function LoginForm() {
-  const handleSumbit = async (e) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     const data = { email: e.target[0].value, password: e.target[2].value };
 
     await axios
-      .post("http://70.12.246.220:8080/user", data)
+      .post("http://3.34.23.91:8080/user", data)
       .then((response) => {
         console.log(response);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        dispatch(login(response.data));
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  // const handleSumbit = async (e) => {
+  //   e.preventDefault();
+  //   const data = { email: e.target[0].value, password: e.target[2].value };
+
+  //   await axios
+  //     .post("http://3.34.23.91:8080/user", data)
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   return (
     <Box>
       <Box
         component="form"
-        onSubmit={handleSumbit}
+        onSubmit={handleLogin}
         sx={{
           display: "grid",
           height: 700,
