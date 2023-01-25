@@ -8,14 +8,15 @@ import FindPassForm from "./test/FindPassForm";
 import AppFooter from "./test/AppFooter";
 import MainPage from "./test/MainPage";
 import MyPage from "./test/MyPage";
-import SpectatingPage from "./test/SpectatingPage";
+import SpectPage from "./SpectPage";
+import PlayPage from "./PlayPage";
 
 function App() {
   return (
     <Box>
       <Box
         sx={{
-          height: 140,
+          height: 130,
         }}
       >
         <ButtonAppBar />
@@ -27,10 +28,10 @@ function App() {
           <Route path="/regist" element={<RegistForm />} />
           <Route path="/findPass" element={<FindPassForm />} />
           <Route path="/myPage" element={<MyPage />} />
-          <Route path="/spect" element={<SpectatingPage />} />
+          <Route path="/spect" element={<SpectPage />} />
+          <Route path="/play" element={<PlayPage />} />
         </Routes>
       </Box>
-
       <Box>
         <AppFooter />
       </Box>
