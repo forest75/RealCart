@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Paper } from "@mui/material";
-import car from "../assets/car.jpg";
+// import car from "../assets/car.jpg";
 
 function PlayPage() {
+  const [imgSrc, setImgSrc] = useState("");
+  const ws = new WebSocket("ws://43.201.27.53:8081");
+
+  window.addEventListener("keydown", (event) => {
+    ws.send(event.keyCode);
+  });
+
+  ws.onopen = function () {
+    console.log("on open");
+    ws.onmessage = function ({ data }) {
+      const url = `data:image/jpeg;base64,${data}`;
+      setImgSrc(url);
+    };
+  };
   return (
     <Box
       sx={{
@@ -206,7 +220,7 @@ function PlayPage() {
           <Box
             component="img"
             alt="car"
-            src={car}
+            src={imgSrc}
             sx={{
               width: "100%",
               height: "100%",

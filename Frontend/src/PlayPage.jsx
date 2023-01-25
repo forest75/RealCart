@@ -13,7 +13,8 @@ import {
 
 function SpectPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://43.201.27.53:8081");
+  const ws = new WebSocket("ws://localhost:8081");
+  console.log(123);
 
   window.addEventListener("keydown", (event) => {
     ws.send(event.keyCode);
@@ -21,11 +22,10 @@ function SpectPage() {
 
   ws.onopen = function () {
     console.log("on open");
-  };
-
-  ws.onmessage = function ({ data }) {
-    const url = `data:image/jpeg;base64,${data}`;
-    setImgSrc(url);
+    ws.onmessage = function ({ data }) {
+      const url = `data:image/jpeg;base64,${data}`;
+      setImgSrc(url);
+    };
   };
 
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
@@ -41,7 +41,7 @@ function SpectPage() {
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
-  const imgRef = useRef(null);
+  // const imgRef = useRef(null);
 
   const totalVotes = voteA + voteB;
   let proportionA;
@@ -215,7 +215,7 @@ function SpectPage() {
               width: "100%",
               height: "100%",
             }}
-            ref={imgRef}
+            // ref={imgRef}
           />
         </Box>
       </Box>
@@ -375,7 +375,7 @@ function SpectPage() {
                 overflow: "auto",
                 border: 1,
               }}
-              ref={chatRef}
+              // ref={chatRef}
             >
               <ul style={{ listStyleType: "none" }}>
                 {chats.map((item) => (
