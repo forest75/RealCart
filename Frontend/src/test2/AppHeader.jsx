@@ -1,9 +1,9 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import ButtonAppBar from "./test/ButtonAppBar";
-import FormPropsTextFields from "./test/LoginForm";
-import RegistForm from "./test/RegistForm";
-import FindPassForm from "./test/FindPassForm";
+import ButtonAppBar from "../test/ButtonAppBar";
+import FormPropsTextFields from "../test/LoginForm";
+import RegistForm from "../pages/RegistForm";
+import FindPassForm from "../pages/FindPassForm";
 
 function AppHeader() {
   return (

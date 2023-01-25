@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import FullWidthTextField from "./FullWidthTextField";
+import FullWidthTextField from "../test/FullWidthTextField";
 
 export default function FormPropsTextFields() {
   const theme = createTheme({
@@ -23,7 +23,7 @@ export default function FormPropsTextFields() {
         "& > :not(style)": {
           m: 1,
         },
-        height: 200,
+        height: 300,
       }}
     >
       <Paper elevation={3}>
