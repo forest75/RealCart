@@ -8,15 +8,19 @@ function PlayPage() {
 
   window.addEventListener("keydown", (event) => {
     ws.send(event.keyCode);
+    console.log(event.keyCode);
   });
 
   ws.onopen = function () {
     console.log("on open");
-    ws.onmessage = function ({ data }) {
-      const url = `data:image/jpeg;base64,${data}`;
-      setImgSrc(url);
-    };
   };
+
+  ws.onmessage = function ({ data }) {
+    const url = `data:image/jpeg;base64,${data}`;
+    setImgSrc(url);
+    console.log(data);
+  };
+
   return (
     <Box
       sx={{
