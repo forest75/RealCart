@@ -171,6 +171,7 @@ public class UserService implements IUserService {
     @Override
     public UserDto login(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("로그인 메서드가 userService에서 호출되었습니다.");
+        LOGGER.info(userDto.toString());
         User user = userDAO.getUser(userDto.getEmail());
         if(user == null){
             LOGGER.info("email 주소가 존재하지 않습니다.");
