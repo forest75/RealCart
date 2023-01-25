@@ -1,14 +1,24 @@
 package com.ssafy.realcart.controller;
 
-import com.ssafy.realcart.data.dto.BoardDto;
-import com.ssafy.realcart.data.dto.DeviceDto;
-import com.ssafy.realcart.data.dto.GameDto;
-import com.ssafy.realcart.data.dto.UserDto;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import com.ssafy.realcart.data.dto.GameDto;
+import com.ssafy.realcart.data.dto.UserDto;
 
 @RestController
 @RequestMapping("/game")

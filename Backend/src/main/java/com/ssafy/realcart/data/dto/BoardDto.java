@@ -1,10 +1,9 @@
 package com.ssafy.realcart.data.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class BoardDto {
