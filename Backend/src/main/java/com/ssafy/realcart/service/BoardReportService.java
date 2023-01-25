@@ -6,13 +6,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ssafy.realcart.data.dao.inter.IBoardReportDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.BoardDto;
 import com.ssafy.realcart.data.entity.BoardReport;
 import com.ssafy.realcart.service.inter.IBoardReportService;
-
+@Service
 public class BoardReportService implements IBoardReportService {
 
 	IBoardReportDAO boardReportDAO;

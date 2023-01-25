@@ -6,11 +6,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ssafy.realcart.data.dao.inter.IBoardNoticeDAO;
 import com.ssafy.realcart.data.entity.BoardNotice;
 import com.ssafy.realcart.data.repository.IBoardNoticeRepository;
-
+@Component
 public class BoardNoticeDAO implements IBoardNoticeDAO {
 	
 	private IBoardNoticeRepository boardNoticeRepository;
