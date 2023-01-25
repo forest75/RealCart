@@ -12,13 +12,10 @@ import ArrowButton from "../components/ArrowButton";
 function LoginForm() {
   const handleSumbit = async (e) => {
     e.preventDefault();
-    console.log(e.target[0].value);
-    console.log(e.target[2].value);
     const data = { email: e.target[0].value, password: e.target[2].value };
-    console.log(data);
 
     await axios
-      .post("http://3.34.23.91:8080/user", data)
+      .post("http://70.12.246.220:8080/user", data)
       .then((response) => {
         console.log(response);
       })

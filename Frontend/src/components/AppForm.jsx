@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 
 function AppForm({ content, pwd, sx, ...otherProps }) {
-  console.log(pwd);
+  // console.log(pwd);
   const [input, setInput] = useState("");
   const verifier = {
     email: () => {
