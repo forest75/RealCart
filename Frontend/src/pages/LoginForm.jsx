@@ -15,10 +15,16 @@ function LoginForm() {
     console.log(e.target[0].value);
     console.log(e.target[2].value);
     const data = { email: e.target[0].value, password: e.target[2].value };
+    console.log(data);
 
-    await axios.post("http://3.34.23.91:8080/user", data).then((response) => {
-      console.log(response);
-    });
+    await axios
+      .post("http://3.34.23.91:8080/user", data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
@@ -6,58 +6,58 @@ import Typography from "@mui/material/Typography";
 import ArticleBox from "../components/ArticleBox";
 
 function NoticeBoard() {
-  const [page, setPage] = useState(0);
-  const onChangePage = (event, value) => {
-    setPage(value - 1);
-  };
-  const articleList = [
-    [
-      {
-        no: 0,
-        title: "여기는 공지사항 게시판입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "적당히 적어도 줄이 맞아요",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "리얼카트 정.말.좋.습.니.다",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-    [
-      {
-        no: 0,
-        title: "2페이지입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "페이지네이션을 구현해보았습니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "우리모두화이팅!",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-  ];
+  // const [page, setPage] = useState(0);
+  // const onChangePage = (event, value) => {
+  //   setPage(value - 1);
+  // };
+  // const articleList = [
+  //   [
+  //     {
+  //       no: 0,
+  //       title: "여기는 공지사항 게시판입니다.",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //     {
+  //       no: 1,
+  //       title: "적당히 적어도 줄이 맞아요",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //     {
+  //       no: 2,
+  //       title: "리얼카트 정.말.좋.습.니.다",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //   ],
+  //   [
+  //     {
+  //       no: 0,
+  //       title: "2페이지입니다.",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //     {
+  //       no: 1,
+  //       title: "페이지네이션을 구현해보았습니다.",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //     {
+  //       no: 2,
+  //       title: "우리모두화이팅!",
+  //       author: "운영자",
+  //       date: "2023.01.11",
+  //       view: 356,
+  //     },
+  //   ],
+  // ];
   return (
     <Box
       sx={{
@@ -100,7 +100,7 @@ function NoticeBoard() {
             date="등록일"
             view="조회수"
           />
-          {articleList[page].map((article) => (
+          {/* {articleList[page].map((article) => (
             <ArticleBox
               sx={{
                 width: "80%",
@@ -113,12 +113,12 @@ function NoticeBoard() {
               date={article.date}
               view={article.view}
             />
-          ))}
+          ))} */}
           <Pagination
-            count={articleList.length}
+            count={10}
             variant="outlined"
             shape="rounded"
-            onChange={onChangePage}
+            // onChange={onChangePage}
             sx={{
               margin: 2,
             }}

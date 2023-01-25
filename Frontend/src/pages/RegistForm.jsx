@@ -1,13 +1,15 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import AppForm from "../components/AppForm";
 import FullWidthTextField from "../test/FullWidthTextField";
 
 export default function RegistForm() {
+  // const [password, setPassword] = useState("");
   const theme = createTheme({
     palette: {
       white: "#ffffff",
@@ -49,7 +51,14 @@ export default function RegistForm() {
                 <h1>회원가입</h1>
               </div>
               <div style={{ display: "flex" }}>
-                <FullWidthTextField content="이메일" />
+                <AppForm
+                  content="email"
+                  sx={{
+                    width: 400,
+                    maxWidth: "90%",
+                    margin: 2,
+                  }}
+                />
                 <Button
                   variant="contained"
                   color="white"
@@ -61,8 +70,22 @@ export default function RegistForm() {
                   중복확인
                 </Button>
               </div>
-              <FullWidthTextField content="비밀번호" />
-              <FullWidthTextField content="비밀번호 확인" />
+              <AppForm
+                content="password"
+                sx={{
+                  width: 400,
+                  maxWidth: "90%",
+                  margin: 2,
+                }}
+              />
+              <AppForm
+                content="passwordCheck"
+                sx={{
+                  width: 400,
+                  maxWidth: "90%",
+                  margin: 2,
+                }}
+              />
               <div style={{ display: "flex" }}>
                 <FullWidthTextField content="닉네임" />
                 <Button
