@@ -2,9 +2,12 @@ import React from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 import car from "../assets/car.jpg";
 
 function MainPage() {
+  const navigate = useNavigate();
+
   const columns = [
     { field: "id", headerName: "순위", width: 150 },
     { field: "nickname", headerName: "NickName", width: 150, editable: true },
@@ -60,6 +63,10 @@ function MainPage() {
               sx={{
                 width: "90%",
                 height: "90%",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate("/spect");
               }}
             />
           </Paper>

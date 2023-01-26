@@ -9,16 +9,22 @@ import {
   ListItem,
   ListItemText,
   Modal,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import InitialContent from "../components/InitialContent";
 import car from "../assets/car.jpg";
 import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
+  const navigate = useNavigate();
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
   // let idx = 0;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [wait, setWait] = React.useState(1);
   const open = Boolean(anchorEl);
 
   const [voteA, setVoteA] = React.useState(0);
@@ -68,6 +74,18 @@ function SpectPage() {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
 
+  // const [modalContent, setModalContent] = useState(null);
+  // setModalContent(
+  //   <InitialContent
+  //     wait={wait}
+  //     setWait={setWait}
+  //     handleModalClose={handleModalClose}
+  //     setModalContent={setModalContent}
+  //   />
+  // );
+
+  const [isReady, setIsReady] = useState(false);
+
   return (
     <Box
       display="flex"
@@ -81,6 +99,32 @@ function SpectPage() {
           height: 800,
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            height: "5%",
+            display: "flex",
+          }}
+        >
+          <Box
+            sx={{
+              width: "65%",
+              height: "100%",
+            }}
+          />
+          <Box
+            sx={{
+              width: "35%",
+              height: "100%",
+              color: "#FFA114",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "end",
+            }}
+          >
+            {isReady ? <Box>대기 중 - 현재 대기 인수 : {wait}명</Box> : null}
+          </Box>
+        </Box>
         <Box
           display="flex"
           sx={{
@@ -198,7 +242,8 @@ function SpectPage() {
               >
                 {options.map((option, index) => (
                   <MenuItem
-                    key={option.id}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
                     disabled={index === selectedIndex}
                     selected={index === selectedIndex}
                     onClick={(event) => handleMenuItemClick(event, index)}
@@ -213,7 +258,7 @@ function SpectPage() {
         <Box
           sx={{
             width: "100%",
-            height: "85%",
+            height: "80%",
           }}
         >
           {/* <Box
@@ -289,18 +334,19 @@ function SpectPage() {
             alignItems: "center",
           }}
         >
-          <Link to="/play" style={{ textDecoration: "none" }}>
-            <Button
-              sx={{
-                height: 60,
-                width: 150,
-                bgcolor: "#043774",
-                color: "white",
-              }}
-            >
-              Play
-            </Button>
-          </Link>
+          {/* <Link to="/play" style={{ textDecoration: "none" }}> */}
+          <Button
+            sx={{
+              height: 60,
+              width: 150,
+              bgcolor: "#043774",
+              color: "white",
+            }}
+            onClick={handleModalOpen}
+          >
+            Play
+          </Button>
+          {/* </Link> */}
         </Box>
         <Box
           display="flex"
@@ -500,99 +546,85 @@ function SpectPage() {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                bgcolor: "background.paper",
-                width: "25%",
-                height: "25%",
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{
-                  width: "100%",
-                  height: "55%",
-                  justifyContent: "center",
-                  alignItems: "end",
-                }}
-              >
-                <h1>현재 대기자 수는 7 명입니다.</h1>
-              </Box>
-              <Box
-                display="flex"
-                sx={{
-                  width: "100%",
-                  height: "45%",
-                }}
-              >
+            <Box>
+              {isReady ? (
                 <Box
-                  display="flex"
                   sx={{
-                    width: "50%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    bgcolor: "background.paper",
+                    width: "25%",
+                    height: "25%",
                   }}
                 >
-                  <Button
-                    variant="contained"
+                  <Box
+                    display="flex"
                     sx={{
-                      width: "50%",
-                      height: "35%",
-                      bgcolor: "white",
-                      color: "black",
+                      width: "100%",
+                      height: "55%",
+                      justifyContent: "center",
+                      alignItems: "end",
                     }}
                   >
-                    대기하기
-                  </Button>
-                </Box>
-                <Box
-                  display="flex"
-                  sx={{
-                    width: "50%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
+                    <Stack
+                      sx={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="h5">
+                        당신의 차례가 되었습니다.
+                      </Typography>
+                      <Typography variant="h5">입장해주세요.</Typography>
+                    </Stack>
+                  </Box>
+                  <Box
+                    display="flex"
                     sx={{
-                      width: "50%",
-                      height: "35%",
-                      bgcolor: "white",
-                      color: "black",
+                      width: "100%",
+                      height: "45%",
                     }}
                   >
-                    취소
-                  </Button>
+                    <Box
+                      display="flex"
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: "50%",
+                          height: "35%",
+                          bgcolor: "white",
+                          color: "black",
+                        }}
+                        onClick={() => {
+                          navigate("/play");
+                          // handleModalClose();
+                          // setIsReady(true);
+                        }}
+                      >
+                        입장
+                      </Button>
+                    </Box>
+                  </Box>
                 </Box>
-              </Box>
+              ) : (
+                <InitialContent
+                  wait={wait}
+                  setWait={setWait}
+                  handleModalOpen={handleModalOpen}
+                  handleModalClose={handleModalClose}
+                  setIsReady={setIsReady}
+                />
+              )}
             </Box>
-            {/* <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Text in a modal
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-              </Typography>
-            </Box> */}
           </Modal>
         </Box>
       </Box>
