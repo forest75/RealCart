@@ -20,11 +20,13 @@ function AppHeader() {
   return (
     <Box
       sx={{
-        height: 160,
+        height: 130,
       }}
     >
       <AppBar
+        elevation={0}
         sx={{
+          borderBottom: "solid 1px  #E2E2E2",
           bgcolor: "white",
         }}
       >
@@ -35,13 +37,13 @@ function AppHeader() {
               alt="logo"
               src={logo}
               sx={{
-                height: 90,
-                margin: 1,
+                height: 70,
+                margin: 2,
               }}
             />
           </Link>
           <Box flexGrow={1} />
-          <Link to="/spect" style={{ textDecoration: "none" }}>
+          <Link to="/spect" style={{ color: "black", textDecoration: "none" }}>
             <AppButton sx={{ width: 150, height: 70 }}>RACE</AppButton>
           </Link>
           <AppButton sx={{ width: 150, height: 70 }} onClick={handleClick}>
@@ -67,37 +69,33 @@ function AppHeader() {
                   height: 50,
                   display: "flex",
                   justifyContent: "center",
+                  borderTop: "solid 1px #f2f2f2",
                 }}
               >
                 공지사항
               </MenuItem>
             </Link>
-            <Box
-              sx={{
-                height: 60,
-                display: "flex",
-                alignItems: "center",
-                borderTop: 1,
-                borderColor: "grey.500",
+            <Link
+              to="/freeBoard"
+              style={{
+                color: "black",
+                textDecoration: "none",
               }}
             >
-              <Link
-                to="/freeBoard"
-                style={{ color: "black", textDecoration: "none" }}
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  borderBottom: "solid 1px  #f2f2f2",
+                  borderTop: "solid 1px  #f2f2f2",
+                  width: 150,
+                  height: 50,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
               >
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    width: 150,
-                    height: 50,
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  자유게시판
-                </MenuItem>
-              </Link>
-            </Box>
+                자유게시판
+              </MenuItem>
+            </Link>
             <Link
               to="/reportBoard"
               style={{ color: "black", textDecoration: "none" }}
@@ -109,8 +107,7 @@ function AppHeader() {
                   height: 50,
                   display: "flex",
                   justifyContent: "center",
-                  borderTop: 1,
-                  borderColor: "grey.500",
+                  borderBottom: "solid 1px  #f2f2f2",
                 }}
               >
                 문의

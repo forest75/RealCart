@@ -78,14 +78,16 @@ function SpectPage() {
       <Box
         sx={{
           width: "70%",
-          height: 800,
+          height: 700,
+          marginRight: "50px",
+          border: "solid 1px #333333",
         }}
       >
         <Box
           display="flex"
           sx={{
             width: "100%",
-            height: "15%",
+            height: "10%",
           }}
         >
           <Box
@@ -95,16 +97,19 @@ function SpectPage() {
               height: "100%",
               justifyContent: "center",
               alignItems: "center",
+              borderRight: "solid 1px #E8E8E8",
+              bgcolor: "#E8E8E8",
             }}
           >
-            <Paper
-              elevation={3}
+            <Box
+              elevation={0}
               sx={{
                 display: "flex",
                 height: "60%",
                 width: "95%",
                 alignItems: "center",
                 justifyContent: "center",
+                borderRight: "solid 1px #333333",
               }}
             >
               <Box
@@ -116,7 +121,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>A 의권짱짱33</h1>
+                <h2>A 의권짱짱33</h2>
               </Box>
               <Box
                 display="flex"
@@ -127,7 +132,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>vs</h1>
+                <h2>vs</h2>
               </Box>
               <Box
                 display="flex"
@@ -138,9 +143,9 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>B 지존ㅎHzㅣㄴ</h1>
+                <h2>B 지존ㅎHzㅣㄴ</h2>
               </Box>
-            </Paper>
+            </Box>
           </Box>
           <Box
             display="flex"
@@ -149,9 +154,10 @@ function SpectPage() {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
+              bgcolor: "#E8E8E8",
             }}
           >
-            <Paper
+            <Box
               elevation={3}
               sx={{
                 display: "flex",
@@ -207,13 +213,14 @@ function SpectPage() {
                   </MenuItem>
                 ))}
               </Menu>
-            </Paper>
+            </Box>
           </Box>
         </Box>
         <Box
           sx={{
             width: "100%",
-            height: "85%",
+            height: "90%",
+            borderTop: "solid 1px #E8E8E8",
           }}
         >
           {/* <Box
@@ -230,6 +237,9 @@ function SpectPage() {
               width: "100%",
               height: "100%",
               position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Box
@@ -249,7 +259,7 @@ function SpectPage() {
                   position: "absolute",
                   top: "100%",
                   left: "100%",
-                  transform: "translate(-100%, -100%)",
+                  transform: "translate(-150%, -150%)",
                 }}
               />
             </Box>
@@ -258,8 +268,8 @@ function SpectPage() {
               alt="car"
               src={car}
               sx={{
-                width: "100%",
-                height: "100%",
+                width: "90%",
+                height: "90%",
               }}
             />
             {/* <iframe
@@ -277,7 +287,9 @@ function SpectPage() {
       <Box
         sx={{
           width: "20%",
-          height: 700,
+          height: "700",
+          borderLeft: "solid 5px #E8E8E8",
+          paddingLeft: "30px",
         }}
       >
         <Box
@@ -544,7 +556,7 @@ function SpectPage() {
                       width: "50%",
                       height: "35%",
                       bgcolor: "white",
-                      color: "black",
+                      color: "#333333",
                     }}
                   >
                     대기하기
