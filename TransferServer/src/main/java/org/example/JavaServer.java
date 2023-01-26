@@ -119,15 +119,6 @@ class PassingThread extends Thread{
             }
         }
     }
-
-    private void sendAll (String s) {
-        for (PrintWriter out : list) {
-            System.out.println("sendAll");
-            out.println(s);
-            out.flush();
-        }
-    }
-
 }
 
 class WSHandler extends WebSocketServer {
