@@ -80,7 +80,6 @@ class PassingThread extends Thread{
         this.socket = socket;
         this.wsServer = wsServer;
         this.webSocket = wsServer.getConnections();
-        System.out.println(webSocket);
         try {
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
