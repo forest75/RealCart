@@ -57,7 +57,7 @@ class ClientSocket:
                 self.sock.send(stringData)
                 print(u'send images %d' % (cnt))
                 cnt += 1
-                time.sleep(0.2)
+                time.sleep(0.3)
         except Exception as e:
             print(e)
             self.sock.close()
