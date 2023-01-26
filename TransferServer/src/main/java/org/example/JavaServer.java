@@ -31,12 +31,6 @@ public class JavaServer {
         ServerSocket serverSocket = null;
         Socket socket = null;
         try {
-            // Initialize WebSocket server
-            int wsPort = 8081;
-            WebSocketServer wsServer = new org.example.WSHandler(wsPort);
-            wsServer.start();
-            System.out.println("WebSocket server started on port " + wsPort);
-
             // binding server socket
             int ssPort = 8080;
             serverSocket = new ServerSocket(ssPort);
@@ -46,6 +40,11 @@ public class JavaServer {
                 // bind raspberry socket server
                 socket = serverSocket.accept();
                 numOfThread++;
+                // Initialize WebSocket server
+                int wsPort = 8081;
+                WebSocketServer wsServer = new org.example.WSHandler(wsPort, new PrintWriter(socket.getOutputStream()));
+                wsServer.start();
+                System.out.println("WebSocket server started on port " + wsPort);
                 // Create Thread when client(Frontend react server) accepted
                 PassingThread passingThread = new PassingThread(socket, wsServer);
                 passingThread.start();
@@ -81,8 +80,8 @@ class PassingThread extends Thread{
         this.socket = socket;
         this.wsServer = wsServer;
         this.webSocket = wsServer.getConnections();
+        System.out.println(webSocket);
         try {
-            System.out.println(socket);
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
             list.add(pw);
@@ -116,31 +115,22 @@ class PassingThread extends Thread{
             for(int i=0; i<imageLen; i++){
                 decImage += (char) br.read();
             }
-            for(WebSocket client : webSocket){
+            for(WebSocket client : wsServer.getConnections()){
                 client.send(decImage);
             }
-            System.out.println(1);
         }
     }
-
-    private void sendAll (String s) {
-        for (PrintWriter out : list) {
-            System.out.println("sendAll");
-            out.println(s);
-            out.flush();
-        }
-    }
-
 }
 
 class WSHandler extends WebSocketServer {
-    public WSHandler(int port) {
+    PrintWriter pw = null;
+    public WSHandler(int port, PrintWriter printWriter) {
         super(new java.net.InetSocketAddress(port));
+        this.pw = printWriter;
     }
 
     @Override
     public void onOpen(org.java_websocket.WebSocket conn, ClientHandshake handshake) {
-        System.out.println("onOpen");
     }
 
     @Override
@@ -150,12 +140,14 @@ class WSHandler extends WebSocketServer {
 
     @Override
     public void onMessage(org.java_websocket.WebSocket conn, String message) {
-        System.out.println(message);
+        pw.write(Integer.parseInt(message));
+        pw.flush();
     }
 
     @Override
     public void onError(org.java_websocket.WebSocket conn, Exception ex) {
         System.out.println("onError");
+        ex.printStackTrace();
     }
 
     @Override

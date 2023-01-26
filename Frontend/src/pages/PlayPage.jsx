@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useRef } from "react";
 import { Box, Paper } from "@mui/material";
 import car from "../assets/car.jpg";
@@ -30,6 +31,29 @@ function PlayPage() {
   // }, []);
 
   window.addEventListener("keydown", handleKeyPress);
+=======
+import React, { useState } from "react";
+import { Box, Paper } from "@mui/material";
+// import car from "../assets/car.jpg";
+
+function PlayPage() {
+  const [imgSrc, setImgSrc] = useState("");
+  const ws = new WebSocket("ws://43.201.27.53:8081");
+
+  ws.onopen = function () {
+    console.log("on open1");
+  };
+
+  ws.onmessage = function ({ data }) {
+    const url = `data:image/jpeg;base64,${data}`;
+    setImgSrc(url);
+  };
+
+  window.addEventListener("keydown", (event) => {
+    ws.send(event.keyCode);
+    console.log(event.keyCode);
+  });
+>>>>>>> dbf2a5ad1a5055b162064072534336fb590fb5f7
 
   return (
     <Box
@@ -358,10 +382,10 @@ function PlayPage() {
           <Box
             component="img"
             alt="car"
-            src={car}
+            src={imgSrc}
             sx={{
-              width: "100%",
-              height: "100%",
+              width: "40%",
+              height: "70%",
             }}
           />
         </Box>

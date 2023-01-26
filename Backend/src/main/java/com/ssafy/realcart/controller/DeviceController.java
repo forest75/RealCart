@@ -42,13 +42,13 @@ public class DeviceController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createDevice(@RequestParam String name, @RequestParam String model, @RequestParam String status, @RequestParam String type){
+    public ResponseEntity<String> createDevice(@RequestBody DeviceDto deviceDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("디바이스 생성 완료");
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<String> changeDevice(@PathVariable("id") int id, @RequestParam String name, @RequestParam String model, @RequestParam String status, @RequestParam String type){
+    public ResponseEntity<String> changeDevice(@PathVariable("id") int id, @RequestBody DeviceDto deviceDto){
 
         return ResponseEntity.status(HttpStatus.OK).body("디바이스 수정 완료");
     }
