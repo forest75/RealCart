@@ -1,22 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
+import { logout } from "../store/loginSlice";
 import AppButton from "./AppButton";
 import logo from "../assets/logo.png";
 
 function AppHeader() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    dispatch(logout());
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+
+  const user = useSelector((state) => state.login.user);
+
+  const [anchorEl1, setAnchorEl1] = useState(null);
+  // const [anchorEl2, setAnchorEl2] = useState(null);
+
+  const handleClick1 = (event) => {
+    setAnchorEl1(event.currentTarget);
   };
+
+  const handleClose1 = () => {
+    setAnchorEl1(null);
+  };
+
+  // const handleClick2 = (event) => {
+  //   setAnchorEl2(event.currentTarget);
+  // };
+
+  // const handleClose2 = () => {
+  //   setAnchorEl2(null);
+  // };
+
+  const [loginComp, setLoginComp] = useState(
+    <Link to="/login" style={{ textDecoration: "none" }}>
+      <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
+    </Link>
+  );
+
+  useEffect(() => {
+    if (user) {
+      setLoginComp(
+        // <AppButton
+        //   sx={{ width: 150, height: 70 }}
+        //   onClick={() => {
+        //     handleLogout();
+        //   }}
+        // >
+        //   {user.nickname}
+        // </AppButton>
+        // <Box>
+        <AppButton sx={{ width: 150, height: 70 }} onClick={handleLogout}>
+          {user.nickname}
+        </AppButton>
+      );
+    } else {
+      setLoginComp(
+        <Link to="/login" style={{ textDecoration: "none" }}>
+          <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
+        </Link>
+      );
+    }
+  }, [user]);
+
   return (
     <Box
       sx={{
@@ -44,14 +97,14 @@ function AppHeader() {
           <Link to="/spect" style={{ textDecoration: "none" }}>
             <AppButton sx={{ width: 150, height: 70 }}>RACE</AppButton>
           </Link>
-          <AppButton sx={{ width: 150, height: 70 }} onClick={handleClick}>
+          <AppButton sx={{ width: 150, height: 70 }} onClick={handleClick1}>
             BOARD
           </AppButton>
           <Menu
             id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
+            anchorEl={anchorEl1}
+            open={Boolean(anchorEl1)}
+            onClose={handleClose1}
             MenuListProps={{
               "aria-labelledby": "basic-button",
             }}
@@ -61,7 +114,7 @@ function AppHeader() {
               style={{ color: "black", textDecoration: "none" }}
             >
               <MenuItem
-                onClick={handleClose}
+                onClick={handleClose1}
                 sx={{
                   width: 150,
                   height: 50,
@@ -86,7 +139,7 @@ function AppHeader() {
                 style={{ color: "black", textDecoration: "none" }}
               >
                 <MenuItem
-                  onClick={handleClose}
+                  onClick={handleClose1}
                   sx={{
                     width: 150,
                     height: 50,
@@ -103,7 +156,7 @@ function AppHeader() {
               style={{ color: "black", textDecoration: "none" }}
             >
               <MenuItem
-                onClick={handleClose}
+                onClick={handleClose1}
                 sx={{
                   width: 150,
                   height: 50,
@@ -118,9 +171,7 @@ function AppHeader() {
             </Link>
           </Menu>
           <AppButton sx={{ width: 150, height: 70 }}>ABOUT</AppButton>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
-          </Link>
+          {loginComp}
         </Toolbar>
       </AppBar>
     </Box>
