@@ -146,6 +146,7 @@ class WSHandler extends WebSocketServer {
     @Override
     public void onError(org.java_websocket.WebSocket conn, Exception ex) {
         System.out.println("onError");
+        ex.printStackTrace();
     }
 
     @Override
