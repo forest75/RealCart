@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { Provider } from "react-redux";
+import store from "./store/store";
 import AppHeader from "./components/AppHeader";
 import LoginForm from "./pages/LoginForm";
 import RegistForm from "./pages/RegistForm";
@@ -17,10 +19,19 @@ import ReportBoard from "./test2/ReportBoard";
 function App() {
   return (
     <Box>
-      <AppHeader />
+      <Provider store={store}>
+        <AppHeader />
+      </Provider>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginForm />} />
+        <Route
+          path="/login"
+          element={
+            <Provider store={store}>
+              <LoginForm />
+            </Provider>
+          }
+        />
         <Route path="/regist" element={<RegistForm />} />
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
