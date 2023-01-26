@@ -25,8 +25,9 @@ function MainPage() {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center",
-        height: 1500,
+        flexDirection: "column",
+        alignItems: "center",
+        height: 1400,
       }}
     >
       <Box
@@ -38,16 +39,17 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "30%",
+            height: "45%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderBottom: "solid 20px #E8E8E8",
+            borderBottom: "solid 1px #5A5857",
           }}
         >
           <Paper
+            elevation={2}
             sx={{
-              width: "50%",
+              width: "60%",
               height: "90%",
               display: "flex",
               justifyContent: "center",
@@ -68,7 +70,7 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "70%",
+            height: "50%",
             display: "flex",
           }}
         >
@@ -93,7 +95,7 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
                   }}
@@ -122,7 +124,7 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
                   }}
@@ -163,9 +165,10 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
+                    textAlign: "center",
                   }}
                 >
                   Ranking

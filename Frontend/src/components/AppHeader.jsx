@@ -74,6 +74,7 @@ function AppHeader() {
     <Box
       sx={{
         height: 130,
+        opacity: "80%",
       }}
     >
       <AppBar
@@ -90,7 +91,7 @@ function AppHeader() {
               alt="logo"
               src={logo}
               sx={{
-                height: 70,
+                height: 90,
                 margin: 2,
               }}
             />
@@ -136,7 +137,7 @@ function AppHeader() {
               }}
             >
               <MenuItem
-                onClick={handleClose}
+                // onClick={handleClose}
                 sx={{
                   borderBottom: "solid 1px  #f2f2f2",
                   borderTop: "solid 1px  #f2f2f2",
@@ -146,25 +147,9 @@ function AppHeader() {
                   justifyContent: "center",
                 }}
               >
-<<<<<<< HEAD
                 자유게시판
               </MenuItem>
             </Link>
-=======
-                <MenuItem
-                  onClick={handleClose1}
-                  sx={{
-                    width: 150,
-                    height: 50,
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  자유게시판
-                </MenuItem>
-              </Link>
-            </Box>
->>>>>>> dbf2a5ad1a5055b162064072534336fb590fb5f7
             <Link
               to="/reportBoard"
               style={{ color: "black", textDecoration: "none" }}

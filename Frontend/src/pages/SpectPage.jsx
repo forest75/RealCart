@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import car from "../assets/car.jpg";
-import tmpmain from "../assets/map_keyboard.png";
+// import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
@@ -73,14 +73,15 @@ function SpectPage() {
       display="flex"
       sx={{
         justifyContent: "center",
+        marginTop: "50px",
+        marginBottom: "50px",
       }}
     >
       <Box
         sx={{
           width: "70%",
-          height: 700,
+          height: 800,
           marginRight: "50px",
-          border: "solid 1px #333333",
         }}
       >
         <Box
@@ -97,8 +98,7 @@ function SpectPage() {
               height: "100%",
               justifyContent: "center",
               alignItems: "center",
-              borderRight: "solid 1px #E8E8E8",
-              bgcolor: "#E8E8E8",
+              border: "solid 1px #E8E8E8",
             }}
           >
             <Box
@@ -109,7 +109,6 @@ function SpectPage() {
                 width: "95%",
                 alignItems: "center",
                 justifyContent: "center",
-                borderRight: "solid 1px #333333",
               }}
             >
               <Box
@@ -154,7 +153,7 @@ function SpectPage() {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
-              bgcolor: "#E8E8E8",
+              border: "solid 1px #E8E8E8",
             }}
           >
             <Box
@@ -236,42 +235,46 @@ function SpectPage() {
             sx={{
               width: "100%",
               height: "100%",
-              position: "relative",
+
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Box
+            <Paper
+              elevation={3}
               sx={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
+                width: "95%",
+                height: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
               }}
             >
               <Box
                 component="img"
+                alt="car"
+                src={car}
+                sx={{
+                  width: "90%",
+                  height: "90%",
+                }}
+              />
+              {/* <Box
+                component="img"
                 alt="tmp"
                 src={tmpmain}
                 sx={{
-                  width: "10%",
-                  height: "10%",
+                  width: "20%",
+                  height: "20%",
                   position: "absolute",
-                  top: "100%",
-                  left: "100%",
-                  transform: "translate(-150%, -150%)",
+                  bottom: "35px",
+                  right: "70px",
                 }}
-              />
-            </Box>
-            <Box
-              component="img"
-              alt="car"
-              src={car}
-              sx={{
-                width: "90%",
-                height: "90%",
-              }}
-            />
+              /> */}
+            </Paper>
+
             {/* <iframe
               width="100%"
               height="100%"
@@ -288,7 +291,7 @@ function SpectPage() {
         sx={{
           width: "20%",
           height: "700",
-          borderLeft: "solid 5px #E8E8E8",
+          borderLeft: "solid 1px #E8E8E8",
           paddingLeft: "30px",
         }}
       >
@@ -324,7 +327,7 @@ function SpectPage() {
         >
           <Paper
             sx={{
-              width: "80%",
+              width: "90%",
               height: "90%",
             }}
           >
@@ -464,18 +467,36 @@ function SpectPage() {
               display="flex"
               sx={{
                 height: "10%",
+                width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <form onSubmit={onSubmit}>
+              <form
+                onSubmit={onSubmit}
+                style={{
+                  width: "100%",
+                }}
+              >
                 <input
                   onChange={onChange}
                   value={chat}
                   type="text"
+                  style={{
+                    width: "50%",
+                    padding: "15px 30px",
+                  }}
                   placeholder="채팅을 입력하세요"
                 />
-                <button type="submit">전송</button>
+                <button
+                  type="submit"
+                  style={{
+                    width: "33.48%",
+                    padding: "14px",
+                  }}
+                >
+                  전송
+                </button>
               </form>
             </Box>
           </Box>
@@ -495,6 +516,7 @@ function SpectPage() {
               width: "50%",
               bgcolor: "white",
               color: "black",
+              marginTop: "20px",
             }}
             onClick={handleModalOpen}
           >
