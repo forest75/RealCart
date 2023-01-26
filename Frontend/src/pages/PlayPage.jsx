@@ -4,10 +4,10 @@ import { Box, Paper } from "@mui/material";
 
 function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://i8a403.p.ssafy.io:443");
+  const ws = new WebSocket("ws://43.201.27.53:8081");
 
   ws.onopen = function () {
-    console.log("on open");
+    console.log("on open1");
     ws.onmessage = function ({ data }) {
       const url = `data:image/jpeg;base64,${data}`;
       setImgSrc(url);
@@ -223,8 +223,8 @@ function PlayPage() {
             alt="car"
             src={imgSrc}
             sx={{
-              width: "100%",
-              height: "100%",
+              width: "40%",
+              height: "70%",
             }}
           />
         </Box>

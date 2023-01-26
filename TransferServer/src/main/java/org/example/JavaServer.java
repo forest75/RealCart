@@ -41,7 +41,7 @@ public class JavaServer {
                 socket = serverSocket.accept();
                 numOfThread++;
                 // Initialize WebSocket server
-                int wsPort = 443;
+                int wsPort = 8081;
                 WebSocketServer wsServer = new org.example.WSHandler(wsPort, new PrintWriter(socket.getOutputStream()));
                 wsServer.start();
                 System.out.println("WebSocket server started on port " + wsPort);
@@ -80,6 +80,7 @@ class PassingThread extends Thread{
         this.socket = socket;
         this.wsServer = wsServer;
         this.webSocket = wsServer.getConnections();
+        System.out.println(webSocket);
         try {
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
