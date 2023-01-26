@@ -8,9 +8,8 @@ function PlayPage() {
 
   ws.onopen = function () {
     console.log("on open1");
-    
   };
-  
+
   ws.onmessage = function ({ data }) {
     const url = `data:image/jpeg;base64,${data}`;
     setImgSrc(url);
