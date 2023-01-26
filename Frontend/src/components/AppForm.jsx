@@ -2,12 +2,21 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 
-function AppForm({ content, pwd, sx, ...otherProps }) {
+function AppForm({
+  content,
+  emailCheck,
+  pwd,
+  nicknameCheck,
+  sx,
+  ...otherProps
+}) {
   // console.log(pwd);
   const [input, setInput] = useState("");
+
   const verifier = {
     email: () => {
       if (input === "") return false;
+      if (emailCheck === "Duplicate") return true;
       // eslint-disable-next-line
       const regExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       if (input.match(regExp) != null) {
@@ -27,15 +36,46 @@ function AppForm({ content, pwd, sx, ...otherProps }) {
     },
     nickname: () => {
       if (input === "") return false;
+      if (nicknameCheck === "Duplicate") return true;
       if (input.length < 3) return true;
       return false;
     },
   };
   const msg = {
     email: "유효한 이메일 형식이 아닙니다.",
+    emailCheckError: "이미 사용중인 이메일입니다.",
+    emailCheckSuccess: "사용 가능한 이메일입니다.",
     password: "비밀번호는 8자 이상입니다.",
     passwordCheck: "비밀번호가 일치하지 않습니다.",
     nickname: "닉네임은 3자 이상입니다.",
+    nicknameCheckError: "이미 사용중인 닉네임입니다.",
+    nicknameCheckSuccess: "사용 가능한 닉네임입니다.",
+  };
+
+  const emailHelper = () => {
+    if (emailCheck === "Unique") {
+      return msg.emailCheckSuccess;
+    }
+    if (verifier.email()) {
+      if (emailCheck === "Duplicate") {
+        return msg.emailCheckError;
+      }
+      return msg.email;
+    }
+    return "";
+  };
+
+  const nicknameHelper = () => {
+    if (nicknameCheck === "Unique") {
+      return msg.nicknameCheckSuccess;
+    }
+    if (verifier.nickname()) {
+      if (nicknameCheck === "Duplicate") {
+        return msg.nicknameCheckError;
+      }
+      return msg.nickname;
+    }
+    return "";
   };
 
   const onChange = (e) => {
@@ -52,7 +92,7 @@ function AppForm({ content, pwd, sx, ...otherProps }) {
           type="email"
           fullWidth
           error={verifier.email()}
-          helperText={verifier.email() ? msg.email : ""}
+          helperText={emailHelper()}
           onChange={onChange}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...otherProps}
@@ -79,7 +119,7 @@ function AppForm({ content, pwd, sx, ...otherProps }) {
           sx={sx}
           required
           label="비밀번호 확인"
-          type="passwordCheck"
+          type="password"
           fullWidth
           error={verifier.passwordCheck()}
           helperText={verifier.passwordCheck() ? msg.passwordCheck : ""}
@@ -89,7 +129,20 @@ function AppForm({ content, pwd, sx, ...otherProps }) {
         />
       );
     case "nickname":
-      return <TextField />;
+      return (
+        <TextField
+          sx={sx}
+          required
+          label="닉네임"
+          type="text"
+          fullWidth
+          error={verifier.nickname()}
+          helperText={nicknameHelper()}
+          onChange={onChange}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...otherProps}
+        />
+      );
     default:
       return <TextField />;
   }
@@ -98,14 +151,18 @@ function AppForm({ content, pwd, sx, ...otherProps }) {
 AppForm.defaultProps = {
   sx: {},
   content: "",
+  emailCheck: "",
   pwd: "",
+  nicknameCheck: "",
 };
 
 AppForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
   content: PropTypes.string,
+  emailCheck: PropTypes.string,
   pwd: PropTypes.string,
+  nicknameCheck: PropTypes.string,
 };
 
 export default AppForm;
