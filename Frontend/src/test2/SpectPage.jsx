@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import tmpmain from "./assets/tmpmain.jpg";
+import tmpmain from "../assets/tmpmain.jpg";
 
 function SpectPage() {
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
