@@ -3,7 +3,7 @@ import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
-import car from "../assets/car.jpg";
+// import car from "../assets/car.jpg";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -86,11 +86,12 @@ function MainPage() {
             <Box
               component="img"
               alt="mainspect"
-              src={car}
+              src="http://192.168.83.21:8080/?action=stream"
               sx={{
                 width: "90%",
                 height: "90%",
                 cursor: "pointer",
+                transform: "rotate(180deg)",
               }}
               onClick={() => {
                 navigate("/spect");

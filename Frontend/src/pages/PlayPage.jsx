@@ -6,7 +6,7 @@ import toturial from "../assets/toturial.png";
 // import car from "../assets/car.jpg";
 
 function PlayPage() {
-  const [imgSrc, setImgSrc] = useState("");
+  const [setImgSrc] = useState("");
   const ws = new WebSocket("ws://43.201.27.53:8081");
 
   ws.onopen = function () {
@@ -256,8 +256,8 @@ function PlayPage() {
         <Paper
           elevation={3}
           sx={{
-            width: "90%",
-            height: "90%",
+            width: "75%",
+            height: "65%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -280,9 +280,10 @@ function PlayPage() {
                 color: "white",
                 opacity: "50%",
                 position: "absolute",
+                zIndex: 1,
               }}
             >
-              <h2>RACE TIME</h2>
+              <h3> &nbsp;RACE TIME</h3>
             </Box>
             <Box
               sx={{
@@ -293,9 +294,10 @@ function PlayPage() {
                 color: "white",
                 opacity: "50%",
                 position: "absolute",
+                zIndex: 1,
               }}
             >
-              <h2>BEST</h2>
+              <h3> &nbsp;BEST</h3>
             </Box>
             <Box
               sx={{
@@ -307,9 +309,10 @@ function PlayPage() {
                 color: "white",
                 opacity: "50%",
                 position: "absolute",
+                zIndex: 1,
               }}
             >
-              <h2>LAP</h2>
+              <h3> &nbsp;LAP</h3>
             </Box>
             <Box
               sx={{
@@ -321,26 +324,30 @@ function PlayPage() {
                 color: "white",
                 opacity: "50%",
                 position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <h2> PLACE</h2>
+              <h3> &nbsp;PLACE</h3>
             </Box>
             <Box
               sx={{
-                width: "20%",
+                width: "25%",
                 height: "50%",
                 bottom: "0",
                 position: "absolute",
                 bgcolor: "black",
                 color: "white",
                 opacity: "0.5",
+                zIndex: 1,
               }}
             >
               <Box
                 id="chat"
                 sx={{
                   width: "100%",
-                  height: "90%",
+                  height: "87%",
                   // maxHeight: 500,
                   overflow: "auto",
                 }}
@@ -370,7 +377,7 @@ function PlayPage() {
                     onChange={onChange}
                     value={chat}
                     style={{
-                      width: "70%",
+                      width: "100%",
                       padding: "10px 30px",
                     }}
                     type="text"
@@ -380,7 +387,7 @@ function PlayPage() {
                     type="submit"
                     style={{
                       padding: "10px",
-                      width: "30%",
+                      width: "80px",
                     }}
                   >
                     <SendIcon
@@ -405,16 +412,19 @@ function PlayPage() {
                 bottom: 0,
                 right: 0,
                 opacity: "60%",
+                zIndex: 1,
               }}
             />
             {/* </div> */}
             <Box
               component="img"
               alt="car"
-              src={imgSrc}
+              src="http://192.168.83.21:8080/?action=stream"
               sx={{
-                width: "40%",
-                height: "70%",
+                width: "100%",
+                height: "100%",
+                transform: "rotate(180deg)",
+                zIndex: -1,
               }}
             />
           </Box>

@@ -74,7 +74,6 @@ function AppHeader() {
     <Box
       sx={{
         height: 130,
-        opacity: "80%",
       }}
     >
       <AppBar

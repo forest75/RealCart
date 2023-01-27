@@ -15,7 +15,7 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import { useNavigate } from "react-router-dom";
 import InitialContent from "../components/InitialContent";
-import car from "../assets/car.jpg";
+// import car from "../assets/car.jpg";
 // import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
@@ -63,7 +63,9 @@ function SpectPage() {
     // preve;
     event.preventDefault();
     if (chat === "") return;
-    setChats((currentArray) => [...currentArray, chat]);
+    // eslint-disable-next-line prefer-template
+    const newchat = "의권짱짱33 : " + chat;
+    setChats((currentArray) => [...currentArray, newchat]);
     setChat("");
   };
 
@@ -120,14 +122,13 @@ function SpectPage() {
       display="flex"
       sx={{
         justifyContent: "center",
-        marginTop: "50px",
         marginBottom: "50px",
       }}
     >
       <Box
         sx={{
           width: "70%",
-          height: 800,
+          height: 700,
           marginRight: "50px",
         }}
       >
@@ -338,10 +339,11 @@ function SpectPage() {
               <Box
                 component="img"
                 alt="car"
-                src={car}
+                src="http://192.168.83.21:8080/?action=stream"
                 sx={{
-                  width: "90%",
+                  width: "80%",
                   height: "90%",
+                  transform: "rotate(180deg)",
                 }}
               />
               {/* <Box
@@ -385,13 +387,13 @@ function SpectPage() {
             height: "15%",
             justifyContent: "center",
             alignItems: "center",
+            marginTop: "40px",
           }}
         >
-
           <Button
             sx={{
-              height: 60,
-              width: 150,
+              height: 80,
+              width: 250,
               bgcolor: "#043774",
               color: "white",
             }}
