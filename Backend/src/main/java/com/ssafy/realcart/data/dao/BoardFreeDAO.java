@@ -1,18 +1,18 @@
 package com.ssafy.realcart.data.dao;
 
-import com.ssafy.realcart.data.dao.inter.IBoardFreeDAO;
-import com.ssafy.realcart.data.entity.BoardFree;
-import com.ssafy.realcart.data.entity.Comment;
-import com.ssafy.realcart.data.repository.IBoardFreeRepository;
-import com.ssafy.realcart.data.repository.ICommentRepository;
-import com.ssafy.realcart.data.repository.IUserRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import com.ssafy.realcart.data.dao.inter.IBoardFreeDAO;
+import com.ssafy.realcart.data.entity.BoardFree;
+import com.ssafy.realcart.data.entity.Comment;
+import com.ssafy.realcart.data.repository.IBoardFreeRepository;
+import com.ssafy.realcart.data.repository.ICommentRepository;
 
 @Component
 public class BoardFreeDAO implements IBoardFreeDAO {
@@ -30,7 +30,8 @@ public class BoardFreeDAO implements IBoardFreeDAO {
 
 
     @Override
-    public boolean createFree(BoardFree boardFree) {
+    public boolean saveFree(BoardFree boardFree) {
+    	LOGGER.info("createFree 메세드를 BoardFreeDAO에서 진입");
         boardFreeRepository.save(boardFree);
         return true;
     }
@@ -53,15 +54,54 @@ public class BoardFreeDAO implements IBoardFreeDAO {
     }
 
     @Override
-    public List<Comment> getComment(int id) {
+    public List<Comment> getCommentByBoardId(int id) {
         return commentRepository.findByBOARD_FK(id);
     }
 
     @Override
-    public boolean createFreeComment(Comment comment) {
+    public boolean saveFreeComment(Comment comment) {
         if(commentRepository.save(comment) != null){
             return true;
         }
         return false;
     }
+
+
+	@Override
+	public boolean deleteFree(int id) {
+		Optional<BoardFree> boardFree = boardFreeRepository.findById(id);
+		
+		if(boardFree.isPresent()) {
+			BoardFree board = boardFree.get();
+			boardFreeRepository.delete(board);
+			return true;
+		}
+		return false;
+		
+	}
+
+
+	@Override
+	public Comment getComment(int commentId) {
+		Optional<Comment> selectedComment = commentRepository.findById(commentId);
+		
+		if(selectedComment.isPresent()) {
+			Comment comment = selectedComment.get();
+			return comment;
+		}
+		return null;
+	}
+
+
+	@Override
+	public boolean deleteComment(int commentId) {
+		Optional<Comment> selectedComment = commentRepository.findById(commentId);
+		
+		if(selectedComment.isPresent()) {
+			Comment comment = selectedComment.get();
+			commentRepository.delete(comment);
+			return true;
+		}
+		return false;
+	}
 }

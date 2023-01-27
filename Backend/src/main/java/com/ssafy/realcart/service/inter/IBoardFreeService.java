@@ -1,12 +1,11 @@
 package com.ssafy.realcart.service.inter;
 
-import com.ssafy.realcart.data.dto.BoardDto;
-import com.ssafy.realcart.data.dto.CommentDto;
-import com.ssafy.realcart.data.entity.BoardFree;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.CommentDto;
 
 @Service
 public interface IBoardFreeService {
@@ -15,5 +14,8 @@ public interface IBoardFreeService {
     List<BoardDto> getBoardFreeAll();
     BoardDto getBoardFree(int id);
     boolean createFreeComment(int id, CommentDto commentDto);
-
+	boolean changeFree(int id, BoardDto boardDto);
+	boolean deleteFree(int id);
+	boolean changeComment(int commentId, CommentDto commentDto);
+	boolean deleteComment(int commentId);
 }

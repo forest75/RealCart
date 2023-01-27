@@ -1,17 +1,23 @@
 package com.ssafy.realcart.data.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.ssafy.realcart.config.BaseTime;
 
-import com.ssafy.realcart.data.dto.CommentDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.List;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name="BOARD_FREE_TB")
 public class BoardFree extends BaseTime{
 

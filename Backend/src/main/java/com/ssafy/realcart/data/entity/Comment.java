@@ -2,12 +2,14 @@ package com.ssafy.realcart.data.entity;
 
 import com.ssafy.realcart.config.BaseTime;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name="COMMENT_TB")
 public class Comment extends BaseTime {
     @Id
