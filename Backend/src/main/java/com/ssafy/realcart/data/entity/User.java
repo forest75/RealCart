@@ -10,9 +10,11 @@ import javax.persistence.Table;
 import com.ssafy.realcart.config.BaseTime;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name="USER_TB")
 public class User extends BaseTime{
     @Id

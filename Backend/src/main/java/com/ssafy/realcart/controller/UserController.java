@@ -74,25 +74,28 @@ public class UserController {
     }
 
     @PostMapping(value="/register")
-    public ResponseEntity createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
         LOGGER.info("createUser 메서드가 userController에서 호출되었습니다.");
+        
         try {
             if(userService.createUser(userDto)){
-                return new ResponseEntity<>(userDto, HttpStatus.OK);
+            	String msg = "회원가입 성공";
+                return new ResponseEntity<String>(msg, HttpStatus.OK);
             }
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        String msg = "회원가입 실패";
+        return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping()
-    public ResponseEntity login(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> login(@RequestBody UserDto userDto){
         LOGGER.info("Login 메서드가 userController에서 호출되었습니다.");
         try {
             UserDto loginUser = userService.login(userDto);
             if(loginUser != null){
-                return new ResponseEntity<>(loginUser, HttpStatus.OK);
+                return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
