@@ -12,11 +12,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-// import { Link } from "react-router-dom";
+import SendIcon from "@mui/icons-material/Send";
 import { useNavigate } from "react-router-dom";
 import InitialContent from "../components/InitialContent";
 import car from "../assets/car.jpg";
-import tmpmain from "../assets/map_keyboard.png";
+// import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
   const navigate = useNavigate();
@@ -120,12 +120,15 @@ function SpectPage() {
       display="flex"
       sx={{
         justifyContent: "center",
+        marginTop: "50px",
+        marginBottom: "50px",
       }}
     >
       <Box
         sx={{
           width: "70%",
           height: 800,
+          marginRight: "50px",
         }}
       >
         <Box
@@ -167,7 +170,7 @@ function SpectPage() {
           display="flex"
           sx={{
             width: "100%",
-            height: "15%",
+            height: "10%",
           }}
         >
           <Box
@@ -177,10 +180,11 @@ function SpectPage() {
               height: "100%",
               justifyContent: "center",
               alignItems: "center",
+              border: "solid 1px #E8E8E8",
             }}
           >
-            <Paper
-              elevation={3}
+            <Box
+              elevation={0}
               sx={{
                 display: "flex",
                 height: "60%",
@@ -198,7 +202,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>A 의권짱짱33</h1>
+                <h2>A 의권짱짱33</h2>
               </Box>
               <Box
                 display="flex"
@@ -209,7 +213,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>vs</h1>
+                <h2>vs</h2>
               </Box>
               <Box
                 display="flex"
@@ -220,9 +224,9 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h1>B 지존ㅎHzㅣㄴ</h1>
+                <h2>B 지존ㅎHzㅣㄴ</h2>
               </Box>
-            </Paper>
+            </Box>
           </Box>
           <Box
             display="flex"
@@ -231,9 +235,10 @@ function SpectPage() {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
+              border: "solid 1px #E8E8E8",
             }}
           >
-            <Paper
+            <Box
               elevation={3}
               sx={{
                 display: "flex",
@@ -290,13 +295,14 @@ function SpectPage() {
                   </MenuItem>
                 ))}
               </Menu>
-            </Paper>
+            </Box>
           </Box>
         </Box>
         <Box
           sx={{
             width: "100%",
-            height: "80%",
+            height: "90%",
+            borderTop: "solid 1px #E8E8E8",
           }}
         >
           {/* <Box
@@ -312,39 +318,46 @@ function SpectPage() {
             sx={{
               width: "100%",
               height: "100%",
-              position: "relative",
+
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Box
+            <Paper
+              elevation={3}
               sx={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
+                width: "95%",
+                height: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
               }}
             >
               <Box
                 component="img"
+                alt="car"
+                src={car}
+                sx={{
+                  width: "90%",
+                  height: "90%",
+                }}
+              />
+              {/* <Box
+                component="img"
                 alt="tmp"
                 src={tmpmain}
                 sx={{
-                  width: "10%",
-                  height: "10%",
+                  width: "20%",
+                  height: "20%",
                   position: "absolute",
-                  top: "100%",
-                  left: "100%",
-                  transform: "translate(-100%, -100%)",
+                  bottom: "35px",
+                  right: "70px",
                 }}
-              />
-            </Box>
-            <Box
-              component="img"
-              alt="car"
-              src={car}
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
+              /> */}
+            </Paper>
+
             {/* <iframe
               width="100%"
               height="100%"
@@ -360,7 +373,9 @@ function SpectPage() {
       <Box
         sx={{
           width: "20%",
-          height: 700,
+          height: "700",
+          borderLeft: "solid 1px #E8E8E8",
+          paddingLeft: "30px",
         }}
       >
         <Box
@@ -372,7 +387,7 @@ function SpectPage() {
             alignItems: "center",
           }}
         >
-          {/* <Link to="/play" style={{ textDecoration: "none" }}> */}
+
           <Button
             sx={{
               height: 60,
@@ -384,7 +399,6 @@ function SpectPage() {
           >
             Play
           </Button>
-          {/* </Link> */}
         </Box>
         <Box
           display="flex"
@@ -396,7 +410,7 @@ function SpectPage() {
         >
           <Paper
             sx={{
-              width: "80%",
+              width: "90%",
               height: "90%",
             }}
           >
@@ -522,7 +536,7 @@ function SpectPage() {
                 height: "90%",
                 // maxHeight: 500,
                 overflow: "auto",
-                border: 1,
+                border: "solid 1px #E8E8E8",
               }}
               ref={chatRef}
             >
@@ -536,18 +550,40 @@ function SpectPage() {
               display="flex"
               sx={{
                 height: "10%",
+                width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <form onSubmit={onSubmit}>
+              <form
+                onSubmit={onSubmit}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <input
                   onChange={onChange}
                   value={chat}
                   type="text"
+                  style={{
+                    width: "70%",
+                    padding: "15px 30px",
+                    border: "solid 1px #E8E8E8",
+                  }}
                   placeholder="채팅을 입력하세요"
                 />
-                <button type="submit">전송</button>
+                <button
+                  type="submit"
+                  style={{
+                    width: "40%",
+                    padding: "10px",
+                    border: "solid 1px #E8E8E8",
+                  }}
+                >
+                  <SendIcon />
+                </button>
               </form>
             </Box>
           </Box>
@@ -567,6 +603,7 @@ function SpectPage() {
               width: "50%",
               bgcolor: "white",
               color: "black",
+              marginTop: "20px",
             }}
             onClick={handleModalOpen}
           >
@@ -600,6 +637,8 @@ function SpectPage() {
                   <Box
                     display="flex"
                     sx={{
+                      bgcolor: "white",
+                      color: "#333333",
                       width: "100%",
                       height: "55%",
                       justifyContent: "center",
