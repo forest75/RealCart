@@ -43,7 +43,7 @@ function MainPage() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderBottom: "solid 1px #5A5857",
+            borderBottom: "solid 1px #E8E8E8",
           }}
         >
           <Paper

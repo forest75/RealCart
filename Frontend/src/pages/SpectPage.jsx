@@ -10,6 +10,7 @@ import {
   ListItemText,
   Modal,
 } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import { Link } from "react-router-dom";
 import car from "../assets/car.jpg";
 // import tmpmain from "../assets/map_keyboard.png";
@@ -307,8 +308,8 @@ function SpectPage() {
           <Link to="/play" style={{ textDecoration: "none" }}>
             <Button
               sx={{
-                height: 60,
-                width: 150,
+                height: 80,
+                width: 250,
                 bgcolor: "#043774",
                 color: "white",
               }}
@@ -453,7 +454,7 @@ function SpectPage() {
                 height: "90%",
                 // maxHeight: 500,
                 overflow: "auto",
-                border: 1,
+                border: "solid 1px #E8E8E8",
               }}
               ref={chatRef}
             >
@@ -476,6 +477,8 @@ function SpectPage() {
                 onSubmit={onSubmit}
                 style={{
                   width: "100%",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <input
@@ -483,19 +486,21 @@ function SpectPage() {
                   value={chat}
                   type="text"
                   style={{
-                    width: "50%",
+                    width: "70%",
                     padding: "15px 30px",
+                    border: "solid 1px #E8E8E8",
                   }}
                   placeholder="채팅을 입력하세요"
                 />
                 <button
                   type="submit"
                   style={{
-                    width: "33.48%",
-                    padding: "14px",
+                    width: "40%",
+                    padding: "10px",
+                    border: "solid 1px #E8E8E8",
                   }}
                 >
-                  전송
+                  <SendIcon />
                 </button>
               </form>
             </Box>

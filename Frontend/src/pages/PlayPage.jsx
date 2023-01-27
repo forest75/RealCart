@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Box, Paper } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 // import car from "../assets/car.jpg";
 import toturial from "../assets/toturial.png";
 // import car from "../assets/car.jpg";
@@ -359,12 +360,18 @@ function PlayPage() {
                   alignItems: "center",
                 }}
               >
-                <form onSubmit={onSubmit}>
+                <form
+                  onSubmit={onSubmit}
+                  style={{
+                    display: "flex",
+                  }}
+                >
                   <input
                     onChange={onChange}
                     value={chat}
                     style={{
-                      padding: "10px",
+                      width: "70%",
+                      padding: "10px 30px",
                     }}
                     type="text"
                     placeholder="채팅을 입력하세요"
@@ -373,9 +380,14 @@ function PlayPage() {
                     type="submit"
                     style={{
                       padding: "10px",
+                      width: "30%",
                     }}
                   >
-                    전송
+                    <SendIcon
+                      sx={{
+                        width: "50px",
+                      }}
+                    />
                   </button>
                 </form>
               </Box>
