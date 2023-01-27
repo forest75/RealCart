@@ -3,7 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 
-function NewContent({ handleModalOpen, handleModalClose, setIsReady }) {
+function NewContent({
+  setWait,
+  handleModalOpen,
+  handleModalClose,
+  setIsReady,
+}) {
   return (
     <Box
       sx={{
@@ -58,8 +63,14 @@ function NewContent({ handleModalOpen, handleModalClose, setIsReady }) {
                 setIsReady(false);
               }, 15000);
               setTimeout(() => {
+                setWait(0);
+              }, 5000);
+              setTimeout(() => {
                 handleModalOpen();
               }, 5000);
+              setTimeout(() => {
+                handleModalClose();
+              }, 15000);
             }}
           >
             확인
@@ -71,6 +82,7 @@ function NewContent({ handleModalOpen, handleModalClose, setIsReady }) {
 }
 
 NewContent.propTypes = {
+  setWait: PropTypes.func.isRequired,
   handleModalOpen: PropTypes.func.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   setIsReady: PropTypes.func.isRequired,

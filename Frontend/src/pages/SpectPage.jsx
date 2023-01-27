@@ -85,6 +85,35 @@ function SpectPage() {
   // );
 
   const [isReady, setIsReady] = useState(false);
+  const [flicker, setFlicker] = useState(false);
+  // const [countdown, setCountdown] = useState(10);
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      setFlicker(!flicker);
+      interval();
+    }, 1000);
+    return () => clearTimeout(interval);
+  }, [flicker]);
+
+  // useEffect(() => {
+  //   if (modalOpen) {
+  //     const intervalId = setInterval(() => {
+  //       setCountdown(countdown - 1);
+  //       if (countdown === 0) clearInterval(intervalId);
+  //     }, 1000);
+
+  //     // const interval = setInterval(() => {
+  //     //   setCountdown(countdown - 1);
+  //     //   if (countdown === 0) {
+  //     //     clearInterval(interval);
+  //     //     // setModalOpen(false);
+  //     //   }
+  //     // }, 1000);
+  //     // return () => clearInterval(interval);
+  //   }
+  //   return null;
+  // }, [modalOpen, countdown]);
 
   return (
     <Box
@@ -122,7 +151,16 @@ function SpectPage() {
               alignItems: "end",
             }}
           >
-            {isReady ? <Box>대기 중 - 현재 대기 인수 : {wait}명</Box> : null}
+            {isReady ? (
+              <Box
+                sx={{
+                  opacity: flicker ? 0 : 1,
+                  animation: "flicker 0.5s linear infinite",
+                }}
+              >
+                대기 중 - 현재 대기 인수 : {wait}명
+              </Box>
+            ) : null}
           </Box>
         </Box>
         <Box
@@ -612,6 +650,7 @@ function SpectPage() {
                       >
                         입장
                       </Button>
+                      {/* 남은 시간 : {countdown} */}
                     </Box>
                   </Box>
                 </Box>

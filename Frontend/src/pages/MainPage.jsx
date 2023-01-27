@@ -24,6 +24,30 @@ function MainPage() {
     nickname: "v스피드왕번개v",
     laptime: "01:23:59",
   });
+
+  const boardcolumns = [
+    { field: "id", headerName: "번호", width: 150 },
+    { field: "title", headerName: "제목", width: 300, editable: true },
+    { field: "date", headerName: "등록일", width: 150, editable: true },
+  ];
+
+  const notice = [];
+  notice.push({
+    id: 1,
+    title: "여기는 공지사항 게시판입니다.",
+    date: "2023.01.27",
+  });
+  notice.push({
+    id: 2,
+    title: "리얼카트 곧 출시 예정!",
+    date: "2023.01.27",
+  });
+  notice.push({
+    id: 3,
+    title: "많은 사랑 부탁드립니다.",
+    date: "2023.01.27",
+  });
+
   return (
     <Box
       sx={{
@@ -111,8 +135,8 @@ function MainPage() {
                 sx={{
                   height: "42.5%",
                 }}
-                rows={ranking}
-                columns={columns}
+                rows={notice}
+                columns={boardcolumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 experimentalFeatures={{ newEditingApi: true }}

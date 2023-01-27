@@ -95,6 +95,7 @@ function InitialContent({
         </Box>
       ) : (
         <NewContent
+          setWait={setWait}
           handleModalOpen={handleModalOpen}
           handleModalClose={handleModalClose}
           setIsReady={setIsReady}
