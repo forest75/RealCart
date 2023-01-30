@@ -13,7 +13,8 @@ import MyPage from "./pages/MyPage";
 import SpectPage from "./pages/SpectPage";
 import PlayPage from "./pages/PlayPage";
 import NoticeBoard from "./pages/NoticeBoard";
-import FreeBoard from "./pages/FreeBoard";
+import FreeBoard from "./pages/freeboard/FreeBoard";
+import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import ReportBoard from "./test2/ReportBoard";
 
 function App() {
@@ -38,7 +39,9 @@ function App() {
         <Route path="/spect" element={<SpectPage />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/noticeBoard" element={<NoticeBoard />} />
-        <Route path="/freeBoard" element={<FreeBoard />} />
+        <Route path="/freeBoard" element={<FreeBoard />}>
+          <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
+        </Route>
         <Route path="/reportBoard" element={<ReportBoard />} />
       </Routes>
       <AppFooter />

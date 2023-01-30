@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 // import car from "../assets/car.jpg";
@@ -18,10 +18,44 @@ function PlayPage() {
     setImgSrc(url);
   };
 
-  window.addEventListener("keydown", (event) => {
-    ws.send(event.keyCode);
-    console.log(event.keyCode);
-  });
+  const [keyState, setKeyState] = useState({});
+  useEffect(() => {
+    window.addEventListener(
+      "keydown",
+      (e) => {
+        setKeyState((prevState) => ({
+          ...prevState,
+          [e.keyCode || e.which]: true,
+        }));
+      },
+      true
+    );
+    window.addEventListener(
+      "keyup",
+      (e) => {
+        setKeyState((prevState) => ({
+          ...prevState,
+          [e.keyCode || e.which]: false,
+        }));
+      },
+      true
+    );
+  }, []);
+
+  useEffect(() => {
+    if (keyState[37]) {
+      console.log("left");
+    }
+    if (keyState[38]) {
+      console.log("up");
+    }
+    if (keyState[39]) {
+      console.log("right");
+    }
+    if (keyState[40]) {
+      console.log("down");
+    }
+  }, [keyState]);
 
   const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
