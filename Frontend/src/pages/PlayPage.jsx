@@ -20,7 +20,6 @@ function PlayPage() {
     console.log(event.keyCode);
   });
 
-
   return (
     <Box
       sx={{
