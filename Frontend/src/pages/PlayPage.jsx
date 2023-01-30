@@ -4,7 +4,7 @@ import { Box, Paper } from "@mui/material";
 
 function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://localhost:3001");
+  const ws = new WebSocket("ws://3.35.3.27:3001");
 
   ws.onopen = function () {
     console.log("on open1");
