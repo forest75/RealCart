@@ -10,4 +10,4 @@ RUN ./gradlew bootjar
 FROM azul/zulu-openjdk-alpine:11.0.17
 COPY --from=builder build/libs/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
