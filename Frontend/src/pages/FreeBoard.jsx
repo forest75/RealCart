@@ -81,7 +81,7 @@ function FreeBoard() {
     >
       <Box
         sx={{
-          width: "80%",
+          width: "85%",
           height: "10%",
           bgcolor: "red",
           display: "flex",
@@ -92,7 +92,7 @@ function FreeBoard() {
         </Typography>
         <Box
           sx={{
-            width: "30%",
+            width: "15%",
             height: "100%",
             bgcolor: "blue",
             display: "flex",
@@ -103,7 +103,7 @@ function FreeBoard() {
           <FormControl
             sx={{
               width: "30%",
-              height: "60%",
+              height: "80%",
               bgcolor: "green",
             }}
           >
@@ -114,6 +114,10 @@ function FreeBoard() {
               value={option}
               // label="Age"
               onChange={handleChange}
+              sx={{
+                width: "50%",
+                height: "50%",
+              }}
             >
               <MenuItem value="회원명">회원명</MenuItem>
               <MenuItem value="제목">제목</MenuItem>
