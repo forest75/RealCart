@@ -5,11 +5,9 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew clean
-RUN ./gradlew build
+RUN ./gradlew bootjar
 
 FROM azul/zulu-openjdk-alpine:11.0.17
-COPY --from=builder build/libs/TransferServer-1.0-SNAPSHOT.jar app.jar
-EXPOSE 8081
-EXPOSE 8581
-RUN ["java", "-jar", "app.jar"]
+COPY --from=builder build/libs/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
