@@ -2,9 +2,12 @@ import React from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
-import car from "../assets/car.jpg";
+import { useNavigate } from "react-router-dom";
+// import car from "../assets/car.jpg";
 
 function MainPage() {
+  const navigate = useNavigate();
+
   const columns = [
     { field: "id", headerName: "순위", width: 150 },
     { field: "nickname", headerName: "NickName", width: 150, editable: true },
@@ -21,12 +24,37 @@ function MainPage() {
     nickname: "v스피드왕번개v",
     laptime: "01:23:59",
   });
+
+  const boardcolumns = [
+    { field: "id", headerName: "번호", width: 150 },
+    { field: "title", headerName: "제목", width: 300, editable: true },
+    { field: "date", headerName: "등록일", width: 150, editable: true },
+  ];
+
+  const notice = [];
+  notice.push({
+    id: 1,
+    title: "여기는 공지사항 게시판입니다.",
+    date: "2023.01.27",
+  });
+  notice.push({
+    id: 2,
+    title: "리얼카트 곧 출시 예정!",
+    date: "2023.01.27",
+  });
+  notice.push({
+    id: 3,
+    title: "많은 사랑 부탁드립니다.",
+    date: "2023.01.27",
+  });
+
   return (
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center",
-        height: 1500,
+        flexDirection: "column",
+        alignItems: "center",
+        height: 1400,
       }}
     >
       <Box
@@ -38,15 +66,17 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "30%",
+            height: "45%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            borderBottom: "solid 1px #E8E8E8",
           }}
         >
           <Paper
+            elevation={2}
             sx={{
-              width: "50%",
+              width: "60%",
               height: "90%",
               display: "flex",
               justifyContent: "center",
@@ -56,10 +86,15 @@ function MainPage() {
             <Box
               component="img"
               alt="mainspect"
-              src={car}
+              src="http://192.168.83.21:8080/?action=stream"
               sx={{
                 width: "90%",
                 height: "90%",
+                cursor: "pointer",
+                transform: "rotate(180deg)",
+              }}
+              onClick={() => {
+                navigate("/spect");
               }}
             />
           </Paper>
@@ -67,7 +102,7 @@ function MainPage() {
         <Box
           sx={{
             width: "100%",
-            height: "70%",
+            height: "50%",
             display: "flex",
           }}
         >
@@ -92,7 +127,7 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
                   }}
@@ -104,8 +139,8 @@ function MainPage() {
                 sx={{
                   height: "42.5%",
                 }}
-                rows={ranking}
-                columns={columns}
+                rows={notice}
+                columns={boardcolumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 experimentalFeatures={{ newEditingApi: true }}
@@ -121,7 +156,7 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
                   }}
@@ -162,9 +197,10 @@ function MainPage() {
                 }}
               >
                 <Typography
-                  variant="h5"
+                  variant="h7"
                   sx={{
                     fontWeight: "bold",
+                    textAlign: "center",
                   }}
                 >
                   Ranking

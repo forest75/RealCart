@@ -9,7 +9,6 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-// import tmpmain from "./assets/tmpmain.jpg";
 
 function SpectPage() {
   const [imgSrc, setImgSrc] = useState("");

@@ -1,29 +1,28 @@
 package com.ssafy.realcart.service;
 
-import com.ssafy.realcart.data.dao.inter.IUserDAO;
-import com.ssafy.realcart.data.dto.UserDto;
-import com.ssafy.realcart.data.entity.User;
-import com.ssafy.realcart.exception.NickNameShortException;
-import com.ssafy.realcart.service.inter.IUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Service;
-
-import javax.mail.internet.MimeMessage;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.internet.MimeMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
+
+import com.ssafy.realcart.data.dao.inter.IUserDAO;
+import com.ssafy.realcart.data.dto.UserDto;
+import com.ssafy.realcart.data.entity.User;
+import com.ssafy.realcart.exception.NickNameShortException;
+import com.ssafy.realcart.service.inter.IUserService;
 
 @Service
 public class UserService implements IUserService {
