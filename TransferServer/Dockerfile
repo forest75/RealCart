@@ -12,4 +12,5 @@ FROM azul/zulu-openjdk-alpine:11.0.17
 COPY --from=builder build/libs/TransferServer-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8081
 EXPOSE 8581
-RUN ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
