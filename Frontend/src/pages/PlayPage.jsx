@@ -4,7 +4,6 @@ import { Box, Paper } from "@mui/material";
 
 function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
-  console.log(3001);
   const ws = new WebSocket("ws://localhost:3001");
 
   ws.onopen = function () {
@@ -20,6 +19,7 @@ function PlayPage() {
     ws.send(event.keyCode);
     console.log(event.keyCode);
   });
+
 
   return (
     <Box
