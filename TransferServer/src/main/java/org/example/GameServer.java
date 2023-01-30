@@ -17,7 +17,7 @@ public class GameServer {
     static List<WebSocket> waitingQueue = null;
     public static void main(String[] args) {
 
-        Thread thread1 = new Thread(new RCcarThread(8081, 3001));
+        Thread thread1 = new Thread(new RCcarThread(8081, 8581));
         thread1.start();
     }
 
