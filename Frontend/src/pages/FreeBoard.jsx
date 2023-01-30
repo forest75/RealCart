@@ -11,10 +11,10 @@ import ArticleBox from "../components/ArticleBox";
 
 function FreeBoard() {
   const [page, setPage] = useState(0);
-  const [age, setAge] = React.useState("");
+  const [option, setOption] = React.useState("정렬 조건");
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setOption(event.target.value);
   };
 
   const onChangePage = (event, value) => {
@@ -100,18 +100,24 @@ function FreeBoard() {
             alignItems: "end",
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <FormControl
+            sx={{
+              width: "30%",
+              height: "60%",
+              bgcolor: "green",
+            }}
+          >
+            <InputLabel id="demo-simple-select-label" />
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={age}
-              label="Age"
+              value={option}
+              // label="Age"
               onChange={handleChange}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value="회원명">회원명</MenuItem>
+              <MenuItem value="제목">제목</MenuItem>
+              <MenuItem value="내용">내용</MenuItem>
             </Select>
           </FormControl>
         </Box>
