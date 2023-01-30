@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
@@ -7,7 +8,11 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import ArticleBox from "../components/ArticleBox";
+import InputBase from "@mui/material/InputBase";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import AppButton from "../../components/AppButton";
+import ArticleBox from "../../components/ArticleBox";
 
 function FreeBoard() {
   const [page, setPage] = useState(0);
@@ -83,7 +88,6 @@ function FreeBoard() {
         sx={{
           width: "80%",
           height: "10%",
-          bgcolor: "red",
           display: "flex",
         }}
       >
@@ -92,16 +96,19 @@ function FreeBoard() {
         </Typography>
         <Box
           sx={{
-            width: "30%",
+            width: "35%",
             height: "100%",
-            bgcolor: "blue",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "end",
             alignItems: "end",
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <FormControl
+            sx={{
+              width: "30%",
+            }}
+          >
+            <InputLabel id="demo-simple-select-label">검색 조건</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -109,11 +116,15 @@ function FreeBoard() {
               label="Age"
               onChange={handleChange}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value={10}>회원명</MenuItem>
+              <MenuItem value={20}>제목</MenuItem>
+              <MenuItem value={30}>내용</MenuItem>
             </Select>
           </FormControl>
+          <InputBase />
+          <IconButton type="button">
+            <SearchIcon />
+          </IconButton>
         </Box>
       </Box>
       <Box
@@ -152,6 +163,25 @@ function FreeBoard() {
               view={article.view}
             />
           ))}
+          <Box
+            sx={{
+              width: "80%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Link to="/freeBoard/write">
+              <AppButton
+                sx={{
+                  border: 1,
+                  bgcolor: "black",
+                  color: "white",
+                }}
+              >
+                글쓰기
+              </AppButton>
+            </Link>
+          </Box>
           <Pagination
             count={articleList.length}
             variant="outlined"
