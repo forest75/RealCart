@@ -71,7 +71,7 @@ class ClientSocket:
 
 
 def main():
-    TCP_IP = '3.35.3.27'
+    TCP_IP = '54.180.138.25'
     TCP_PORT = 8081
     client = ClientSocket(TCP_IP, TCP_PORT)
 
