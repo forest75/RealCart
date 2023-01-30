@@ -419,7 +419,7 @@ function PlayPage() {
             <Box
               component="img"
               alt="car"
-              src="http://192.168.83.21:8080/?action=stream"
+              src={imgSrc}
               sx={{
                 width: "100%",
                 height: "100%",

@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 
 function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
   const mergedSx = {
-    ...{ bgcolor: "white", color: "black", border: 1 },
+    ...{ bgcolor: "white", color: "black", borderBottom: 1 },
     ...sx,
   };
   return (

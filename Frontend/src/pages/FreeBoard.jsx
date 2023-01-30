@@ -3,10 +3,20 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import ArticleBox from "../components/ArticleBox";
 
 function FreeBoard() {
   const [page, setPage] = useState(0);
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
@@ -73,9 +83,38 @@ function FreeBoard() {
         sx={{
           width: "80%",
           height: "10%",
+          bgcolor: "red",
+          display: "flex",
         }}
       >
-        <Typography variant="h5">자유게시판</Typography>
+        <Typography variant="h4" flexGrow={1}>
+          자유게시판
+        </Typography>
+        <Box
+          sx={{
+            width: "30%",
+            height: "100%",
+            bgcolor: "blue",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "end",
+          }}
+        >
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={age}
+              label="Age"
+              onChange={handleChange}
+            >
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box
         sx={{
@@ -104,7 +143,6 @@ function FreeBoard() {
             <ArticleBox
               sx={{
                 width: "80%",
-                bgcolor: "#f5f5f5",
               }}
               key={article.no}
               no={article.no}
