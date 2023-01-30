@@ -27,7 +27,7 @@ function SpectPage() {
   const [wait, setWait] = React.useState(1);
   const open = Boolean(anchorEl);
 
-  const [voteA, setVoteA] = React.useState(0);
+  const [voteA, setVoteA] = React.useState(2);
   const [voteB, setVoteB] = React.useState(0);
 
   const [chat, setChat] = useState("");

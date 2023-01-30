@@ -44,7 +44,6 @@ class ClientSocket:
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 300)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 200)
         try:
-            self.sock.send(b'2')
             while capture.isOpened():
                 ret, frame = capture.read()
                 resize_frame = cv2.resize(frame, dsize=(300, 200), interpolation=cv2.INTER_AREA)
@@ -57,7 +56,7 @@ class ClientSocket:
                 self.sock.send(stringData)
                 print(u'send images %d' % (cnt))
                 cnt += 1
-                time.sleep(0.3)
+                time.sleep(0.7)
         except Exception as e:
             print(e)
             self.sock.close()
@@ -72,8 +71,8 @@ class ClientSocket:
 
 
 def main():
-    TCP_IP = '43.201.27.53'
-    TCP_PORT = 8080
+    TCP_IP = 'localhost'
+    TCP_PORT = 8081
     client = ClientSocket(TCP_IP, TCP_PORT)
 
 
