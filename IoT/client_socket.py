@@ -67,7 +67,7 @@ class ClientSocket:
     def recv(self):
         while True:
             data = self.sock.recv(2)
-            print(int(data))
+            print(int.from_bytes(data, byteorder='little'))
 
 
 def main():
