@@ -15,6 +15,7 @@ import PlayPage from "./pages/PlayPage";
 import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/FreeBoard";
 import ReportBoard from "./test2/ReportBoard";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/noticeBoard" element={<NoticeBoard />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
       <AppFooter />
     </Box>

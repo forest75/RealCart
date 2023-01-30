@@ -167,7 +167,9 @@ function AppHeader() {
               </MenuItem>
             </Link>
           </Menu>
-          <AppButton sx={{ width: 150, height: 70 }}>ABOUT</AppButton>
+          <Link to="/admin" style={{ color: "black", textDecoration: "none" }}>
+            <AppButton sx={{ width: 150, height: 70 }}>ABOUT</AppButton>
+          </Link>
           {loginComp}
         </Toolbar>
       </AppBar>
