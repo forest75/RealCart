@@ -210,6 +210,14 @@ def work2():
     while True:
         color_sensing()
 
+def work3():
+    global car_speed
+    while True:
+        car_speed *= 0.8
+        drive(car_speed)
+        time.sleep(1)
+        print('car speed : ', car_speed)
+
 
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM) # GPIO mode setup
@@ -231,11 +239,14 @@ if __name__ == '__main__':
     try:
         th1 = Thread(target=work)
         th2 = Thread(target=work2)
+        th3 = Thread(target=work3)
     
         th1.start()
         th2.start()
+        th3.start()
         th1.join()
         th2.join()
+        th3.join()
 
             
     except KeyboardInterrupt:
