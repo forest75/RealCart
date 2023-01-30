@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-// import Divider from "@mui/material/Divider";
+import TextField from "@mui/material/TextField";
 
 function FreeBoardWrite() {
   return (
@@ -13,6 +13,7 @@ function FreeBoardWrite() {
         alignItems: "center",
         width: "100%",
         height: 700,
+        // bgcolor: "gray",
       }}
     >
       <Box
@@ -20,27 +21,38 @@ function FreeBoardWrite() {
           width: "80%",
           height: "10%",
           display: "flex",
+          // bgcolor: "red",
+          alignItems: "center",
         }}
       >
         <Typography variant="h4" flexGrow={1}>
           자유게시판
         </Typography>
-        <Box
+      </Box>
+      <Box
+        sx={{
+          width: "80%",
+          height: "15%",
+          // bgcolor: "blue",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderTop: 2,
+          borderBottom: 3,
+        }}
+      >
+        <TextField
           sx={{
-            width: "35%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "end",
+            width: "100%",
           }}
-        >
-          a
-        </Box>
+        />
       </Box>
       <Box
         sx={{
           width: "100%",
-          height: "80%",
+          height: "75%",
+          bgcolor: "breen",
         }}
       >
         b
