@@ -4,7 +4,7 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY src src
-COPY build/libs/app.jar app.jar
+COPY build/libs/TransferServer-1.0-SNAPSHOT.jar app.jar
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJAR
 
