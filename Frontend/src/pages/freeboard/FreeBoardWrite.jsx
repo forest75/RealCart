@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertFromRaw } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,10 +12,12 @@ function FreeBoardWrite() {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const [html, setHtml] = useState("");
   useEffect(() => {
     // console.log(editorState.getCurrentContent().getPlainText());
     // console.log(convertFromRaw(editorState.getCurrentContent()));
-    convertFromRaw(editorState.getCurrentContent());
+    // convertFromRaw(editorState.getCurrentContent());
+    setHtml(draftToHtml(convertToRaw(editorState.getCurrentContent())));
   }, [editorState]);
   return (
     <Box
@@ -133,6 +136,7 @@ function FreeBoardWrite() {
               등록
             </AppButton>
           </Box>
+          <textarea name="text" id="a" value={html} />
         </Box>
       </Box>
     </Box>

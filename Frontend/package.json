@@ -16,6 +16,7 @@
     "axios": "^1.2.3",
     "bootstrap": "^5.2.3",
     "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "express": "^4.18.2",
     "prop": "^0.1.1",
     "prop-types": "^15.8.1",
