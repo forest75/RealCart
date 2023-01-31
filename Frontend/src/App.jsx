@@ -39,9 +39,8 @@ function App() {
         <Route path="/spect" element={<SpectPage />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/noticeBoard" element={<NoticeBoard />} />
-        <Route path="/freeBoard" element={<FreeBoard />}>
-          <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
-        </Route>
+        <Route path="/freeBoard" element={<FreeBoard />} />
+        <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
       </Routes>
       <AppFooter />

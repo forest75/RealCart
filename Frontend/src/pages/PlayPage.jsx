@@ -19,6 +19,12 @@ function PlayPage() {
   };
 
   const [keyState, setKeyState] = useState({});
+  const [inputSwitch, setInputSwitch] = useState({
+    37: false,
+    38: false,
+    39: false,
+    40: false,
+  });
   useEffect(() => {
     window.addEventListener(
       "keydown",
@@ -43,17 +49,69 @@ function PlayPage() {
   }, []);
 
   useEffect(() => {
-    if (keyState[37]) {
-      console.log("left");
+    if (keyState[37] && inputSwitch[37] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        37: true,
+      }));
+      const interval = setInterval(() => {
+        ws.send(37);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          37: false,
+        }));
+      }, 1000);
     }
-    if (keyState[38]) {
-      console.log("up");
+    if (keyState[38] && inputSwitch[38] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        38: true,
+      }));
+      const interval = setInterval(() => {
+        ws.send(38);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          38: false,
+        }));
+      }, 1000);
     }
-    if (keyState[39]) {
-      console.log("right");
+    if (keyState[39] && inputSwitch[39] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        39: true,
+      }));
+      const interval = setInterval(() => {
+        ws.send(39);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          39: false,
+        }));
+      }, 1000);
     }
-    if (keyState[40]) {
-      console.log("down");
+    if (keyState[40] && inputSwitch[40] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        40: true,
+      }));
+      const interval = setInterval(() => {
+        ws.send(40);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          40: false,
+        }));
+      }, 1000);
     }
   }, [keyState]);
 
