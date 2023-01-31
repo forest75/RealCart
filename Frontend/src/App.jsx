@@ -16,6 +16,7 @@ import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/freeboard/FreeBoard";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import ReportBoard from "./test2/ReportBoard";
+import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
       </Routes>
       <AppFooter />
     </Box>

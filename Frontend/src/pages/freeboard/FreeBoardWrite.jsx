@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertFromRaw } from "draft-js";
+import { EditorState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { Link } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardWrite() {
@@ -14,7 +15,6 @@ function FreeBoardWrite() {
   useEffect(() => {
     // console.log(editorState.getCurrentContent().getPlainText());
     // console.log(convertFromRaw(editorState.getCurrentContent()));
-    convertFromRaw(editorState.getCurrentContent());
   }, [editorState]);
   return (
     <Box
@@ -112,16 +112,21 @@ function FreeBoardWrite() {
             }}
           >
             <Box flexGrow={1} />
-            <AppButton
-              sx={{
-                width: "100px",
-                height: "40px",
-                marginRight: "10px",
-                border: 1,
-              }}
+            <Link
+              to="/FreeBoard"
+              style={{ color: "black", textDecoration: "none" }}
             >
-              취소
-            </AppButton>
+              <AppButton
+                sx={{
+                  width: "100px",
+                  height: "40px",
+                  marginRight: "10px",
+                  border: 1,
+                }}
+              >
+                취소
+              </AppButton>
+            </Link>
             <AppButton
               sx={{
                 width: "100px",
