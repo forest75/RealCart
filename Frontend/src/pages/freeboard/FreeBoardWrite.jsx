@@ -136,7 +136,7 @@ function FreeBoardWrite() {
               등록
             </AppButton>
           </Box>
-          <textarea name="text" id="a" value={html} />
+          {html}
         </Box>
       </Box>
     </Box>
