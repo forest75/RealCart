@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+// import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
-import draftToHtml from "draftjs-to-html";
+// import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,13 +13,26 @@ function FreeBoardWrite() {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  const [html, setHtml] = useState("");
-  useEffect(() => {
-    // console.log(editorState.getCurrentContent().getPlainText());
-    // console.log(convertFromRaw(editorState.getCurrentContent()));
-    // convertFromRaw(editorState.getCurrentContent());
-    setHtml(draftToHtml(convertToRaw(editorState.getCurrentContent())));
-  }, [editorState]);
+  // const [html, setHtml] = useState("");
+  // useEffect(() => {
+  //   // console.log(editorState.getCurrentContent().getPlainText());
+  //   // console.log(convertFromRaw(editorState.getCurrentContent()));
+  //   // convertFromRaw(editorState.getCurrentContent());
+  //   setHtml(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+  // }, [editorState]);
+  const handleSubmit = () => {
+    // console.log(editorState.getCurrentContent());
+    // const contentState = convertFromRaw(editorState);
+    // console.log(contentState);
+    const rawContentState = convertToRaw(editorState.getCurrentContent());
+    // const data = JSON.stringify(rawContentState);
+
+    // console.log(rawContentState, typeof rawContentState);
+    // const contentState = convertFromRaw(rawContentState);
+    // console.log(contentState, typeof contentState);
+    console.log(JSON.stringify(rawContentState));
+    // console.log(JSON.stringify(contentState));
+  };
   return (
     <Box
       sx={{
@@ -132,11 +146,11 @@ function FreeBoardWrite() {
                 bgcolor: "black",
                 color: "white",
               }}
+              onClick={handleSubmit}
             >
               등록
             </AppButton>
           </Box>
-          {html}
         </Box>
       </Box>
     </Box>
