@@ -2,6 +2,7 @@ package com.ssafy.signal;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.kurento.client.EventListener;
 import org.kurento.client.IceCandidate;
 import org.kurento.client.IceCandidateFoundEvent;
@@ -12,6 +13,7 @@ import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,7 +22,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-
+@Component
 public class CallHandler extends TextWebSocketHandler {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(CallHandler.class);
@@ -58,7 +60,7 @@ public class CallHandler extends TextWebSocketHandler {
 			JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
 			int mediaId = jsonMessage.get("mediaId").getAsInt(); 
 			UserSession user = null;
-			if(presenters.get(sessions[mediaId])!= null) {
+			if(sessions[mediaId] != null && presenters.get(sessions[mediaId])!= null) {
 				if(presenters.get(sessions[mediaId]) == session) {
 					user = presenters.get(sessions[mediaId]);
 				} else {
@@ -85,7 +87,7 @@ public class CallHandler extends TextWebSocketHandler {
 		if(presenters.containsKey(sessionId)) {
 			int mediaId = -1;
 			for (int i = 0; i < sessions.length; i++) {
-				if(sessions[i].equals(sessionId)) mediaId = i;
+				if(sessions[i] != null && sessions[i].equals(sessionId)) mediaId = i;
 			}
 			if(mediaId == -1) {
 				LOGGER.debug("Can not find stopped session");
@@ -94,7 +96,9 @@ public class CallHandler extends TextWebSocketHandler {
 			for (UserSession viewer : viewers.get(mediaId).values()) {
 				JsonObject response = new JsonObject();
 		        response.addProperty("id", "stopCommunication");
-		        viewer.sendMessage(response);
+		        if(viewer.getSession().isOpen()) {
+		        	viewer.sendMessage(response);
+		        }
 			}
 			LOGGER.info("Releasing media pipeline");
 			if(presenters.get(sessionId).getWebRtcEndpoint().getMediaPipeline() != null) {
@@ -106,7 +110,7 @@ public class CallHandler extends TextWebSocketHandler {
 
 	private void viewer(WebSocketSession session, JsonObject jsonMessage) throws IOException {
 		int mediaId = jsonMessage.get("mediaId").getAsInt(); 
-		if (presenters.isEmpty() || presenters.get(sessions[mediaId]) == null) {
+		if (presenters.isEmpty() || sessions[mediaId] == null || presenters.get(sessions[mediaId]) == null) {
 		      JsonObject response = new JsonObject();
 		      response.addProperty("id", "viewerResponse");
 		      response.addProperty("response", "rejected");

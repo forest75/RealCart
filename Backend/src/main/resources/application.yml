@@ -1,0 +1,36 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: realcart403@gmail.com
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          timeout: '5000'
+          auth: 'true'
+    password: byjfkulhufqoexit
+  datasource:
+    password: '12341234'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: a403
+    url: jdbc:mysql://3.34.23.91:3306/testrc?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+  jpa:
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: 'true'
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+notification:
+  mattermost:
+    webhook-url: https://meeting.ssafy.com/hooks/4uwa1nkf6id938iw3nxqz8mnta
+    pretext: Web-BackEnd
+    enabled: 'true'
+  
