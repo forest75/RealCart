@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState, useRef } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
-// import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,28 +11,35 @@ import { Link } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardWrite() {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
-  // const [html, setHtml] = useState("");
-  // useEffect(() => {
-  //   // console.log(editorState.getCurrentContent().getPlainText());
-  //   // console.log(convertFromRaw(editorState.getCurrentContent()));
-  //   // convertFromRaw(editorState.getCurrentContent());
-  //   setHtml(draftToHtml(convertToRaw(editorState.getCurrentContent())));
-  // }, [editorState]);
-  const handleSubmit = () => {
-    // console.log(editorState.getCurrentContent());
-    // const contentState = convertFromRaw(editorState);
-    // console.log(contentState);
-    const rawContentState = convertToRaw(editorState.getCurrentContent());
-    // const data = JSON.stringify(rawContentState);
+  const titleRef = useRef();
 
-    // console.log(rawContentState, typeof rawContentState);
-    // const contentState = convertFromRaw(rawContentState);
-    // console.log(contentState, typeof contentState);
-    console.log(JSON.stringify(rawContentState));
-    // console.log(JSON.stringify(contentState));
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  const onEditorStateChange = (eState) => {
+    setEditorState(eState);
+  };
+
+  const user = useSelector((state) => state.login.user);
+
+  const handleSubmit = () => {
+    const rawContentState = convertToRaw(editorState.getCurrentContent());
+    const data = {
+      title: titleRef.current.value,
+      content: JSON.stringify(rawContentState),
+      nickname: user.nickname,
+    };
+    axios
+      .post("http://3.34.23.91:8080/board/free", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Box
@@ -43,7 +50,6 @@ function FreeBoardWrite() {
         alignItems: "center",
         width: "100%",
         height: 700,
-        // bgcolor: "gray",
       }}
     >
       <Box
@@ -51,7 +57,6 @@ function FreeBoardWrite() {
           width: "80%",
           height: "10%",
           display: "flex",
-          // bgcolor: "red",
           alignItems: "center",
         }}
       >
@@ -63,7 +68,6 @@ function FreeBoardWrite() {
         sx={{
           width: "80%",
           height: "15%",
-          // bgcolor: "blue",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -74,6 +78,7 @@ function FreeBoardWrite() {
       >
         <TextField
           placeholder="제목을 입력하세요"
+          inputRef={titleRef}
           sx={{
             width: "100%",
           }}
@@ -106,8 +111,11 @@ function FreeBoardWrite() {
             }}
           >
             <Editor
+              wrapperStyle={{ margin: "10px" }}
+              placeholder="내용을 작성해주세요."
+              localization={{ locale: "ko" }}
               editorState={editorState}
-              onEditorStateChange={setEditorState}
+              onEditorStateChange={onEditorStateChange}
             />
           </Box>
         </Box>
