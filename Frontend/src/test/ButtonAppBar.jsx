@@ -24,7 +24,7 @@ export default function ButtonAppBar() {
   });
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ border: 1 }}>
         <AppBar color="secondary">
           <Toolbar>
             <Link to="/">
@@ -33,8 +33,8 @@ export default function ButtonAppBar() {
                 alt="logo"
                 src={logo}
                 sx={{
-                  height: 110,
-                  margin: 3,
+                  height: 90,
+                  margin: 1,
                 }}
               />
             </Link>
@@ -42,18 +42,25 @@ export default function ButtonAppBar() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               &nbsp;
             </Typography>
-            <Button color="inherit" sx={{ width: 150, height: 70 }}>
-              <h4>RACE</h4>
-            </Button>
-            <Button color="inherit" sx={{ width: 150, height: 70 }}>
-              <h4>Board</h4>
-            </Button>
+            <Link
+              to="/spect"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Button color="inherit" sx={{ width: 150, height: 70 }}>
+                <span>RACE</span>
+              </Button>
+            </Link>
+            <Link to="/play" style={{ color: "black", textDecoration: "none" }}>
+              <Button color="inherit" sx={{ width: 150, height: 70 }}>
+                <span>Board</span>
+              </Button>
+            </Link>
             <Link
               to="/myPage"
               style={{ color: "black", textDecoration: "none" }}
             >
               <Button color="inherit" sx={{ width: 150, height: 70 }}>
-                <h4>About</h4>
+                <span>About</span>
               </Button>
             </Link>
             <Link
@@ -61,7 +68,7 @@ export default function ButtonAppBar() {
               style={{ color: "black", textDecoration: "none" }}
             >
               <Button color="inherit" sx={{ width: 150, height: 70 }}>
-                <h4>Login</h4>
+                <span>Login</span>
               </Button>
             </Link>
           </Toolbar>
