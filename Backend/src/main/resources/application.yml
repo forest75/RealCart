@@ -25,5 +25,24 @@ spring:
         auth: true
         timeout: 5000
         enable: true
+    security:
+      oauth2.client:
+        registration:
+          google:
+            clientId: 55232188941-26bjfq117744pjvoeecihpe05t2pvd8c.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+              - email
+              - profile
+
+# 토큰 관련 secret Key 및 RedirectUri 설정
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpiry: 1800000
+    refreshTokenExpiry: 604800000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth/redirect
 
 # logging.config=classpath:logback-spring.xml

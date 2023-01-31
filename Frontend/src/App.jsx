@@ -16,6 +16,7 @@ import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/freeboard/FreeBoard";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import ReportBoard from "./test2/ReportBoard";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/spect" element={<SpectPage />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/noticeBoard" element={<NoticeBoard />} />
+        <Route path="/oauth/redirect" element={<AuthPage />} />
         <Route path="/freeBoard" element={<FreeBoard />}>
           <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         </Route>
