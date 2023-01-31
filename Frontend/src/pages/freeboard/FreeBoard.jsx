@@ -151,17 +151,28 @@ function FreeBoard() {
             view="조회수"
           />
           {articleList[page].map((article) => (
-            <ArticleBox
-              sx={{
-                width: "80%",
+            <Link
+              to="/freeBoard/detail"
+              style={{
+                textDecoration: "none",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              key={article.no}
-              no={article.no}
-              title={article.title}
-              author={article.author}
-              date={article.date}
-              view={article.view}
-            />
+            >
+              <ArticleBox
+                sx={{
+                  width: "80%",
+                }}
+                key={article.no}
+                no={article.no}
+                title={article.title}
+                author={article.author}
+                date={article.date}
+                view={article.view}
+              />
+            </Link>
           ))}
           <Box
             sx={{
