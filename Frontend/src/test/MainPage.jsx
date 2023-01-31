@@ -1,9 +1,24 @@
 import { Box, Grid, Paper } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 
 function MainPage() {
+  // const webcamRef = useRef(null);
+  const [inp, setInput] = useState("");
+  // const handleCam = (stream) => {
+  //   webcamRef.current.focus();
+  //   webcamRef.current.srcObject = stream;
+  //   webcamRef.current.addEventListener("keydown", (event) => {
+  //     // setInput(event.key);
+  //     console.log(event.key);
+  //   });
+  // };
+  useEffect(() => {
+    console.log(inp);
+  }, [inp]);
+  const onChange = (event) => {
+    setInput(event.target.value);
+  };
   const columns = [
     { field: "id", headerName: "순위", width: 150 },
     { field: "nickname", headerName: "NickName", width: 150, editable: true },
@@ -26,7 +41,6 @@ function MainPage() {
   //   { field: "author", headerName: "NickName", width: 150, editable: true },
   //   { field: "view", headerName: "NickName", width: 150, editable: true },
   // ]
-
   return (
     <Box
       style={{
@@ -36,110 +50,77 @@ function MainPage() {
         justifyContent: "center",
       }}
     >
-      <div style={{ marginBottom: "50px", marginTop: "30px" }}>
-        <Link to="/spect" style={{ color: "black", textDecoration: "none" }}>
+      <div container style={{ marginBottom: "100px" }}>
+        <Paper elevation={3}>
+          <Grid
+            container
+            spacing={2}
+            style={{
+              minWidth: "90vh",
+              minHeight: "50vh",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <form>
+              <input type="text" value={inp} onChange={onChange} />
+            </form>
+            <Box
+              component="img"
+              alt="play"
+              tabIndex={-1}
+              src="http://172.30.192.150:8080/?action=stream"
+              onKeyDown={(event) => {
+                console.log(event.key);
+              }}
+            />
+            {/* <img
+              role="presentation"
+              src="http://172.30.192.150:8080/?action=stream"
+              alt="play"
+              tabIndex={-1}
+              onKeyDown={(event) => {
+                console.log(event.key);
+              }}
+            /> */}
+          </Grid>
+        </Paper>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "0px 100px 100px 100px",
+        }}
+      >
+        <Box sx={{ width: 1000 }}>
           <Paper elevation={3}>
             <Grid
               container
               spacing={2}
               style={{
-                minWidth: "90vh",
+                minWidth: "50vh",
                 minHeight: "50vh",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: "flex-start",
+                padding: "30px",
               }}
             >
-              a
+              <h1>공지사항</h1>
+              <h1>게시글</h1>
             </Grid>
           </Paper>
-        </Link>
-      </div>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-evenly",
-          marginBottom: "20px",
-        }}
-      >
-        <Box>
-          <Paper
-            elevation={3}
-            sx={{
-              width: "100%",
-              height: "500px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              spacing={2}
-              style={{
-                minWidth: "100vh",
-                minHeight: "5vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <h3>공지사항</h3>
-              <Box
-                sx={{
-                  width: 700,
-                  height: 150,
-                }}
-              >
-                <DataGrid
-                  rows={ranking}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                />
-              </Box>
-            </Box>
-            <Box
-              container
-              spacing={2}
-              style={{
-                minWidth: "100vh",
-                minHeight: "5vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <h3>게시글</h3>
-              <Box
-                sx={{
-                  width: 700,
-                  height: 150,
-                }}
-              >
-                <DataGrid
-                  rows={ranking}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                />
-              </Box>
-            </Box>
-          </Paper>
         </Box>
-        <Box>
-          <Paper elevation={3} sx={{ width: "100%", height: "500px" }}>
-            <Box
+        <Box sx={{ width: 1000, marginLeft: 10 }}>
+          <Paper elevation={3}>
+            <Grid
               container
               spacing={2}
               style={{
-                minWidth: "90vh",
+                minWidth: "50vh",
                 minHeight: "50vh",
                 display: "flex",
                 flexDirection: "column",
@@ -147,11 +128,11 @@ function MainPage() {
                 justifyContent: "center",
               }}
             >
-              <h3>Ranking</h3>
+              <h1>Ranking</h1>
               <Box
                 sx={{
-                  width: 700,
-                  height: 350,
+                  width: 600,
+                  height: 300,
                 }}
               >
                 <DataGrid
@@ -162,7 +143,7 @@ function MainPage() {
                   experimentalFeatures={{ newEditingApi: true }}
                 />
               </Box>
-            </Box>
+            </Grid>
           </Paper>
         </Box>
       </div>
