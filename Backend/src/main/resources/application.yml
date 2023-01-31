@@ -1,0 +1,29 @@
+spring:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://3.34.23.91:3306/testrc?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul  # DB Source URL
+      username: a403  # DB username
+      password: 12341234  # DB password
+    jpa:
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  # Case Sensitivity
+        ddl-auto: update  # DDL(create, alter, drop) 정의시 DB의 고유 기능을 사용할 수 있다.
+      show-sql: true  # JPA 쿼리문 확인 가능
+      properties:
+        hibernate:
+          format_sql: true  # JPA의 구현체인 Hibernate가 동작하면서 발생한 SQL의 가독성을 높여준다.
+    mvc:
+      pathmatch:
+        matching-strategy: ant_path_matcher  # swagger
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: realcart403@gmail.com
+      password: byjfkulhufqoexit
+      smtp:
+        auth: true
+        timeout: 5000
+        enable: true
+
+# logging.config=classpath:logback-spring.xml
