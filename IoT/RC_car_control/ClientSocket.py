@@ -9,7 +9,6 @@ import threading
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
 from car import CAR
-import json
 
 class ClientSocket:
     
@@ -48,12 +47,12 @@ class ClientSocket:
     def sendData(self):
         try:
             while True:
-                timeStamp = time()
-                gate = self.car_A.gate
-                data = f"time: {timeStamp}, gate: {gate}"
+                timeStamp = time.time()
+                data = '22'
+                #data = f"time: {timeStamp}, gate: {self.car_A.gate}"
                 length = str(len(data))
                 self.sock.sendall(length.encode('utf-8').ljust(64))  # timestamp의 length
-                self.sock.send(data)  # 실제 보낼 데이터
+                self.sock.send('10'.encode())  # 실제 보낼 데이터
                 time.sleep(1)
 
         except Exception as e:
@@ -61,7 +60,7 @@ class ClientSocket:
             self.sock.close()
             time.sleep(1)
             self.connectServer()
-            self.sendData()
+
 
     def recv(self):
         while True:

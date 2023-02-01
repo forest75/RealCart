@@ -1,5 +1,5 @@
 import socket
-from _thread import *
+import threading
 from pynput import keyboard
 
 client_sockets = [] # 서버에 접속한 클라이언트 목록
@@ -25,13 +25,14 @@ def on_release(key):
     if key == keyboard.Key.esc:
         return False
 
+def key_event():
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()
+
 # 쓰레드에서 실행되는 코드입니다.
 # 접속한 클라이언트마다 새로운 쓰레드가 생성되어 통신을 하게 됩니다
 def threaded(client_socket, addr):
     print(">> Connected by:", addr[0], ':', addr[1])
-
-    with keyboard.Listener(on_press=on_press) as listener:
-        listener.join()
     
     # 클라이언트가 접속을 끊을 때 까지 반복합니다.
     while True:
@@ -44,7 +45,7 @@ def threaded(client_socket, addr):
                 print(">> Disconnected by" + addr[0], ":", addr[1])
                 break
 
-            print(">>Received from" + addr[0], ':', addr[1], data.decode())
+            print(data.decode())
 
         except ConnectionResetError as e:
             print('>> Disconneted by' + addr[0], ':', addr[1])
@@ -76,7 +77,15 @@ try:
 
         client_socket, addr = server_socket.accept()
         client_sockets.append(client_socket)
-        start_new_thread(threaded, (client_socket, addr))
+        
+        recv_thread = threading.Thread(target=threaded, args=(client_socket, addr))
+        recv_thread.start()
+        
+        send_thread = threading.Thread(target=key_event)
+        send_thread.start()
+        
+        #start_new_thread(threaded, (client_socket, addr))
+        #start_new_thread(key_event)
         print('참가자 수:', len(client_sockets))
 
 except Exception as e:
