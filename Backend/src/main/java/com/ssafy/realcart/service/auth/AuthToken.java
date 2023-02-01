@@ -1,5 +1,6 @@
-package com.ssafy.realcart.service;
+package com.ssafy.realcart.service.auth;
 
+import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.data.repository.IUserRepository;
 import io.jsonwebtoken.*;
 import lombok.Getter;
@@ -11,25 +12,20 @@ import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
-//@ComponentScan
 public class AuthToken {
 
     @Getter
     private final String token;
     private final Key key;
+    
+    private static final String AUTHORITIES_KEY = "admin";  // 특별한 권한이 필요한 경우
 
-    private final IUserRepository userRepository;  // 순서 변경 금지
-
-    private static final String AUTHORITIES_KEY = "role";
-
-    AuthToken(String id, Date expiry, Key key, IUserRepository userRepository) {
-        this.userRepository = userRepository;
+    AuthToken(String id, Date expiry, Key key) {
         this.key = key;
         this.token = createAuthToken(id, expiry);
     }
 
-    AuthToken(String id, String role, Date expiry, Key key, IUserRepository userRepository) {
-        this.userRepository = userRepository;
+    AuthToken(String id, String role, Date expiry, Key key) {
         this.key = key;
         this.token = createAuthToken(id, role, expiry);
     }
@@ -43,22 +39,9 @@ public class AuthToken {
     }
 
     private String createAuthToken(String id, String role, Date expiry) {
-        User user = userRepository.findByUserId(id);
-        Long userSeq = user.getUserSeq();
-        String username = user.getUsername();
-
-        Claims claims = Jwts.claims().setSubject(id); // JWT payload 에 저장되는 정보단위 (sub)
-        claims.put("user_seq", userSeq);
-        claims.put("username", username);
-        claims.put("user_id", id); // user_id를 저장(명명방식에 과거 프로젝트 장고 흔적). 정보는 key / value 쌍으로 저장된다.
-        claims.put(AUTHORITIES_KEY, role);
-
-        Date now = new Date();
         return Jwts.builder()
-//                .setSubject(id)
-                .setClaims(claims) // 정보 저장
-                .setIssuedAt(now) // jwt 추가
-//                .claim(AUTHORITIES_KEY, role)
+                .setSubject(id)
+                .claim(AUTHORITIES_KEY, role)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiry)
                 .compact();

@@ -1,14 +1,11 @@
 package com.ssafy.realcart.data.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.ssafy.realcart.config.BaseTime;
 
+import com.ssafy.realcart.data.entity.auth.ProviderType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -43,5 +40,10 @@ public class User extends BaseTime{
     private byte isBan;
     @Column(name="refresh_token")
     private String refreshToken;
+
+    @Column(name = "provider_type", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ProviderType providerType;
 
 }

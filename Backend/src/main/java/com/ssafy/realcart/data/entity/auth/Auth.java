@@ -1,4 +1,4 @@
-package com.ssafy.realcart.data.entity;
+package com.ssafy.realcart.data.entity.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
