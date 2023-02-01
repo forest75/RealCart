@@ -60,7 +60,7 @@ function FreeBoardModify() {
       nickname: user.nickname,
     };
     axios
-      .post("http://3.34.23.91:8080/board/free", data, {
+      .put(`http://3.34.23.91:8080/board/free/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -193,7 +193,7 @@ function FreeBoardModify() {
               }}
               onClick={handleSubmit}
             >
-              등록
+              수정
             </AppButton>
           </Box>
         </Box>
