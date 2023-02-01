@@ -6,3 +6,4 @@ class CAR:
         self.handle = 'center'
         self.state = 0
         self.command = 0
+        self.gate = 0

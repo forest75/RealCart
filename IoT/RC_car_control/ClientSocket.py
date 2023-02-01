@@ -9,6 +9,7 @@ import threading
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
 from car import CAR
+import json
 
 class ClientSocket:
     
@@ -32,8 +33,8 @@ class ClientSocket:
             self.connectCount = 0
             recv_thread = threading.Thread(target=self.recv)
             recv_thread.start()
-            #send_thread = threading.Thread(target=self.sendImages)
-            #send_thread.start()
+            send_thread = threading.Thread(target=self.sendData)
+            send_thread.start()
 
         except Exception as e:
             print(e)
@@ -44,33 +45,24 @@ class ClientSocket:
             print(u'%d times try to connect with server' % (self.connectCount))
             self.connectServer()
 
-    def sendImages(self):
-        cnt = 0
-        capture = cv2.VideoCapture(0)
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 300)
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 200)
-        
+    def sendData(self):
         try:
-            while capture.isOpened():
-                ret, frame = capture.read()
-                resize_frame = cv2.resize(frame, dsize=(300, 200), interpolation=cv2.INTER_AREA)
-                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
-                result, imgencode = cv2.imencode('.jpg', resize_frame, encode_param)
-                data = numpy.array(imgencode)
-                stringData = base64.b64encode(data)
-                length = str(len(stringData))
-                self.sock.sendall(length.encode('utf-8').ljust(64))
-                self.sock.send(stringData)
-                print(u'send images %d' % (cnt))
-                cnt += 1
+            while True:
+                timeStamp = self.time()
+                gate = self.car_A.gate()
+                data = {"time": timeStamp, "gate": gate}
+                json_data = json.loads(data)
+                length = str(len(json_data))
+                self.sock.sendall(length.encode('utf-8').ljust(64))  # timestamp의 length
+                self.sock.send(data)  # 실제 보낼 데이터
                 time.sleep(0.7)
-                
+
         except Exception as e:
             print(e)
             self.sock.close()
             time.sleep(1)
             self.connectServer()
-            self.sendImages()
+            self.sendData()
 
     def recv(self):
         while True:

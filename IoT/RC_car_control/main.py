@@ -59,7 +59,7 @@ def main():
     driving_thread = threading.Thread(target=driving)
     slowdown_thread = threading.Thread(target=slowdown)
 
-
+                               
     client = ClientSocket(TCP_IP, TCP_PORT, car_A)
 
 

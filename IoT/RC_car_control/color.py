@@ -5,7 +5,7 @@ from car import CAR
 
 class COLOR:
 
-    def __init__(self, color_s2, color_s3, color_signal, color_cycles):
+    def __init__(self, color_s2, color_s3, color_signal, color_cycles, car_A):
 
         try:
 
@@ -16,6 +16,7 @@ class COLOR:
             self.color_s3 = color_s3
             self.color_signal = color_signal
             self.color_cycles = color_cycles
+            self.car_A = car_A
 
             print('Color Sensing GPIO pin Setting complete')
 
@@ -40,6 +41,7 @@ class COLOR:
 
         duration = time.time() - start  # seconds to rn for loop
         red = color_cycles / duration
+
 
         # Blue
         GPIO.output(color_s2, GPIO.LOW)
@@ -68,15 +70,17 @@ class COLOR:
         green = color_cycles / duration
 
         if color_green[0] < red < color_green[1] and color_green[2] < green < color_green[3] and color_green[4] < blue < \
-                color_green[5] and CAR.state == 0:
+                color_green[5] and self.car_A.state == 0:
             print('Ready')
-            CAR.state = 1
+            self.car_A.state = 1
+            self.car_A.gate = 1
 
         elif color_pink[0] < red < color_pink[1] and color_pink[2] < green < color_pink[3] and color_pink[4] < blue < \
-                color_pink[5] and CAR.state == 1:
+                color_pink[5] and self.car_A.state == 1:
             print('Goal')
-            CAR.speed = 0
-            DC_MOTOR.drive(CAR.speed)
-            CAR.state = 0
+            self.car_A.speed = 0
+            DC_MOTOR.drive(self.car_A.speed)
+            self.car_A.state = 0
+            self.car_A.gate = 4
 
-        return CAR.state
+        return self.car_A.state
