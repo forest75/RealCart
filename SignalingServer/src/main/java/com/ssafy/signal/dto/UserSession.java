@@ -1,4 +1,4 @@
-package com.ssafy.signal;
+package com.ssafy.signal.dto;
 
 import java.io.IOException;
 

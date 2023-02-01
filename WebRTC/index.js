@@ -16,19 +16,25 @@
  */
 
 var ws = new WebSocket('wss://13.125.13.39:8090/call');
+var socket = new WebSocket('wss://13.125.13.39:8090/chat');
 var video;
+var text;
 var webRtcPeer;
 var mediaId;
 window.onload = function() {
 	
 	video = document.getElementById('video');
-	
+	text = document.getElementById('text');
+	connect();
 }
 
 window.onbeforeunload = function() {
 	ws.close();
 }
 
+// socket.onmessage = function(message){
+// 	console.log(message);
+// }
 ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
 	console.info('Received message: ' + message.data);
@@ -67,6 +73,23 @@ function presenterResponse(message) {
 	}
 }
 
+function connect(){
+	
+	stompClient = Stomp.over(socket);
+	stompClient.connect({}, function(){
+		stompClient.subscribe('/subscribe', function (greeting){
+			console.log(greeting.body);
+		});
+	});
+}
+
+function sendChat(){
+	stompClient.send("/publish/messages", {}, JSON.stringify({
+		'message' : text.value,
+		'senderId' : 7,
+		'receiverId' : 14,
+	}));
+}
 function viewerResponse(message) {
 	if (message.response != 'accepted') {
 		var errorMsg = message.message ? message.message : 'Unknow error';

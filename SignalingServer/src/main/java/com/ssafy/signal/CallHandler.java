@@ -22,6 +22,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.ssafy.signal.dto.UserSession;
 import com.ssafy.signal.mattermost.NotificationManager;
 @Component
 public class CallHandler extends TextWebSocketHandler {
