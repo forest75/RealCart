@@ -6,19 +6,19 @@ client_sockets = [] # 서버에 접속한 클라이언트 목록
 
 def on_press(key):
     if (key == keyboard.Key.up):
-        client_socket.send("38".encode())
+        client_socket.send('&'.encode())
     
     if (key == keyboard.Key.down):
-        client_socket.send("40".encode())
+        client_socket.send('('.encode())
     
     if (key == keyboard.Key.left):
-        client_socket.send("37".encode())
+        client_socket.send('%'.encode())
     
     if (key == keyboard.Key.right):
-        client_socket.send("39".encode())
+        client_socket.send('\''.encode())
         
     if (key == keyboard.Key.space):
-        client_socket.send("32".encode())
+        client_socket.send(' '.encode())
 
 def on_release(key):
     print('Key %s released' %key)
