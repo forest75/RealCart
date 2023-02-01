@@ -42,7 +42,7 @@ public class MatterMostSender {
 			HttpEntity<String> entity = new HttpEntity<>(payload, headers);
 			RESTTEMPLATE.postForEntity(webhookUrl, entity, String.class);
 		} catch (Exception e) {
-			LOGGER.error("#### ERROR!! Notification Manager : {}", e.getMessage());
+			LOGGER.error("#### ERROR!! Notification Manager : {}", e);
 		}
 	}
 }

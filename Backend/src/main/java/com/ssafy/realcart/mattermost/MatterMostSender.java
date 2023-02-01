@@ -38,11 +38,11 @@ public class MatterMostSender {
 			String payload = new Gson().toJson(attachments);
 			
 			HttpHeaders headers = new HttpHeaders();
-			headers.set("Content-tyoe", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
 			HttpEntity<String> entity = new HttpEntity<>(payload, headers);
 			RESTTEMPLATE.postForEntity(webhookUrl, entity, String.class);
 		} catch (Exception e) {
-			LOGGER.error("#### ERROR!! Notification Manager : {}", e.getMessage());
+			LOGGER.error("#### ERROR!! Notification Manager : ", e);
 		}
 	}
 }
