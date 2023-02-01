@@ -48,7 +48,7 @@ class ClientSocket:
     def sendData(self):
         try:
             while True:
-                timeStamp = self.time()
+                timeStamp = time()
                 gate = self.car_A.gate()
                 data = f"time: {timeStamp}, gate: {gate}"
                 length = str(len(data))
