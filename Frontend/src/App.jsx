@@ -34,7 +34,7 @@ function App() {
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
-        <Route path="/freeBoard/detail:id" element={<FreeBoardDetail />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
       </Routes>
       <AppFooter />
     </Box>
