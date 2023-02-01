@@ -13,6 +13,7 @@ import PlayPage from "./pages/PlayPage";
 import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/freeboard/FreeBoard";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
+import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
 import ReportBoard from "./test2/ReportBoard";
 import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
 
@@ -31,8 +32,9 @@ function App() {
         <Route path="/noticeBoard" element={<NoticeBoard />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
+        <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
-        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
+        <Route path="/freeBoard/detail:id" element={<FreeBoardDetail />} />
       </Routes>
       <AppFooter />
     </Box>
