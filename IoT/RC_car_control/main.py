@@ -24,6 +24,16 @@ def driving(self, car_transmission):
     
     except:
         print('driving Error')
+
+def slowdown(self, car_transmission):
+    try:
+        while True:
+            self.car_A.speed *= 0.9
+            car_transmission.drive(self.car_A.speed)
+            SERVO_MOTOR.sleep(0.5)
+
+    except:
+        print("slow down Error!")
             
 
 def main():
@@ -47,7 +57,9 @@ def main():
     color = COLOR(color_s2, color_s3, color_signal, color_cycles, car_A)
     
     driving_thread = threading.Thread(target=driving)
-    
+    slowdown_thread = threading.Thread(target=slowdown)
+
+
     client = ClientSocket(TCP_IP, TCP_PORT, car_A)
 
 
