@@ -2,9 +2,10 @@ import threading
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
 from car import CAR
+from color import COLOR
 from ClientSocket import ClientSocket
 
-def driving():
+def driving(self, car_transmission):
     try:
         while True:
             key_up = 38
@@ -32,12 +33,18 @@ def main():
     dc_enable = 27
     dc_input_1 = 15
     dc_input_2 = 18
+
+    color_s2 = 23
+    color_s3 = 24
+    color_signal = 25
+    color_cycles = 10
     
     servo_pin = 17
     
     car_A = CAR()
     car_transmission = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)      
     car_handle = SERVO_MOTOR(servo_pin)
+    color = COLOR(color_s2, color_s3, color_signal, color_cycles, car_A)
     
     driving_thread = threading.Thread(target=driving)
     
