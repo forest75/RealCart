@@ -50,9 +50,8 @@ class ClientSocket:
             while True:
                 timeStamp = self.time()
                 gate = self.car_A.gate()
-                data = {"time": timeStamp, "gate": gate}
-                json_data = json.loads(data)
-                length = str(len(json_data))
+                data = f"time: {timeStamp}, gate: {gate}"
+                length = str(len(data))
                 self.sock.sendall(length.encode('utf-8').ljust(64))  # timestamp의 length
                 self.sock.send(data)  # 실제 보낼 데이터
                 time.sleep(0.7)
