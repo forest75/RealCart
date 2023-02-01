@@ -26,6 +26,7 @@ public class MatterMostMessageDto {
 		}
 		
 		public Attachments(Attachment attachment) {
+			this();
 			this.attachments.add(attachment);
 		}
 		
