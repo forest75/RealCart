@@ -3,7 +3,7 @@ package com.ssafy.realcart.controller;
 import com.ssafy.realcart.common.ApiResponse;
 import com.ssafy.realcart.config.auth.AppProperties;
 import com.ssafy.realcart.data.entity.User;
-import com.ssafy.realcart.data.entity.auth.Auth;
+import com.ssafy.realcart.data.entity.auth.AuthReqModel;
 import com.ssafy.realcart.data.entity.auth.UserPrincipal;
 import com.ssafy.realcart.data.repository.IUserRepository;
 import com.ssafy.realcart.service.auth.AuthToken;
@@ -35,7 +35,7 @@ public class AuthController {
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody Auth authReqModel
+            @RequestBody AuthReqModel authReqModel
     ) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
