@@ -2,6 +2,7 @@ package com.ssafy.realcart.controller;
 
 import com.ssafy.realcart.common.ApiResponse;
 import com.ssafy.realcart.config.auth.AppProperties;
+import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.data.entity.auth.Auth;
 import com.ssafy.realcart.data.entity.auth.UserPrincipal;
 import com.ssafy.realcart.data.repository.IUserRepository;
@@ -27,7 +28,6 @@ public class AuthController {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
     private final IUserRepository userRepository;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
@@ -64,14 +64,17 @@ public class AuthController {
         );
 
         // userId refresh token 으로 DB 확인
-        String userRefreshToken = userRepository.findById()
+        String userRefreshToken = userRepository.findByEmail(userId).getRefreshToken();
+        System.out.println(userRefreshToken);
         if (userRefreshToken == null) {
             // 없는 경우 새로 등록
-            userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
-            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+            userRefreshToken = refreshToken.getToken();
+            User user = userRepository.findByEmail(userId);
+            user.setRefreshToken(userRefreshToken);
+            userRepository.saveAndFlush(user);
         } else {
             // DB에 refresh 토큰 업데이트
-            userRefreshToken.setRefreshToken(refreshToken.getToken());
+            userRefreshToken = refreshToken.getToken();
         }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
