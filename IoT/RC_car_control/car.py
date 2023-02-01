@@ -5,3 +5,4 @@ class CAR:
         self.speed = 0
         self.handle = 'center'
         self.state = 0
+        self.command = 0
