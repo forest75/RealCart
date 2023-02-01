@@ -48,11 +48,10 @@ class ClientSocket:
         try:
             while True:
                 timeStamp = time.time()
-                data = '22'
-                #data = f"time: {timeStamp}, gate: {self.car_A.gate}"
-                length = str(len(data))
-                self.sock.sendall(length.encode('utf-8').ljust(64))  # timestamp의 length
-                self.sock.send('10'.encode())  # 실제 보낼 데이터
+                data = f"time: {timeStamp}, gate: {self.car_A.gate}"
+                #length = str(len(data))
+                #self.sock.sendall(data.encode('utf-8').ljust(64))  # timestamp의 length
+                self.sock.send(data.encode())  # 실제 보낼 데이터
                 time.sleep(1)
 
         except Exception as e:
