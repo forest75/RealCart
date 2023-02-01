@@ -12,9 +12,8 @@ def threaded(client_socket, addr):
     while True:
 
         try:
-
             # 데이터가 수신되면 클라이언트에 다시 전송합니다.
-            data = client_socket.recv(1024)
+            # data = client_socket.recv(2)
 
             if not data:
                 print(">> Disconnected by" + addr[0], ":", addr[1])
@@ -24,9 +23,7 @@ def threaded(client_socket, addr):
 
             # 서버에 접속한 클라이언트들에게 채팅 보내기
             # 메세지를 보낸 본인을 제외한 서버에 접속한 클라이언트에게 메세지 보내기
-            for client in client_sockets:
-                if client != client_socket:
-                    client.send(data)
+            client_socket.sendall("40".encode())
 
         except ConnectionResetError as e:
             print('>> Disconneted by' + addr[0], ':', addr[1])
