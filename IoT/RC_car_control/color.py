@@ -5,17 +5,19 @@ from car import CAR
 
 class COLOR:
 
-    def __init__(self, color_s2, color_s3, color_signal, color_cycles, car_A):
+    def __init__(self, color_s2, color_s3, color_signal, car_A):
 
         try:
+            GPIO.setmode(GPIO.BCM)
 
-            GPIO.output(color_s2, GPIO.LOW)
-            GPIO.output(color_s3, GPIO.LOW)
+            GPIO.setup(color_signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(color_s2,GPIO.OUT)
+            GPIO.setup(color_s3, GPIO.OUT)
 
             self.color_s2 = color_s2
             self.color_s3 = color_s3
             self.color_signal = color_signal
-            self.color_cycles = color_cycles
+            self.color_cycles = 10
             self.car_A = car_A
 
             print('Color Sensing GPIO pin Setting complete')

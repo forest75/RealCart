@@ -47,14 +47,13 @@ def main():
     color_s2 = 23
     color_s3 = 24
     color_signal = 25
-    color_cycles = 10
     
     servo_pin = 17
     
     car_A = CAR()
     car_transmission = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)      
     car_handle = SERVO_MOTOR(servo_pin)
-    color = COLOR(color_s2, color_s3, color_signal, color_cycles, car_A)
+    color = COLOR(color_s2, color_s3, color_signal, car_A)
     
     #driving_thread = threading.Thread(target=driving)
     #slowdown_thread = threading.Thread(target=slowdown)
