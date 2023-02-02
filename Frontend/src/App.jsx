@@ -14,8 +14,11 @@ import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/freeboard/FreeBoard";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
-import ReportBoard from "./test2/ReportBoard";
 import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
+import ReportBoard from "./pages/reportboard/ReportBoard";
+import ReportBoardWrite from "./pages/reportboard/ReportBoardWrite";
+import ReportBoardModify from "./pages/reportboard/ReportBoardModify";
+import ReportBoardDetail from "./pages/reportboard/ReportBoardDetail";
 import AuthPage from "./pages/AuthPage";
 
 function App() {
@@ -34,9 +37,12 @@ function App() {
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
-        <Route path="/oauth/redirect" element={<AuthPage />} />
-        <Route path="/reportBoard" element={<ReportBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
+        <Route path="/reportBoard" element={<ReportBoard />} />
+        <Route path="/reportBoard/write" element={<ReportBoardWrite />} />
+        <Route path="/reportBoard/modify" element={<ReportBoardModify />} />
+        <Route path="/reportBoard/detail" element={<ReportBoardDetail />} />
+        <Route path="/oauth/redirect" element={<AuthPage />} />
       </Routes>
       <AppFooter />
     </Box>

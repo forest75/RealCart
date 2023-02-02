@@ -14,11 +14,13 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import InitialContent from "../components/InitialContent";
 // import car from "../assets/car.jpg";
 // import tmpmain from "../assets/map_keyboard.png";
 
 function SpectPage() {
+  const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
   // let idx = 0;
@@ -64,7 +66,7 @@ function SpectPage() {
     event.preventDefault();
     if (chat === "") return;
     // eslint-disable-next-line prefer-template
-    const newchat = "의권짱짱33 : " + chat;
+    const newchat = `${user.nickname} : ` + chat;
     setChats((currentArray) => [...currentArray, newchat]);
     setChat("");
   };
