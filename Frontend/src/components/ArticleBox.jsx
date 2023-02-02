@@ -1,9 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
 // import Button from "@mui/material/Button";
 
-function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
+function ArtcleBox({
+  sx,
+  board,
+  no,
+  title,
+  author,
+  date,
+  view,
+  ...otherProps
+}) {
   const mergedSx = {
     ...{ bgcolor: "white", color: "black", borderBottom: 1 },
     ...sx,
@@ -30,15 +40,26 @@ function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
         >
           {no}
         </Box>
-        <Box
-          sx={{
-            width: "60%",
+        <Link
+          to={`/${board}/detail?no=${no}`}
+          style={{
+            textDecoration: "none",
+            width: "100%",
             display: "flex",
+            alignItems: "center",
             justifyContent: "center",
           }}
         >
-          {title}
-        </Box>
+          <Box
+            sx={{
+              width: "60%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {title}
+          </Box>
+        </Link>
         <Box
           sx={{
             width: "10%",
@@ -78,6 +99,7 @@ ArtcleBox.defaultProps = {
 ArtcleBox.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
+  board: PropTypes.string.isRequired,
   no: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,

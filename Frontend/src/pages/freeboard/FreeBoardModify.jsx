@@ -1,19 +1,50 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
-function FreeBoardWrite() {
+function FreeBoardModify() {
   const titleRef = useRef();
 
+  const [searchParams] = useSearchParams();
+  const no = Number(searchParams.get("no"));
+
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  useEffect(() => {
+    axios
+      .get(`http://3.34.23.91:8080/board/free/${no}`)
+      .then((res) => {
+        titleRef.current.value = res.data.title;
+        let { content } = res.data;
+        try {
+          content = JSON.parse(content);
+        } catch (e) {
+          content = {
+            blocks: [
+              {
+                text: content,
+                type: "unstyled",
+                entityRanges: [],
+              },
+            ],
+            entityMap: {},
+          };
+        }
+        content = convertFromRaw(content);
+        setEditorState(EditorState.createWithContent(content));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const onEditorStateChange = (eState) => {
     setEditorState(eState);
@@ -29,7 +60,7 @@ function FreeBoardWrite() {
       nickname: user.nickname,
     };
     axios
-      .post("http://3.34.23.91:8080/board/free", data, {
+      .put(`http://3.34.23.91:8080/board/free/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -77,7 +108,7 @@ function FreeBoardWrite() {
         }}
       >
         <TextField
-          placeholder="제목을 입력하세요"
+          placeholder="수정"
           inputRef={titleRef}
           sx={{
             width: "100%",
@@ -162,7 +193,7 @@ function FreeBoardWrite() {
               }}
               onClick={handleSubmit}
             >
-              등록
+              수정
             </AppButton>
           </Box>
         </Box>
@@ -171,4 +202,4 @@ function FreeBoardWrite() {
   );
 }
 
-export default FreeBoardWrite;
+export default FreeBoardModify;

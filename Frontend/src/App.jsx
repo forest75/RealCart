@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
-import { Provider } from "react-redux";
-import store from "./store/store";
 import AppHeader from "./components/AppHeader";
 import LoginForm from "./pages/LoginForm";
 import RegistForm from "./pages/RegistForm";
@@ -15,36 +13,30 @@ import PlayPage from "./pages/PlayPage";
 import NoticeBoard from "./pages/NoticeBoard";
 import FreeBoard from "./pages/freeboard/FreeBoard";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
+import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
 import ReportBoard from "./test2/ReportBoard";
+import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
 import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
     <Box>
-      <Provider store={store}>
-        <AppHeader />
-      </Provider>
+      <AppHeader />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route
-          path="/login"
-          element={
-            <Provider store={store}>
-              <LoginForm />
-            </Provider>
-          }
-        />
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/regist" element={<RegistForm />} />
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
         <Route path="/spect" element={<SpectPage />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/noticeBoard" element={<NoticeBoard />} />
+        <Route path="/freeBoard" element={<FreeBoard />} />
+        <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
+        <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
         <Route path="/oauth/redirect" element={<AuthPage />} />
-        <Route path="/freeBoard" element={<FreeBoard />}>
-          <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
-        </Route>
         <Route path="/reportBoard" element={<ReportBoard />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
       </Routes>
       <AppFooter />
     </Box>
