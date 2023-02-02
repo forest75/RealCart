@@ -40,9 +40,11 @@ class RCcarThread implements Runnable{
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
             System.out.println("socket I/O streams are created.");
-            webSocketServer = new org.example.WsHandler(webSocketPort, pw);
-            webSocketServer.start();
-            System.out.println("websocket server started on port " + webSocketPort);
+            while(true){
+                webSocketServer = new org.example.WsHandler(webSocketPort, pw);
+                webSocketServer.start();
+                System.out.println("websocket server started on port " + webSocketPort);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
