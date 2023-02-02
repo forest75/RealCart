@@ -22,7 +22,7 @@ def cmd_check(car_A):
 
 def main():
     #TCP_IP = '3.35.3.27'   # Game Server IP
-    #TCP_IP = '70.12.246.218'
+    #TCP_IP = '70.12.246.218' #Park seongmin IP
     TCP_IP = '127.0.0.1'  # Simulator IP
     TCP_PORT = 8081
     
