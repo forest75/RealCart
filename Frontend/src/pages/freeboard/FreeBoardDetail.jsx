@@ -10,42 +10,58 @@ import AppButton from "../../components/AppButton";
 function FreeBoardDetail() {
   // const chatRef = useRef();
   const [title, setTitle] = useState();
+  const [comments, setComments] = useState();
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
+  const [chat, setChat] = useState("");
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     axios
       .get(`http://3.34.23.91:8080/board/free/${no}`)
       .then((res) => {
         setTitle(res.data.title);
-        console.log(res.data);
+        setComments(res.data.coments);
+        // console.log(res.data.comments);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const [chat, setChat] = useState("");
   // const [chats, setChats] = useState([]);
   // const chatRef = useRef(null);
 
   const onChange = (event) => {
     setChat(event.target.value);
+    setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
+    if (count > 200) {
+      alert("200자까지만 작성할 수 있습니다.");
+      setChat(chat.substring(0, 200));
+    }
   };
   const user = useSelector((state) => state.login.user);
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(chat);
-    console.log(e);
+    // console.log(chat);
+    // console.log(e);
     if (chat === "") return;
     const data = {
-      content: e.target[0].value,
-      nickname: user.nickname,
+      comments: [
+        {
+          content: e.target[0].value,
+          nickname: user.nickname,
+        },
+      ],
     };
     console.log(data);
 
     await axios
-      .put(`http://3.34.23.91:8080/user/board/free/${no}`, data)
+      .post(`http://3.34.23.91:8080/board/free`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         console.log(response);
       })
@@ -224,6 +240,7 @@ function FreeBoardDetail() {
                   onChange={onChange}
                   value={chat}
                   type="text"
+                  maxLength="200"
                   style={{
                     width: "98%",
                     height: "100px",
@@ -247,7 +264,7 @@ function FreeBoardDetail() {
                       width: "95%",
                     }}
                   >
-                    1/200
+                    {count}/200
                   </Box>
                   <AppButton type="submit">등록</AppButton>
                 </Box>
@@ -255,6 +272,7 @@ function FreeBoardDetail() {
             </Box>
           </Box>
         </Box>
+        <Box>{comments}</Box>
       </Box>
     </Box>
   );
