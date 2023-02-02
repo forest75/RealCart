@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
@@ -24,56 +25,39 @@ function ReportBoard() {
   };
 
   const onChangePage = (event, value) => {
-    setPage(value - 1);
+    setPage(value);
   };
-  const articleList = [
-    [
-      {
-        no: 0,
-        title: "여기가 자유 게시판인가요?.",
-        author: "SSAFY1",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "리얼카트 너무 재밌어요.",
-        author: "김싸피",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "골드 미만 글 작성 금지",
-        author: "웅니",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-    [
-      {
-        no: 0,
-        title: "2페이지입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "3페이지는 없어요.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "만들면 생겨요",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-  ];
+
+  const [loading, setLoading] = useState(true);
+  const [articleList, setArticleList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/report`)
+      .then((res) => {
+        const articles = res.data;
+        const numberOfArticlesPerUnit = 10;
+        const numberOfUnits = Math.ceil(
+          articles.length / numberOfArticlesPerUnit
+        );
+        const List = [];
+        for (let i = 0; i < numberOfUnits; i += 1) {
+          List.push(
+            articles.slice(
+              i * numberOfArticlesPerUnit,
+              (i + 1) * numberOfArticlesPerUnit
+            )
+          );
+        }
+        setArticleList(List);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Box
       sx={{
@@ -145,6 +129,7 @@ function ReportBoard() {
             sx={{
               width: "80%",
             }}
+            board="reportboard"
             no="번호"
             title="제목"
             author="작성자"
@@ -156,13 +141,13 @@ function ReportBoard() {
               sx={{
                 width: "80%",
               }}
-              board="freeboard"
-              key={article.no}
-              no={article.no}
+              board="reportboard"
+              key={article.id}
+              no={article.id}
               title={article.title}
-              author={article.author}
-              date={article.date}
-              view={article.view}
+              author={article.nickname}
+              date={Date(article.createdTime)}
+              view={article.hit}
             />
           ))}
           <Box

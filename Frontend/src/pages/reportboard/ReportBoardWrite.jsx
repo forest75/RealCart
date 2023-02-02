@@ -8,9 +8,19 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { Link } from "react-router-dom";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import AppButton from "../../components/AppButton";
 
 function ReportBoardWrite() {
+  const [option, setOption] = React.useState("");
+
+  const handleChange = (event) => {
+    setOption(event.target.value);
+  };
+
   const titleRef = useRef();
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -29,7 +39,7 @@ function ReportBoardWrite() {
       nickname: user.nickname,
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/report`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -69,18 +79,36 @@ function ReportBoardWrite() {
           width: "80%",
           height: "15%",
           display: "flex",
-          flexDirection: "column",
+          // flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           borderTop: 2,
           borderBottom: 3,
         }}
       >
+        <FormControl
+          sx={{
+            width: "15%",
+          }}
+        >
+          <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={option}
+            label="Option"
+            onChange={handleChange}
+          >
+            <MenuItem value={10}>버그리포트</MenuItem>
+            <MenuItem value={20}>신고</MenuItem>
+            <MenuItem value={30}>이용문의</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           placeholder="제목을 입력하세요"
           inputRef={titleRef}
           sx={{
-            width: "100%",
+            width: "85%",
           }}
         />
       </Box>
