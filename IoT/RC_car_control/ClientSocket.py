@@ -12,12 +12,12 @@ from car import CAR
 
 class ClientSocket:
     
-    def __init__(self, ip, port, car_A):
+    def __init__(self, ip, port, car_A, car_gear, car_handle):
         self.TCP_SERVER_IP = ip
         self.TCP_SERVER_PORT = port
         self.car_A = car_A
-        #self.car_transmission = car_transmission
-        #self.car_handle = car_handle
+        self.car_gear = car_gear
+        self.car_handle = car_handle
         self.connectCount = 0
         self.connectServer()
 
@@ -48,7 +48,7 @@ class ClientSocket:
         try:
             while True:
                 timeStamp = time.time()
-                data = f"time: {timeStamp}, gate: {self.car_A.gate}"
+                data = f"{time: {timeStamp}, gate: {self.car_A.gate}}"
                 #length = str(len(data))
                 #self.sock.sendall(data.encode('utf-8').ljust(64))  # timestamp의 length
                 self.sock.send(data.encode())  # 실제 보낼 데이터
@@ -64,12 +64,9 @@ class ClientSocket:
     def recv(self):
         while True:
             data = self.sock.recv(2)
-            int_data = int.from_bytes(data, byteorder='little')
-            self.car_A.command = int_data
-            
+            int_data = int.from_bytes(data, byteorder='little')            
             print('Data :', int_data)
-            
-            """
+                        
             stop  = 0
             forward  = 1
             backward = 2
@@ -83,26 +80,25 @@ class ClientSocket:
             self.car_A.handle = 'center'
             
             if (int_data == key_up):
-                self.car_A.handle = 'center'
                 self.car_A.speed = self.car_A.speed + 10                
                 if (self.car_A.speed > 100): self.car_A.speed = 100
+                self.car_gear.drive(self.car_A.speed)
+                self.car_handle.steering('center')
             
             if (int_data == key_down):
-                self.car_A.handle = 'center'
                 self.car_A.speed = self.car_A.speed - 10                
                 if (self.car_A.speed < -100): self.car_A.speed = -100
+                self.car_gear.drive(self.car_A.speed)
+                self.car_handle.steering('center')
             
             if (int_data == key_left):
-                self.car_A.handle = 'left'
-                self.car_handle.steering(self.car_A.handle)
+                self.car_handle.steering('left')
             
             if (int_data == key_right):
-                self.car_A.handle = 'right'
-                self.car_handle.steering(self.car_A.handle)
+                self.car_handle.steering('right')
             
             if (int_data == key_space):
                 self.car_A.speed = 0
             
-            self.car_transmission.drive(self.car_A.speed)
-            """
+
            

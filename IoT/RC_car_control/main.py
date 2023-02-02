@@ -37,7 +37,7 @@ def slowdown(self, car_transmission):
             
 
 def main():
-    TCP_IP = '127.0.0.1'
+    TCP_IP = '3.35.3.27'
     TCP_PORT = 8081
     
     dc_enable = 27
@@ -51,14 +51,14 @@ def main():
     servo_pin = 17
     
     car_A = CAR()
-    car_transmission = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)      
+    car_gear = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)      
     car_handle = SERVO_MOTOR(servo_pin)
     color = COLOR(color_s2, color_s3, color_signal, car_A)
     
     #driving_thread = threading.Thread(target=driving)
     #slowdown_thread = threading.Thread(target=slowdown)
                                
-    client = ClientSocket(TCP_IP, TCP_PORT, car_A)
+    client = ClientSocket(TCP_IP, TCP_PORT, car_A, car_gear, car_handle)
 
 
 if __name__ == "__main__":    
