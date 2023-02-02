@@ -8,7 +8,7 @@ RUN npm install
 
 CMD ["npm", "run", "build"]
 
-COPY . .
+COPY . /app
 
 EXPOSE 3000
 
