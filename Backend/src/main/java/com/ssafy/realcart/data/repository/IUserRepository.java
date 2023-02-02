@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface IUserRepository extends CrudRepository<User, Integer> {
     User findByNickname(String nickname);
     User findByEmail(String email);
+    User saveAndFlush(User user);
 }
