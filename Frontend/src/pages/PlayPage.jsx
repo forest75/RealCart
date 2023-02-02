@@ -7,7 +7,7 @@ import toturial from "../assets/toturial.png";
 
 function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://3.35.3.27:8581");
+  const ws = new WebSocket("ws://3.35.3.27:8887");
 
   ws.onopen = function () {
     console.log("on open1");
@@ -20,6 +20,7 @@ function PlayPage() {
 
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
+    16: false,
     37: false,
     38: false,
     39: false,
@@ -39,6 +40,12 @@ function PlayPage() {
     window.addEventListener(
       "keyup",
       (e) => {
+        if (e.keyCode === 37 || e.keyCode === 39) {
+          setTimeout(() => {
+            console.log("stop");
+            ws.send(41);
+          }, 100);
+        }
         setKeyState((prevState) => ({
           ...prevState,
           [e.keyCode || e.which]: false,
@@ -49,21 +56,39 @@ function PlayPage() {
   }, []);
 
   useEffect(() => {
+    if (keyState[16] && inputSwitch[16] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        16: true,
+      }));
+      const interval = setInterval(() => {
+        console.log(16);
+        ws.send("stop");
+      }, 10);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          16: false,
+        }));
+      }, 100);
+    }
     if (keyState[37] && inputSwitch[37] === false) {
       setInputSwitch((prevState) => ({
         ...prevState,
         37: true,
       }));
       const interval = setInterval(() => {
+        console.log("left");
         ws.send(37);
-      }, 100);
+      }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           37: false,
         }));
-      }, 1000);
+      }, 100);
     }
     if (keyState[38] && inputSwitch[38] === false) {
       setInputSwitch((prevState) => ({
@@ -71,15 +96,16 @@ function PlayPage() {
         38: true,
       }));
       const interval = setInterval(() => {
+        console.log("up");
         ws.send(38);
-      }, 100);
+      }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           38: false,
         }));
-      }, 1000);
+      }, 100);
     }
     if (keyState[39] && inputSwitch[39] === false) {
       setInputSwitch((prevState) => ({
@@ -87,15 +113,16 @@ function PlayPage() {
         39: true,
       }));
       const interval = setInterval(() => {
+        console.log("right");
         ws.send(39);
-      }, 100);
+      }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           39: false,
         }));
-      }, 1000);
+      }, 100);
     }
     if (keyState[40] && inputSwitch[40] === false) {
       setInputSwitch((prevState) => ({
@@ -103,15 +130,16 @@ function PlayPage() {
         40: true,
       }));
       const interval = setInterval(() => {
+        console.log("down");
         ws.send(40);
-      }, 100);
+      }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           40: false,
         }));
-      }, 1000);
+      }, 100);
     }
   }, [keyState]);
 
