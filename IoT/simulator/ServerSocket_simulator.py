@@ -26,7 +26,7 @@ def on_release(key):
         return False
 
 def key_event():
-    with keyboard.Listener(on_press=on_press) as listener:
+    with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
 
 # 쓰레드에서 실행되는 코드입니다.

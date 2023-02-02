@@ -48,9 +48,11 @@ class ClientSocket:
         try:
             while True:
                 timeStamp = time.time()
-                data = f"{time: {timeStamp}, gate: {self.car_A.gate}}"
-                #length = str(len(data))
-                #self.sock.sendall(data.encode('utf-8').ljust(64))  # timestamp의 length
+                data = f"{{time: {timeStamp}, gate: {self.car_A.gate}}}"
+                length = str(len(data.encode()))    # b''
+                self.sock.sendall(length.encode('utf-8').ljust(128))  # timestamp의 length
+                #print(length)
+                #print(data.encode())
                 self.sock.send(data.encode())  # 실제 보낼 데이터
                 time.sleep(1)
 
@@ -75,20 +77,19 @@ class ClientSocket:
             key_down = 40
             key_left = 37
             key_right = 39
-            key_space = 32
+            key_shift = 32
+            key_release = 41
 
-            self.car_A.handle = 'center'
-            
+            self.car_A.speed *= 0.9
+                        
             if (int_data == key_up):
                 self.car_A.speed = self.car_A.speed + 10                
                 if (self.car_A.speed > 100): self.car_A.speed = 100
-                self.car_gear.drive(self.car_A.speed)
                 self.car_handle.steering('center')
             
             if (int_data == key_down):
                 self.car_A.speed = self.car_A.speed - 10                
                 if (self.car_A.speed < -100): self.car_A.speed = -100
-                self.car_gear.drive(self.car_A.speed)
                 self.car_handle.steering('center')
             
             if (int_data == key_left):
@@ -97,8 +98,12 @@ class ClientSocket:
             if (int_data == key_right):
                 self.car_handle.steering('right')
             
-            if (int_data == key_space):
+            if (int_data == key_shift):
                 self.car_A.speed = 0
+                
+            if (int_data == key_release):
+                self.car_handle.steering('center')
             
+            
+            self.car_gear.drive(self.car_A.speed)
 
-           

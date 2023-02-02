@@ -5,26 +5,6 @@ from car import CAR
 from color import COLOR
 from ClientSocket import ClientSocket
 
-def driving(self, car_transmission):
-    try:
-        while True:
-            key_up = 38
-            key_down = 40
-            
-            if (self.car_A.command == key_up):
-                self.car_A.speed = self.car_A.speed + 10                
-                if (self.car_A.speed > 100): self.car_A.speed = 100
-            
-            if (self.car_A.command == key_down):
-                self.car_A.handle = 'center'
-                self.car_A.speed = self.car_A.speed - 10                
-                if (self.car_A.speed < -100): self.car_A.speed = -100
-            
-            car_transmission.drive(self.car_A.speed)
-    
-    except:
-        print('driving Error')
-
 def slowdown(self, car_transmission):
     try:
         while True:
@@ -37,7 +17,8 @@ def slowdown(self, car_transmission):
             
 
 def main():
-    TCP_IP = '3.35.3.27'
+    TCP_IP = '3.35.3.27'   # Game Server IP
+    #TCP_IP = '127.0.0.1'  # Simulator IP
     TCP_PORT = 8081
     
     dc_enable = 27
@@ -55,8 +36,11 @@ def main():
     car_handle = SERVO_MOTOR(servo_pin)
     color = COLOR(color_s2, color_s3, color_signal, car_A)
     
+    color_thread = threading.Thread(target=color.is_passing_gate)
     #driving_thread = threading.Thread(target=driving)
     #slowdown_thread = threading.Thread(target=slowdown)
+    
+    color_thread.start()
                                
     client = ClientSocket(TCP_IP, TCP_PORT, car_A, car_gear, car_handle)
 
