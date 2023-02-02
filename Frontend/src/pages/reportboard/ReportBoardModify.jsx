@@ -20,7 +20,7 @@ function ReportBoardModify() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/free/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
         titleRef.current.value = res.data.title;
         let { content } = res.data;
@@ -60,7 +60,7 @@ function ReportBoardModify() {
       nickname: user.nickname,
     };
     axios
-      .put(`http://3.34.23.91:8080/board/free/${no}`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },

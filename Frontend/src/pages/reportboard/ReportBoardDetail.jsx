@@ -18,7 +18,7 @@ function ReportBoardDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/free/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
         setTitle(res.data.title);
         setComments(res.data.coments);
@@ -57,7 +57,7 @@ function ReportBoardDetail() {
     console.log(data);
 
     await axios
-      .post(`http://3.34.23.91:8080/board/free`, data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
         headers: {
           "Content-Type": "application/json",
         },
