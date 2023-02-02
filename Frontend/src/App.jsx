@@ -16,6 +16,7 @@ import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
 import ReportBoard from "./test2/ReportBoard";
 import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
+        <Route path="/oauth/redirect" element={<AuthPage />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
       </Routes>

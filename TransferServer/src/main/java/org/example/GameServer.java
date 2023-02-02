@@ -17,7 +17,7 @@ public class GameServer {
     static List<WebSocket> waitingQueue = null;
     public static void main(String[] args) {
 
-        Thread thread1 = new Thread(new RCcarThread(8081, 3001));
+        Thread thread1 = new Thread(new RCcarThread(8081, 8581));
         thread1.start();
     }
 
@@ -54,7 +54,7 @@ class RCcarThread implements Runnable{
         try{
             while(br != null){
                 String imageLenStr = "";
-                for(int i=0; i<64; i++){
+                for(int i=0; i<128; i++){
                     imageLenStr += (char) br.read();
                 }
                 int imageLen = Integer.parseInt(imageLenStr.trim());
@@ -62,7 +62,7 @@ class RCcarThread implements Runnable{
                 for(int i=0; i<imageLen; i++) {
                     decImage += (char) br.read();
                 }
-                System.out.println(decImage.substring(0,30));
+                System.out.println(decImage);
             }
         } catch (IOException e){
             socket = null;
