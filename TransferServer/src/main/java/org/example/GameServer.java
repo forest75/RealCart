@@ -41,8 +41,8 @@ class RCcarThread implements Runnable{
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
             System.out.println("socket I/O streams are created.");
             String domain = "i8a403.p.ssafy.io";
-            InetSocketAddress address = new InetSocketAddress(new InetSocketAddress(domain, webSocketPort));
-            webSocketServer = new WsHandler(webSocketPort, pw);
+            InetSocketAddress address = new InetSocketAddress(domain, webSocketPort);
+            webSocketServer = new WsHandler(address, pw);
             webSocketServer.start();
             System.out.println("websocket server started on port " + webSocketPort);
         } catch (IOException e) {
