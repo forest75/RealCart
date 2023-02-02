@@ -6,8 +6,10 @@ COPY package.json .
 
 RUN npm install
 
-COPY . .
+CMD ["npm", "run", "build"]
+
+COPY . /app
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+ENTRYPOINT ["node", "server.js"]
