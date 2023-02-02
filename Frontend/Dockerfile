@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
+EMTRYPOINT ["node", "server.js"]
