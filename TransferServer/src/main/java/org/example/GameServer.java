@@ -54,7 +54,7 @@ class RCcarThread implements Runnable{
         try{
             while(br != null){
                 String imageLenStr = "";
-                for(int i=0; i<64; i++){
+                for(int i=0; i<128; i++){
                     imageLenStr += (char) br.read();
                 }
                 int imageLen = Integer.parseInt(imageLenStr.trim());
