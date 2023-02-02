@@ -128,6 +128,11 @@ function LoginForm() {
                 bgcolor: "white",
                 border: 1,
               }}
+              onClick={() => {
+                window.open(
+                  "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"
+                );
+              }}
             >
               <Box
                 sx={{
@@ -146,6 +151,7 @@ function LoginForm() {
                   <GoogleIcon />
                 </Box>
               </Box>
+              {/* <a href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"> */}
               <Box
                 sx={{
                   width: "38%",
@@ -156,6 +162,7 @@ function LoginForm() {
               >
                 <Box>구글로 시작하기</Box>
               </Box>
+              {/* </a> */}
               <Box
                 sx={{
                   width: "31%",
