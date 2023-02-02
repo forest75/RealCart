@@ -15,10 +15,15 @@ def slowdown(self, car_transmission):
     except:
         print("slow down Error!")
             
+def cmd_check(car_A):
+    while True:
+        print('command:',car_A.command)
+
 
 def main():
-    TCP_IP = '3.35.3.27'   # Game Server IP
-    #TCP_IP = '127.0.0.1'  # Simulator IP
+    #TCP_IP = '3.35.3.27'   # Game Server IP
+    #TCP_IP = '70.12.246.218'
+    TCP_IP = '127.0.0.1'  # Simulator IP
     TCP_PORT = 8081
     
     dc_enable = 27
@@ -39,6 +44,9 @@ def main():
     color_thread = threading.Thread(target=color.is_passing_gate)
     #driving_thread = threading.Thread(target=driving)
     #slowdown_thread = threading.Thread(target=slowdown)
+    
+    cmd_thread = threading.Thread(target=cmd_check, args=(car_A))
+    cmd_thread.start()
     
     color_thread.start()
                                

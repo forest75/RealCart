@@ -17,10 +17,16 @@ def on_press(key):
     if (key == keyboard.Key.right):
         client_socket.send('\''.encode())
         
-    if (key == keyboard.Key.space):
+    if (key == keyboard.Key.shift):
         client_socket.send(' '.encode())
 
 def on_release(key):
+    if (key == keyboard.Key.left):
+        client_socket.send(')'.encode())
+        
+    if (key == keyboard.Key.right):
+        client_socket.send(')'.encode())
+        
     print('Key %s released' %key)
     if key == keyboard.Key.esc:
         return False
