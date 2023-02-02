@@ -91,7 +91,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // DB 저장
         String userRefreshToken = userRepository.findByEmail(userInfo.getEmail()).getRefreshToken();
-        System.out.println(userRefreshToken);
         if (userRefreshToken == null) {
             // 없는 경우 새로 등록
             userRefreshToken = refreshToken.getToken();

@@ -10,6 +10,8 @@ import com.ssafy.realcart.service.auth.AuthToken;
 import com.ssafy.realcart.service.auth.AuthTokenProvider;
 import com.ssafy.realcart.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +33,9 @@ public class AuthController {
     private final IUserRepository userRepository;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+
+    private final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
     @GetMapping(value="/login")
     public ApiResponse login(
             HttpServletRequest request,
@@ -43,8 +48,10 @@ public class AuthController {
                         authReqModel.getPassword()
                 )
         );
-        System.out.println(authReqModel.getId());
-        System.out.println(authReqModel.getPassword());
+        LOGGER.warn("authReqModel.getId() : " + authReqModel.getId());
+        LOGGER.warn("authReqModel.getPassword() : " + authReqModel.getPassword());
+        System.out.println("authReqModel.getId() : " + authReqModel.getId());
+        System.out.println("authReqModel.getPassword() : " + authReqModel.getPassword());
 
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -65,7 +72,7 @@ public class AuthController {
 
         // userId refresh token 으로 DB 확인
         String userRefreshToken = userRepository.findByEmail(userId).getRefreshToken();
-        System.out.println(userRefreshToken);
+        System.out.println("userRefreshToken : " + userRefreshToken);
         if (userRefreshToken == null) {
             // 없는 경우 새로 등록
             userRefreshToken = refreshToken.getToken();

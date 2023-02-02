@@ -6,12 +6,16 @@ import javax.validation.constraints.NotNull;
 import com.ssafy.realcart.config.BaseTime;
 
 import com.ssafy.realcart.data.entity.auth.ProviderType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="USER_TB")
 public class User extends BaseTime{
     @Id
@@ -46,4 +50,24 @@ public class User extends BaseTime{
     @NotNull
     private ProviderType providerType;
 
+    public User(
+            String username,
+            String email,
+            String nickname,
+            byte emailVerified,
+            String profileImageUrl,
+            byte isBan,
+            ProviderType providerType) {
+        this.username = username;
+        this.email = email;
+        this.nickname = nickname;
+        this.password = "NO_PASS";
+        this.salt = "SALT";
+        this.emailSalt = "EMAIL_SALT";
+        this.emailVerified = emailVerified;
+        this.profileImageUrl = profileImageUrl;
+        this.isBan = isBan;
+//        this.refreshToken = refreshToken;
+        this.providerType = providerType;
+    }
 }
