@@ -150,6 +150,7 @@ def main():
     
     car_gear = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)
     car_handle = SERVO_MOTOR(servo_pin)
+    car_color = ''
     
     gear_thread = threading.Thread(target=driving)
     handle_thread = threading.Thread(target=handling)
