@@ -22,6 +22,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Arrays;
 
 public class SSLServerExample {
 
@@ -65,6 +66,7 @@ public class SSLServerExample {
 
             context.init(km, null, null);
         } catch (Exception e) {
+            e.printStackTrace();
             context = null;
         }
         return context;

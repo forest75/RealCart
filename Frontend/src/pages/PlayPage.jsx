@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import WebSocket from "isomorphic-ws";
+// import WebSocket from "isomorphic-ws";
 import toturial from "../assets/toturial.png";
 // import car from "../assets/car.jpg";
 
