@@ -41,7 +41,7 @@ public class SSLServerExample {
         SSLContext context;
         String password = "CHANGEIT";
         try {
-            context = SSLContext.getInstance("JKS");
+            context = SSLContext.getInstance("TLS");
             String certPem = Paths.get("src", "pem", "cert.pem").toString();
             String certKey = Paths.get("src", "pem", "cert.key").toString();
 
