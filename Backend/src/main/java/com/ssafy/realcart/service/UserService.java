@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.UserDto;
 import com.ssafy.realcart.data.entity.User;
+import com.ssafy.realcart.data.entity.auth.ProviderType;
 import com.ssafy.realcart.exception.NickNameShortException;
 import com.ssafy.realcart.service.inter.IUserService;
 
@@ -60,6 +61,7 @@ public class UserService implements IUserService {
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
         user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
+        user.setProviderType(userDto.getProviderType() == null ? ProviderType.LOCAL : userDto.getProviderType());
         byte[] emailSalt = getSalt();
         user.setEmailSalt(bytesToHex(emailSalt));
         if(userDAO.createUser(user)){
