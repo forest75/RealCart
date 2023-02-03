@@ -73,6 +73,7 @@ class ClientSocket:
 def main():
     # TCP_IP = 'i8a403.p.ssafy.io'
     TCP_IP = '3.35.3.27'
+    # TCP_IP = 'localhost'
     TCP_PORT = 8081
     client = ClientSocket(TCP_IP, TCP_PORT)
 
