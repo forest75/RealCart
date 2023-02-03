@@ -30,7 +30,7 @@ public class SSLServerExample {
 
         SSLContext context = getContext();
         if (context != null) {
-            chatserver.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(getContext()));
+            chatserver.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(context));
         }
         chatserver.setConnectionLostTimeout(30);
         chatserver.start();
@@ -41,7 +41,7 @@ public class SSLServerExample {
         SSLContext context;
         String password = "CHANGEIT";
         try {
-            context = SSLContext.getInstance("TLS");
+            context = SSLContext.getInstance("JKS");
             String certPem = Paths.get("src", "pem", "cert.pem").toString();
             String certKey = Paths.get("src", "pem", "cert.key").toString();
 
