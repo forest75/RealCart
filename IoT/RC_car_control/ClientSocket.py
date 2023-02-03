@@ -64,6 +64,9 @@ class ClientSocket:
 
 
     def recv(self):
+
+        release_toggle = 0
+
         while True:
             data = self.sock.recv(2)
             int_data = int.from_bytes(data, byteorder='little')            
@@ -103,6 +106,7 @@ class ClientSocket:
                 self.car_A.speed = 0
                 
             if (int_data == key_release):
+                release_toggle = 1
                 self.car_handle.steering('center')
             
             

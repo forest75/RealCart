@@ -20,6 +20,7 @@ def cmd_check(car_A):
         print('command:',car_A.command)
 
 
+
 def main():
     #TCP_IP = '3.35.3.27'   # Game Server IP
     #TCP_IP = '70.12.246.218' #Park seongmin IP
