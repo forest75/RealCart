@@ -1,21 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-// import car from "../assets/car.jpg";
+import WebSocket from "isomorphic-ws";
 import toturial from "../assets/toturial.png";
 // import car from "../assets/car.jpg";
 
 function PlayPage() {
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrc] = useState("");
+
   const ws = new WebSocket("wss://i8a403.p.ssafy.io:8887");
 
-  ws.onopen = function () {
-    console.log("on open1");
+  ws.onopen = function open() {
+    console.log("connected");
+    ws.send(Date.now());
   };
 
-  ws.onmessage = function ({ data }) {
-    const url = `data:image/jpeg;base64,${data}`;
-    setImgSrc(url);
+  ws.onclose = function close() {
+    console.log("disconnected");
+  };
+
+  ws.onmessage = function incoming(data) {
+    console.log(`Roundtrip time: ${Date.now() - data.data} ms`);
+
+    setTimeout(function timeout() {
+      ws.send(Date.now());
+    }, 500);
   };
 
   const [keyState, setKeyState] = useState({});
