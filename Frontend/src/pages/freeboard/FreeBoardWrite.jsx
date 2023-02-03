@@ -29,7 +29,7 @@ function FreeBoardWrite() {
       nickname: user.nickname,
     };
     axios
-      .post("http://3.34.23.91:8080/board/free", data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
         headers: {
           "Content-Type": "application/json",
         },
