@@ -1,8 +1,18 @@
 package com.ssafy.realcart.data.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class UserDto {
     private int userId;
     private String username;

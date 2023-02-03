@@ -8,21 +8,32 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.ssafy.realcart.config.BaseTime;
+import com.ssafy.realcart.data.dto.AdDto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper=false)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 @Table(name="BOARD_NOTICE_TB")
 public class BoardNotice extends BaseTime{
 	@Id
     @Column(name="BOARD_NOTICE_PK")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="title")
+	@Column(columnDefinition = "integer default 0", name="hit")
+    private int hit;
+    @Column(length = 500, nullable = false, name="title")
     private String title;
-    @Column(name="content")
+    @Column(columnDefinition = "TEXT", nullable = false, name="content")
     private String content;
 }

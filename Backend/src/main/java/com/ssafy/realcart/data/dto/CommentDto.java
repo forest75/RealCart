@@ -1,10 +1,20 @@
 package com.ssafy.realcart.data.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class CommentDto {
     private int id;
     private String nickname;

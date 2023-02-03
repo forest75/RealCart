@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.UserDto;
@@ -44,6 +45,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public boolean createUser(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("createUser 메서드가 userService에서 호출되었습니다.");
         User user = new User();
@@ -130,11 +132,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto getUser(String email) {
-        return null;
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
         LOGGER.info("getAllUsers 메서드가 userService에서 호출되었습니다.");
         List<UserDto> userDtoList = new ArrayList<UserDto>();
@@ -168,6 +166,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto login(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("로그인 메서드가 userService에서 호출되었습니다.");
         LOGGER.info(userDto.toString());
@@ -192,6 +191,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkEmail(String email) {
         LOGGER.info("checkEmail 메서드가 userService에서 호출되었습니다.");
         if(userDAO.getUser(email) != null){
@@ -204,6 +204,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkNickname(String nickname) {
         LOGGER.info("checkNickname 메서드가 userService에서 호출되었습니다.");
         if(userDAO.checkNickname(nickname) != null){
@@ -216,6 +217,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean verifyEmail(String email, String salt) {
         return userDAO.verifyEmail(email, salt);
 
