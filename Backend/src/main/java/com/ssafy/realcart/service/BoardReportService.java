@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IBoardReportDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
-import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.BoardReportDto;
+import com.ssafy.realcart.data.dto.BoardReportRequestDto;
 import com.ssafy.realcart.data.entity.BoardReport;
 import com.ssafy.realcart.service.inter.IBoardReportService;
 @Service
@@ -28,56 +29,63 @@ public class BoardReportService implements IBoardReportService {
 	
 	@Override
 	@Transactional
-	public boolean createReport(BoardDto boardDto) {
+	public boolean createReport(BoardReportRequestDto boardDto) {
 		BoardReport boardReport = new BoardReport();
 		boardReport.setContent(boardDto.getContent());
 		boardReport.setTitle(boardDto.getTitle());
 		boardReport.setUser(userDAO.checkNickname(boardDto.getNickname()));
+		boardReport.setCategory(boardDto.getCategory());
 		return boardReportDAO.saveReport(boardReport);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<BoardDto> getBoardReportAll() {
+	public List<BoardReportDto> getBoardReportAll() {
 		List<BoardReport> boardReports = boardReportDAO.getBoardReportAll();
-		List<BoardDto> boardDtos = new ArrayList<BoardDto>();
+		List<BoardReportDto> boardReportDtos = new ArrayList<BoardReportDto>();
 		for (BoardReport boardReport : boardReports) {
-			BoardDto boardDto = new BoardDto();
-			boardDto.setContent(boardReport.getContent());
-			boardDto.setCreatedTime(boardReport.getCreatedDate());
-			boardDto.setHit(boardReport.getHit());
-			boardDto.setId(boardReport.getId());
-			boardDto.setModifiedTime(boardReport.getModifiedDate());
-			boardDto.setNickname(boardReport.getUser().getNickname());
-			boardDto.setTitle(boardReport.getTitle());
-			boardDtos.add(boardDto);
+			BoardReportDto boardReportDto = new BoardReportDto();
+			boardReportDto.setCreatedTime(boardReport.getCreatedDate());
+			boardReportDto.setHit(boardReport.getHit());
+			boardReportDto.setId(boardReport.getId());
+			boardReportDto.setModifiedTime(boardReport.getModifiedDate());
+			boardReportDto.setNickname(boardReport.getUser().getNickname());
+			boardReportDto.setTitle(boardReport.getTitle());
+			boardReportDto.setCategory(boardReport.getCategory());
+			boardReportDto.setIsEnd(boardReport.getIsEnd());
+			boardReportDto.setIsPrivate(boardReport.getIsPrivate());
+			boardReportDtos.add(boardReportDto);
 		}
-		return boardDtos;
+		return boardReportDtos;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public BoardDto getBoardReport(int id) {
+	public BoardReportDto getBoardReport(int id) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
 		if(boardReport == null) return null;
-		BoardDto boardDto = new BoardDto();
-		boardDto.setContent(boardReport.getContent());
-		boardDto.setCreatedTime(boardReport.getCreatedDate());
-		boardDto.setHit(boardReport.getHit());
-		boardDto.setId(boardReport.getId());
-		boardDto.setModifiedTime(boardReport.getModifiedDate());
-		boardDto.setNickname(boardReport.getUser().getNickname());
-		boardDto.setTitle(boardReport.getTitle());
-		return boardDto;
+		BoardReportDto boardReportDto = new BoardReportDto();
+		boardReportDto.setContent(boardReport.getContent());
+		boardReportDto.setCreatedTime(boardReport.getCreatedDate());
+		boardReportDto.setHit(boardReport.getHit());
+		boardReportDto.setId(boardReport.getId());
+		boardReportDto.setModifiedTime(boardReport.getModifiedDate());
+		boardReportDto.setNickname(boardReport.getUser().getNickname());
+		boardReportDto.setTitle(boardReport.getTitle());
+		boardReportDto.setCategory(boardReport.getCategory());
+		boardReportDto.setIsEnd(boardReport.getIsEnd());
+		boardReportDto.setIsPrivate(boardReport.getIsPrivate());
+		return boardReportDto;
 	}
 
 	@Override
 	@Transactional
-	public boolean changeReport(int id, BoardDto boardDto) {
+	public boolean changeReport(int id, BoardReportRequestDto boardDto) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
 		if(boardReport != null) {
 			boardReport.setContent(boardDto.getContent());
 			boardReport.setTitle(boardDto.getTitle());
+			boardReport.setCategory(boardDto.getCategory());
 			boardReportDAO.saveReport(boardReport);
 			return true;
 		}

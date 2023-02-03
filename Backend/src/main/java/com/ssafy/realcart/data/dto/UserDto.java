@@ -1,5 +1,7 @@
 package com.ssafy.realcart.data.dto;
 
+import com.ssafy.realcart.data.entity.auth.ProviderType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +25,5 @@ public class UserDto {
     private String intro;
     private String profileImageUrl;
     private String refreshToken;
+    private ProviderType providerType;
 }

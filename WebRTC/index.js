@@ -30,6 +30,7 @@ window.onload = function() {
 
 window.onbeforeunload = function() {
 	ws.close();
+	socket.close();
 }
 
 // socket.onmessage = function(message){
