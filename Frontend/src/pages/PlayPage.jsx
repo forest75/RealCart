@@ -7,7 +7,7 @@ import toturial from "../assets/toturial.png";
 
 function PlayPage() {
   const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("wss://localhost:8887");
+  const ws = new WebSocket("wss://i8a403.p.ssafy.io:8887");
 
   ws.onopen = function () {
     console.log("on open1");
