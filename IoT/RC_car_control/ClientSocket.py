@@ -65,14 +65,14 @@ class ClientSocket:
 
     def recv(self):
 
-        release_toggle = 0
+        flag_release = False
+        flag_handling = False
 
         while True:
             data = self.sock.recv(2)
             int_data = int.from_bytes(data, byteorder='little')            
             #print('Data :', int_data)
-            self.car_A.command = int_data
-                        
+            
             stop  = 0
             forward  = 1
             backward = 2
@@ -83,32 +83,32 @@ class ClientSocket:
             key_right = 39
             key_shift = 32
             key_release = 41
-
-            self.car_A.speed *= 0.9
-                        
+                                    
             if (int_data == key_up):
                 self.car_A.speed = self.car_A.speed + 10                
                 if (self.car_A.speed > 100): self.car_A.speed = 100
-                self.car_handle.steering('center')
             
             if (int_data == key_down):
                 self.car_A.speed = self.car_A.speed - 10                
                 if (self.car_A.speed < -100): self.car_A.speed = -100
-                self.car_handle.steering('center')
             
-            if (int_data == key_left):
-                self.car_handle.steering('left')
+            if (int_data == key_left and flag_handling == False):
+                flag_handling = True
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('left', flag_handling))
             
-            if (int_data == key_right):
-                self.car_handle.steering('right')
+            if (int_data == key_right and flag_handling == False):
+                flag_handling = True
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('right'))
             
             if (int_data == key_shift):
                 self.car_A.speed = 0
                 
             if (int_data == key_release):
-                release_toggle = 1
-                self.car_handle.steering('center')
+                flag_release = True
             
+            if (flag_release == True):
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('center'))
+                flag_release = False            
             
             self.car_gear.drive(self.car_A.speed)
 

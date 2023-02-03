@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 from pynput import keyboard
 
 client_sockets = [] # 서버에 접속한 클라이언트 목록
@@ -27,7 +28,7 @@ def on_release(key):
     if (key == keyboard.Key.right):
         client_socket.send(')'.encode())
         
-    print('Key %s released' %key)
+    # print('Key %s released' %key)
     if key == keyboard.Key.esc:
         return False
 

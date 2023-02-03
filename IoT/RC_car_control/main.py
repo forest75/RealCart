@@ -5,22 +5,6 @@ from car import CAR
 from color import COLOR
 from ClientSocket import ClientSocket
 
-def slowdown(self, car_transmission):
-    try:
-        while True:
-            self.car_A.speed *= 0.9
-            car_transmission.drive(self.car_A.speed)
-            SERVO_MOTOR.sleep(0.5)
-
-    except:
-        print("slow down Error!")
-            
-def cmd_check(car_A):
-    while True:
-        print('command:',car_A.command)
-
-
-
 def main():
     #TCP_IP = '3.35.3.27'   # Game Server IP
     #TCP_IP = '70.12.246.218' #Park seongmin IP
@@ -46,11 +30,8 @@ def main():
     #driving_thread = threading.Thread(target=driving)
     #slowdown_thread = threading.Thread(target=slowdown)
     
-    cmd_thread = threading.Thread(target=cmd_check, args=(car_A))
-    cmd_thread.start()
-    
     color_thread.start()
-                               
+    
     client = ClientSocket(TCP_IP, TCP_PORT, car_A, car_gear, car_handle)
 
 
