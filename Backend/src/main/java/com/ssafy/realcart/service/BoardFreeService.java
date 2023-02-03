@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IBoardFreeDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
@@ -32,6 +33,7 @@ public class BoardFreeService implements IBoardFreeService {
 
 
     @Override
+    @Transactional
     public boolean createFree(BoardDto boardDto) {
         LOGGER.info("BoardFreeService CreateFree 메세드 접속");
         BoardFree boardFree = new BoardFree();
@@ -54,6 +56,7 @@ public class BoardFreeService implements IBoardFreeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BoardDto> getBoardFreeAll() {
         List<BoardFree> list = boardFreeDAO.getBoardFreeAll();
         List<BoardDto> boardDtos = new ArrayList<BoardDto>();
@@ -84,6 +87,7 @@ public class BoardFreeService implements IBoardFreeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BoardDto getBoardFree(int id) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         if(board != null){
@@ -115,6 +119,7 @@ public class BoardFreeService implements IBoardFreeService {
     }
 
     @Override
+    @Transactional
     public boolean createFreeComment(int id, CommentDto commentDto) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         User user = userDAO.checkNickname(commentDto.getNickname());
@@ -128,6 +133,7 @@ public class BoardFreeService implements IBoardFreeService {
 
 
 	@Override
+	@Transactional
 	public boolean changeFree(int id, BoardDto boardDto) {
 		BoardFree board = boardFreeDAO.getBoardFree(id);
 		board.setContent(boardDto.getContent());
@@ -137,12 +143,14 @@ public class BoardFreeService implements IBoardFreeService {
 
 
 	@Override
+	@Transactional
 	public boolean deleteFree(int id) {
 		return boardFreeDAO.deleteFree(id);
 	}
 
 
 	@Override
+	@Transactional
 	public boolean changeComment(int commentId, CommentDto commentDto) {
 		Comment comment = boardFreeDAO.getComment(commentId); 
 		if(comment != null) {
@@ -155,6 +163,7 @@ public class BoardFreeService implements IBoardFreeService {
 
 
 	@Override
+	@Transactional
 	public boolean deleteComment(int commentId) {
 		return boardFreeDAO.deleteComment(commentId);
 	}

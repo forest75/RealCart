@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IBoardNoticeDAO;
 import com.ssafy.realcart.data.dto.BoardDto;
@@ -24,6 +25,7 @@ public class BoardNoticeService implements IBoardNoticeService {
     }
 
 	@Override
+	@Transactional
 	public boolean createNotice(BoardDto boardDto) {
 		BoardNotice boardNotice = new BoardNotice();
 		boardNotice.setContent(boardDto.getContent());
@@ -35,6 +37,7 @@ public class BoardNoticeService implements IBoardNoticeService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<BoardDto> getBoardNoticeAll() {
 		List<BoardNotice> boardNotices = boardNoticeDAO.getBoardNoticeAll();
 		List<BoardDto> boardDtos = new ArrayList<BoardDto>();
@@ -51,6 +54,7 @@ public class BoardNoticeService implements IBoardNoticeService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public BoardDto getBoardNotice(int id) {
 		BoardNotice boardNotice = boardNoticeDAO.getBoardNotice(id);
 		if(boardNotice == null) return null;
@@ -64,6 +68,7 @@ public class BoardNoticeService implements IBoardNoticeService {
 	}
 
 	@Override
+	@Transactional
 	public boolean changeNotice(int id, BoardDto boardDto) {
 		BoardNotice boardNotice = boardNoticeDAO.getBoardNotice(id);
 		if(boardNotice != null) {
@@ -75,6 +80,7 @@ public class BoardNoticeService implements IBoardNoticeService {
 	}
 
 	@Override
+	@Transactional
 	public boolean deleteNotice(int id) {
 		return boardNoticeDAO.deleteNotice(id);
 	}
