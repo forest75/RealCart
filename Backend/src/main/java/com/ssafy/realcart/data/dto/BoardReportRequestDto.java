@@ -1,7 +1,6 @@
 package com.ssafy.realcart.data.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString
 @SuperBuilder
-public class BoardDto {
+public class BoardReportRequestDto extends BoardDto{
 
-    private String title;
-    private String content;
-	private String nickname;
+	private Category category;
 }

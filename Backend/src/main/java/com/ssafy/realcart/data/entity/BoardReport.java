@@ -2,6 +2,8 @@ package com.ssafy.realcart.data.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,9 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.ssafy.realcart.config.BaseTime;
-import com.ssafy.realcart.data.dto.AdDto;
+import com.ssafy.realcart.data.dto.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +43,14 @@ public class BoardReport extends BaseTime{
     private int hit;
     @Column(columnDefinition = "TEXT", nullable = false, name="content")
     private String content;
-    
+    @Column(name = "category", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Category category;
+    @Column(name="is_end")
+    private byte isEnd;
+    @Column(name="is_private")
+    private byte isPrivate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="USER_FK")
     @ToString.Exclude

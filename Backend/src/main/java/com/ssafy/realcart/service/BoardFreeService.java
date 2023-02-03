@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.realcart.data.dao.inter.IBoardFreeDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.BoardFreeDto;
 import com.ssafy.realcart.data.dto.CommentDto;
 import com.ssafy.realcart.data.entity.BoardFree;
 import com.ssafy.realcart.data.entity.Comment;
@@ -57,19 +58,20 @@ public class BoardFreeService implements IBoardFreeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardDto> getBoardFreeAll() {
+    public List<BoardFreeDto> getBoardFreeAll() {
         List<BoardFree> list = boardFreeDAO.getBoardFreeAll();
-        List<BoardDto> boardDtos = new ArrayList<BoardDto>();
+        List<BoardFreeDto> boardDtos = new ArrayList<BoardFreeDto>();
         for (BoardFree free:
              list) {
-            BoardDto boardDto = new BoardDto();
-            boardDto.setId(free.getId());
-            boardDto.setTitle(free.getTitle());
-            boardDto.setCreatedTime(free.getCreatedDate());
-            boardDto.setModifiedTime(free.getModifiedDate());
-            boardDto.setContent(free.getContent());
-            boardDto.setNickname(free.getUser().getNickname());
-            boardDto.setHit(free.getHit());
+            BoardFreeDto boardFreeDto = new BoardFreeDto();
+            boardFreeDto.setId(free.getId());
+            boardFreeDto.setTitle(free.getTitle());
+            boardFreeDto.setCreatedTime(free.getCreatedDate());
+            boardFreeDto.setModifiedTime(free.getModifiedDate());
+            boardFreeDto.setContent(free.getContent());
+            boardFreeDto.setNickname(free.getUser().getNickname());
+            boardFreeDto.setHit(free.getHit());
+            boardFreeDto.setIsReport(free.getIsReport());
             List<Comment> comments = boardFreeDAO.getCommentByBoardId(free.getId());
             List<CommentDto> commentDtos = new ArrayList<CommentDto>();
             for (Comment comment:
@@ -80,27 +82,28 @@ public class BoardFreeService implements IBoardFreeService {
                 commentDto.setCreatedTime(comment.getCreatedDate());
                 commentDtos.add(commentDto);
             }
-            boardDto.setComments(commentDtos);
-            boardDtos.add(boardDto);
+            boardFreeDto.setComments(commentDtos);
+            boardDtos.add(boardFreeDto);
         }
         return boardDtos;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BoardDto getBoardFree(int id) {
+    public BoardFreeDto getBoardFree(int id) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         if(board != null){
             board.setHit(board.getHit()+1);
             boardFreeDAO.saveFree(board);
-            BoardDto boardDto = new BoardDto();
-            boardDto.setHit(board.getHit());
-            boardDto.setNickname(board.getUser().getNickname());
-            boardDto.setTitle(board.getTitle());
-            boardDto.setContent(board.getContent());
-            boardDto.setId(board.getId());
-            boardDto.setCreatedTime(board.getCreatedDate());
-            boardDto.setModifiedTime(board.getModifiedDate());
+            BoardFreeDto boardFreeDto = new BoardFreeDto();
+            boardFreeDto.setHit(board.getHit());
+            boardFreeDto.setNickname(board.getUser().getNickname());
+            boardFreeDto.setTitle(board.getTitle());
+            boardFreeDto.setContent(board.getContent());
+            boardFreeDto.setId(board.getId());
+            boardFreeDto.setCreatedTime(board.getCreatedDate());
+            boardFreeDto.setModifiedTime(board.getModifiedDate());
+            boardFreeDto.setIsReport(board.getIsReport());
             List<Comment> comments = boardFreeDAO.getCommentByBoardId(board.getId());
             List<CommentDto> commentDtos = new ArrayList<CommentDto>();
             for (Comment comment:
@@ -112,8 +115,8 @@ public class BoardFreeService implements IBoardFreeService {
                 commentDto.setModifiedTime(comment.getModifiedDate());
                 commentDtos.add(commentDto);
             }
-            boardDto.setComments(commentDtos);
-            return boardDto;
+            boardFreeDto.setComments(commentDtos);
+            return boardFreeDto;
         }
         return null;
     }

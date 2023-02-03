@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IBoardNoticeDAO;
 import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.BoardNoticeDto;
 import com.ssafy.realcart.data.entity.BoardNotice;
 import com.ssafy.realcart.service.inter.IBoardNoticeService;
 @Service
@@ -38,33 +39,33 @@ public class BoardNoticeService implements IBoardNoticeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<BoardDto> getBoardNoticeAll() {
+	public List<BoardNoticeDto> getBoardNoticeAll() {
 		List<BoardNotice> boardNotices = boardNoticeDAO.getBoardNoticeAll();
-		List<BoardDto> boardDtos = new ArrayList<BoardDto>();
+		List<BoardNoticeDto> boardNoticeDtos = new ArrayList<BoardNoticeDto>();
 		for (BoardNotice boardNotice : boardNotices) {
-			BoardDto boardDto = new BoardDto();
-			boardDto.setContent(boardNotice.getContent());
-			boardDto.setCreatedTime(boardNotice.getCreatedDate());
-			boardDto.setId(boardNotice.getId());
-			boardDto.setModifiedTime(boardNotice.getModifiedDate());
-			boardDto.setTitle(boardNotice.getTitle());
-			boardDtos.add(boardDto);
+			BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
+			boardNoticeDto.setContent(boardNotice.getContent());
+			boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());
+			boardNoticeDto.setId(boardNotice.getId());
+			boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
+			boardNoticeDto.setTitle(boardNotice.getTitle());
+			boardNoticeDtos.add(boardNoticeDto);
 		}
-		return boardDtos;
+		return boardNoticeDtos;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public BoardDto getBoardNotice(int id) {
+	public BoardNoticeDto getBoardNotice(int id) {
 		BoardNotice boardNotice = boardNoticeDAO.getBoardNotice(id);
 		if(boardNotice == null) return null;
-		BoardDto boardDto = new BoardDto();
-		boardDto.setContent(boardNotice.getContent());
-		boardDto.setCreatedTime(boardNotice.getCreatedDate());
-		boardDto.setId(boardNotice.getId());
-		boardDto.setModifiedTime(boardNotice.getModifiedDate());
-		boardDto.setTitle(boardNotice.getTitle());
-		return boardDto;
+		BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
+		boardNoticeDto.setContent(boardNotice.getContent());
+		boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());
+		boardNoticeDto.setId(boardNotice.getId());
+		boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
+		boardNoticeDto.setTitle(boardNotice.getTitle());
+		return boardNoticeDto;
 	}
 
 	@Override

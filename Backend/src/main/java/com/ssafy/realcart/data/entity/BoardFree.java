@@ -40,6 +40,8 @@ public class BoardFree extends BaseTime{
     private int hit;
     @Column(columnDefinition = "TEXT", nullable = false, name="content")
     private String content;
+    @Column(name="is_report")
+    private byte isReport;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="USER_FK")
     @ToString.Exclude
