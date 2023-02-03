@@ -10,7 +10,6 @@ import java.util.List;
 public interface IUserService {
 
     boolean createUser(UserDto userDto) throws NoSuchAlgorithmException;
-    UserDto getUser(String email);
     List<UserDto> getAllUsers();
     boolean updateUser(String email);
     boolean deleteUser(String email);

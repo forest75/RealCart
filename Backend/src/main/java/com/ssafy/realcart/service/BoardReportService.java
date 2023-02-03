@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.realcart.data.dao.inter.IBoardReportDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
@@ -26,6 +27,7 @@ public class BoardReportService implements IBoardReportService {
 	}
 	
 	@Override
+	@Transactional
 	public boolean createReport(BoardDto boardDto) {
 		BoardReport boardReport = new BoardReport();
 		boardReport.setContent(boardDto.getContent());
@@ -35,6 +37,7 @@ public class BoardReportService implements IBoardReportService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<BoardDto> getBoardReportAll() {
 		List<BoardReport> boardReports = boardReportDAO.getBoardReportAll();
 		List<BoardDto> boardDtos = new ArrayList<BoardDto>();
@@ -53,6 +56,7 @@ public class BoardReportService implements IBoardReportService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public BoardDto getBoardReport(int id) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
 		if(boardReport == null) return null;
@@ -68,6 +72,7 @@ public class BoardReportService implements IBoardReportService {
 	}
 
 	@Override
+	@Transactional
 	public boolean changeReport(int id, BoardDto boardDto) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
 		if(boardReport != null) {
@@ -80,6 +85,7 @@ public class BoardReportService implements IBoardReportService {
 	}
 
 	@Override
+	@Transactional
 	public boolean deleteReport(int id) {
 		return boardReportDAO.deleteReport(id);
 	}
