@@ -62,7 +62,7 @@ class RCcarThread implements Runnable{
                 for(int i=0; i<imageLen; i++) {
                     decImage += (char) br.read();
                 }
-                System.out.println(decImage);
+                //System.out.println(decImage);
             }
         } catch (IOException e){
             socket = null;
