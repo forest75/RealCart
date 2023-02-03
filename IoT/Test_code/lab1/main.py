@@ -102,9 +102,13 @@ def driving():
             flag_shift = False
         
         else:
+            if (car_speed < 1): car_speed = 0
             car_speed *= 0.95
         
         car_gear.drive(car_speed)
+        print('car_speed :', car_speed)
+        time.sleep(0.1)
+
 
 def handling():
     global car_handle
