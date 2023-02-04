@@ -44,7 +44,7 @@ public class SSLServerExample {
         try {
             context = SSLContext.getInstance("TLS");
             String certPem = Paths.get("src", "pem", "cert.pem").toString();
-            String certKey = Paths.get("src", "pem", "cert.key").toString();
+            String certKey = Paths.get("src", "pem", "key.pem").toString();
 
             byte[] certBytes = parseDERFromPEM(getBytes(new File(certPem)),
                     "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
