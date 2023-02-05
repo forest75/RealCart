@@ -34,6 +34,7 @@ function ReportBoardWrite() {
   const handleSubmit = () => {
     const rawContentState = convertToRaw(editorState.getCurrentContent());
     const data = {
+      category: "신고",
       title: titleRef.current.value,
       content: JSON.stringify(rawContentState),
       nickname: user.nickname,

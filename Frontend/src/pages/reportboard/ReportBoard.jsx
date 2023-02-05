@@ -35,21 +35,35 @@ function ReportBoard() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/report`)
       .then((res) => {
+        console.log(res);
         const articles = res.data;
-        const numberOfArticlesPerUnit = 10;
-        const numberOfUnits = Math.ceil(
-          articles.length / numberOfArticlesPerUnit
-        );
-        const List = [];
-        for (let i = 0; i < numberOfUnits; i += 1) {
-          List.push(
-            articles.slice(
-              i * numberOfArticlesPerUnit,
-              (i + 1) * numberOfArticlesPerUnit
-            )
+        if (articles.length === 0) {
+          setArticleList([
+            [
+              {
+                id: "-",
+                title: "게시글이 없습니다.",
+                nickname: "-",
+                hit: "-",
+              },
+            ],
+          ]);
+        } else {
+          const numberOfArticlesPerUnit = 10;
+          const numberOfUnits = Math.ceil(
+            articles.length / numberOfArticlesPerUnit
           );
+          const List = [];
+          for (let i = 0; i < numberOfUnits; i += 1) {
+            List.push(
+              articles.slice(
+                i * numberOfArticlesPerUnit,
+                (i + 1) * numberOfArticlesPerUnit
+              )
+            );
+          }
+          setArticleList(List);
         }
-        setArticleList(List);
         setLoading(false);
       });
   }, []);
