@@ -7,11 +7,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardWrite() {
   const titleRef = useRef();
+  const navigate = useNavigate();
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
@@ -36,6 +37,7 @@ function FreeBoardWrite() {
       })
       .then((res) => {
         console.log(res);
+        navigate("/freeBoard");
       })
       .catch((err) => {
         console.log(err);

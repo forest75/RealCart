@@ -44,21 +44,14 @@ function ArtcleBox({
           to={`/${board}/detail?no=${no}`}
           style={{
             textDecoration: "none",
-            width: "100%",
+            width: "60%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            color: "black",
           }}
         >
-          <Box
-            sx={{
-              width: "60%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {title}
-          </Box>
+          <Box>{title}</Box>
         </Link>
         <Box
           sx={{

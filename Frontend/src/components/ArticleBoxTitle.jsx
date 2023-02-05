@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
 // import Button from "@mui/material/Button";
 
 function ArtcleBox({
@@ -40,26 +39,17 @@ function ArtcleBox({
         >
           {no}
         </Box>
-        <Link
-          to={`/${board}/detail?no=${no}`}
-          style={{
-            textDecoration: "none",
-            width: "100%",
+
+        <Box
+          sx={{
+            width: "60%",
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
+            textAlign: "center",
           }}
         >
-          <Box
-            sx={{
-              width: "60%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {title}
-          </Box>
-        </Link>
+          {title}
+        </Box>
         <Box
           sx={{
             width: "10%",

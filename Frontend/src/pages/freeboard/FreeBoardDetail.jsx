@@ -29,15 +29,28 @@ function FreeBoardDetail() {
       });
   }, []);
 
+  const handleDelete = () => {
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   // const [chats, setChats] = useState([]);
   // const chatRef = useRef(null);
 
   const onChange = (event) => {
     setChat(event.target.value);
+    console.log(event.target.value);
     setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
     if (count > 200) {
       alert("200자까지만 작성할 수 있습니다.");
-      setChat(chat.substring(0, 200));
+      setChat(chat.substring(0, 199));
+      setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
     }
   };
   const user = useSelector((state) => state.login.user);
@@ -186,6 +199,7 @@ function FreeBoardDetail() {
               border: "solid 1px black",
               marginRight: "10px",
             }}
+            onClick={handleDelete}
           >
             삭제
           </AppButton>
@@ -238,7 +252,6 @@ function FreeBoardDetail() {
               >
                 <Textarea
                   onChange={onChange}
-                  value={chat}
                   type="text"
                   maxLength="200"
                   style={{
