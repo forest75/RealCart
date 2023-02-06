@@ -126,11 +126,16 @@ public class BoardFreeService implements IBoardFreeService {
     public boolean createFreeComment(int id, CommentDto commentDto) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         User user = userDAO.checkNickname(commentDto.getNickname());
-        Comment comment = new Comment();
-        comment.setBoardFree(board);
-        comment.setUser(user);
-        comment.setContent(commentDto.getContent());
-        return boardFreeDAO.saveFreeComment(comment);
+        if(user != null) {
+        	Comment comment = new Comment();
+        	comment.setBoardFree(board);
+        	comment.setUser(user);
+        	comment.setContent(commentDto.getContent());
+        	return boardFreeDAO.saveFreeComment(comment);
+        }
+        else {
+        	return false;
+        }
 
     }
 
