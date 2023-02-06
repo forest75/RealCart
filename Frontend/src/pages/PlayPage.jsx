@@ -14,7 +14,7 @@ function PlayPage() {
   const user = useSelector((state) => state.login.user);
   const [imgSrc] = useState("");
 
-  const ws = new WebSocket("ws://i8a403.p.ssafy.io:8581");
+  const ws = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
   // ws.onopen = function open() { };
 
