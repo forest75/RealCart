@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.BoardFreeDto;
+import com.ssafy.realcart.data.dto.BoardNoticeDto;
+import com.ssafy.realcart.data.dto.BoardReportDto;
+import com.ssafy.realcart.data.dto.BoardReportRequestDto;
 import com.ssafy.realcart.data.dto.CommentDto;
 import com.ssafy.realcart.service.inter.IBoardFreeService;
 import com.ssafy.realcart.service.inter.IBoardNoticeService;
@@ -40,25 +44,25 @@ public class BoardController {
     }
 
     @GetMapping(value="/free")
-    public ResponseEntity<List<BoardDto>> getBoardFreeAll(){
+    public ResponseEntity<List<BoardFreeDto>> getBoardFreeAll(){
     	LOGGER.info("getBoardFreeAll 메서드를  BoardController에서 진입");
-        List<BoardDto> list = boardFreeService.getBoardFreeAll();
+        List<BoardFreeDto> list = boardFreeService.getBoardFreeAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping(value="/notice")
-    public ResponseEntity<List<BoardDto>> getBoardNoticeAll(){
+    public ResponseEntity<List<BoardNoticeDto>> getBoardNoticeAll(){
     	LOGGER.info("getBoardNoticeAll 메서드를  BoardController에서 진입");
-    	List<BoardDto> list = boardNoticeService.getBoardNoticeAll();
+    	List<BoardNoticeDto> list = boardNoticeService.getBoardNoticeAll();
     	
     	return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping(value="/report")
-    public ResponseEntity<List<BoardDto>> getBoardReportAll(){
+    public ResponseEntity<List<BoardReportDto>> getBoardReportAll(){
     	LOGGER.info("getBoardReportAll 메서드를  BoardController에서 진입");
-    	List<BoardDto> list = boardReportService.getBoardReportAll();
+    	List<BoardReportDto> list = boardReportService.getBoardReportAll();
     	
     	return ResponseEntity.status(HttpStatus.OK).body(list);
     }
@@ -86,7 +90,7 @@ public class BoardController {
     }
 
     @PostMapping(value="/report")
-    public ResponseEntity<String>  createReport(@RequestBody BoardDto boardDto){
+    public ResponseEntity<String>  createReport(@RequestBody BoardReportRequestDto boardDto){
     	LOGGER.info("createReport 메서드를  BoardController에서 진입");
 
     	if(boardReportService.createReport(boardDto)){
@@ -119,7 +123,7 @@ public class BoardController {
     }
 
     @PutMapping(value="/report/{id}")
-    public ResponseEntity<String>  changeReport(@PathVariable int id, @RequestBody BoardDto boardDto){
+    public ResponseEntity<String>  changeReport(@PathVariable int id, @RequestBody BoardReportRequestDto boardDto){
     	LOGGER.info("changeReport 메서드를  BoardController에서 진입");
     	if(boardReportService.changeReport(id, boardDto)) {
     		return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
@@ -156,25 +160,25 @@ public class BoardController {
     }
 
     @GetMapping(value="/free/{id}")
-    public ResponseEntity<BoardDto> getFree(@PathVariable("id") int id){
+    public ResponseEntity<BoardFreeDto> getFree(@PathVariable("id") int id){
     	LOGGER.info("getFree 메서드를  BoardController에서 진입");
-        BoardDto boardDto = boardFreeService.getBoardFree(id);
+        BoardFreeDto boardDto = boardFreeService.getBoardFree(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
     @GetMapping(value="/notice/{id}")
-    public ResponseEntity<BoardDto> getNotice(@PathVariable("id") int id){
+    public ResponseEntity<BoardNoticeDto> getNotice(@PathVariable("id") int id){
     	LOGGER.info("getNotice 메서드를  BoardController에서 진입");
-    	BoardDto boardDto = boardNoticeService.getBoardNotice(id);
+    	BoardNoticeDto boardDto = boardNoticeService.getBoardNotice(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
     @GetMapping(value="/report/{id}")
-    public ResponseEntity<BoardDto> getReport(@PathVariable("id") int id){
+    public ResponseEntity<BoardReportDto> getReport(@PathVariable("id") int id){
     	LOGGER.info("getReport 메서드를  BoardController에서 진입");
-    	BoardDto boardDto = boardReportService.getBoardReport(id);
+    	BoardReportDto boardDto = boardReportService.getBoardReport(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }

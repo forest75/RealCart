@@ -1,24 +1,27 @@
 package com.ssafy.realcart.data.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
-public class CommentDto {
+@SuperBuilder
+public class BoardFreeDto extends BoardDto{
     private int id;
-    private String nickname;
-    private String content;
+    private int hit;
+    private byte isReport;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
+    private String nickname;
+    private List<CommentDto> comments;
 }

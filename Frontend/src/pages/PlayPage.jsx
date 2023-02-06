@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-// import car from "../assets/car.jpg";
+// import WebSocket from "isomorphic-ws";
 import toturial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
@@ -11,17 +11,26 @@ import RectangleRace from "../assets/Rectangle_Racetime.png";
 // import car from "../assets/car.jpg";
 
 function PlayPage() {
-  const [imgSrc, setImgSrc] = useState("");
-  const ws = new WebSocket("ws://3.35.3.27:8887");
   const user = useSelector((state) => state.login.user);
+  const [imgSrc] = useState("");
 
-  ws.onopen = function () {
-    console.log("on open1");
+  const ws = new WebSocket("ws://i8a403.p.ssafy.io:8581");
+
+  ws.onopen = function open() {
+    console.log("connected");
+    ws.send(Date.now());
   };
 
-  ws.onmessage = function ({ data }) {
-    const url = `data:image/jpeg;base64,${data}`;
-    setImgSrc(url);
+  ws.onclose = function close() {
+    console.log("disconnected");
+  };
+
+  ws.onmessage = function incoming(data) {
+    console.log(`Roundtrip time: ${Date.now() - data.data} ms`);
+
+    setTimeout(function timeout() {
+      ws.send(Date.now());
+    }, 500);
   };
 
   const [keyState, setKeyState] = useState({});

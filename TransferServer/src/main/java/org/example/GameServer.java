@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -61,7 +62,7 @@ class RCcarThread implements Runnable{
                 for(int i=0; i<imageLen; i++) {
                     decImage += (char) br.read();
                 }
-                System.out.println(decImage);
+                //System.out.println(decImage);
             }
         } catch (IOException e){
             socket = null;
@@ -77,7 +78,7 @@ class WsHandler extends WebSocketServer{
     int port = 0;
 
     public WsHandler(int port, PrintWriter pw){
-        super(new java.net.InetSocketAddress(port));
+        super(new InetSocketAddress(port));
         this.port = port;
         this.pw = pw;
     }
