@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-import ArticleBox from "../components/ArticleBox";
+import ArticleBox from "../../components/ArticleBox";
+import ArticleBoxTitle from "../../components/ArticleBoxTitle";
+import AppButton from "../../components/AppButton";
 
 function NoticeBoard() {
   const [page, setPage] = useState(0);
@@ -90,7 +93,7 @@ function NoticeBoard() {
             alignItems: "center",
           }}
         >
-          <ArticleBox
+          <ArticleBoxTitle
             sx={{
               width: "80%",
             }}
@@ -106,6 +109,7 @@ function NoticeBoard() {
                 width: "80%",
                 bgcolor: "#f5f5f5",
               }}
+              board="noticeboard"
               key={article.no}
               no={article.no}
               title={article.title}
@@ -114,6 +118,25 @@ function NoticeBoard() {
               view={article.view}
             />
           ))}
+          <Box
+            sx={{
+              width: "80%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Link to="/noticeBoard/write">
+              <AppButton
+                sx={{
+                  border: 1,
+                  bgcolor: "black",
+                  color: "white",
+                }}
+              >
+                글쓰기
+              </AppButton>
+            </Link>
+          </Box>
           <Pagination
             count={articleList.length}
             variant="outlined"
