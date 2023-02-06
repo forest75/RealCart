@@ -14,6 +14,7 @@ import ArrowButton from "../components/ArrowButton";
 function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(process.env.REACT_APP_BACKEND_URL);
 
   const handleLogin = async (e) => {
     e.preventDefault();

@@ -7,10 +7,9 @@ import { useSearchParams, Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
 
-function FreeBoardDetail() {
+function ReportBoardDetail() {
   // const chatRef = useRef();
   const [title, setTitle] = useState();
-  const [content, setContent] = useState();
   const [comments, setComments] = useState();
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
@@ -22,7 +21,6 @@ function FreeBoardDetail() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
         setTitle(res.data.title);
-        setContent(res.data.content);
         setComments(res.data.coments);
         // console.log(res.data.comments);
       })
@@ -31,28 +29,15 @@ function FreeBoardDetail() {
       });
   }, []);
 
-  const handleDelete = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   // const [chats, setChats] = useState([]);
   // const chatRef = useRef(null);
 
   const onChange = (event) => {
     setChat(event.target.value);
-    console.log(event.target.value);
     setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
     if (count > 200) {
       alert("200자까지만 작성할 수 있습니다.");
-      setChat(chat.substring(0, 199));
-      setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
+      setChat(chat.substring(0, 200));
     }
   };
   const user = useSelector((state) => state.login.user);
@@ -87,7 +72,6 @@ function FreeBoardDetail() {
 
     setChat("");
   };
-
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
@@ -167,7 +151,9 @@ function FreeBoardDetail() {
             width: "100%",
           }}
         >
-          <Box dangerouslySetInnerHTML={{ __html: { content } }} />
+          <Box component="h3" sx={{ fontWeight: "300", padding: "20px" }}>
+            여기는 자유게시판인데 소정캡짱이 랭킹 1위 실화냐?
+          </Box>
         </Box>
         <Box
           sx={{
@@ -200,7 +186,6 @@ function FreeBoardDetail() {
               border: "solid 1px black",
               marginRight: "10px",
             }}
-            onClick={handleDelete}
           >
             삭제
           </AppButton>
@@ -253,6 +238,7 @@ function FreeBoardDetail() {
               >
                 <Textarea
                   onChange={onChange}
+                  value={chat}
                   type="text"
                   maxLength="200"
                   style={{
@@ -292,4 +278,4 @@ function FreeBoardDetail() {
   );
 }
 
-export default FreeBoardDetail;
+export default ReportBoardDetail;
