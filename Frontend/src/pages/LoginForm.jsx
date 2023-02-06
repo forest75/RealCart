@@ -20,7 +20,7 @@ function LoginForm() {
     const data = { email: e.target[0].value, password: e.target[2].value };
 
     await axios
-      .post("http://3.34.23.91:8080/user", data)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
       .then((response) => {
         console.log(response);
         localStorage.setItem("user", JSON.stringify(response.data));

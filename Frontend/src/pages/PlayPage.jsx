@@ -1,11 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 // import WebSocket from "isomorphic-ws";
 import toturial from "../assets/toturial.png";
+import rhombusLap from "../assets/rhombus_lab.png";
+import rhombusPlace from "../assets/rhombus_place.png";
+import RectangleBest from "../assets/Rectangle_Best.png";
+import RectangleRace from "../assets/Rectangle_Racetime.png";
 // import car from "../assets/car.jpg";
 
 function PlayPage() {
+  const user = useSelector((state) => state.login.user);
   const [imgSrc] = useState("");
 
   const ws = new WebSocket("ws://i8a403.p.ssafy.io:8581");
@@ -160,7 +166,8 @@ function PlayPage() {
     // preve;
     event.preventDefault();
     if (chat === "") return;
-    setChats((currentArray) => [...currentArray, chat]);
+    const newChat = `${user.nickname} : ${chat}`;
+    setChats((currentArray) => [...currentArray, newChat]);
     setChat("");
   };
 
@@ -398,65 +405,115 @@ function PlayPage() {
             }}
           >
             <Box
+              component="img"
+              alt="RectangleRacetime"
+              src={RectangleRace}
               sx={{
-                width: "15%",
+                width: "25%",
                 height: "13%",
-                top: "5%",
-                bgcolor: "black",
+                opacity: "92%",
+                top: "3%",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            />
+
+            <Box
+              component="h4"
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "2%",
+                left: "7.5%",
                 color: "white",
-                opacity: "50%",
                 position: "absolute",
                 zIndex: 1,
               }}
             >
-              <h3> &nbsp;RACE TIME</h3>
+              RACE TIME
             </Box>
             <Box
+              component="img"
+              alt="RectangleBest"
+              src={RectangleBest}
               sx={{
                 width: "20%",
-                height: "13%",
+                height: "9%",
+                opacity: "85%",
                 top: "20%",
-                bgcolor: "black",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            />
+            <Box
+              component="h5"
+              sx={{
+                width: "20%",
+                height: "9%",
+                top: "14%",
+                left: "7.5%",
                 color: "white",
-                opacity: "50%",
                 position: "absolute",
                 zIndex: 1,
               }}
             >
-              <h3> &nbsp;BEST</h3>
+              <h3>BEST</h3>
             </Box>
             <Box
+              component="img"
+              alt="rhombusLap"
+              src={rhombusLap}
               sx={{
-                width: "15%",
+                width: "17%",
                 height: "13%",
-                top: "5%",
+                top: "3%",
                 right: "0",
-                bgcolor: "black",
-                color: "white",
                 opacity: "50%",
                 position: "absolute",
                 zIndex: 1,
               }}
+            />
+            <Box
+              component="h4"
+              sx={{
+                color: "white",
+                position: "absolute",
+                top: "1%",
+                right: "7%",
+                zIndex: 1,
+              }}
             >
-              <h3> &nbsp;LAP</h3>
+              LAP
             </Box>
             <Box
+              component="img"
+              alt="rhombusPlace"
+              src={rhombusPlace}
               sx={{
-                width: "15%",
-                height: "8%",
-                top: "20%",
+                width: "20%",
+                height: "11%",
+                top: "17%",
                 right: "0",
-                bgcolor: "black",
-                color: "white",
                 opacity: "50%",
                 position: "absolute",
                 zIndex: 1,
                 display: "flex",
                 alignItems: "center",
               }}
+            />
+            <Box
+              component="h4"
+              sx={{
+                top: "15%",
+                right: "7%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
             >
-              <h3> &nbsp;PLACE</h3>
+              PLACE
             </Box>
+
             <Box
               sx={{
                 width: "25%",
