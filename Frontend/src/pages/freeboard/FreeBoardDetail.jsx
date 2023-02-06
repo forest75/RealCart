@@ -21,9 +21,10 @@ function FreeBoardDetail() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
-        setTitle(res.data.title);
-        setContent(res.data.content);
-        setComments(res.data.coments);
+        const article = res.data;
+        setTitle(article.title);
+        setContent(article.content);
+        setComments(article.comments);
         // console.log(res.data.comments);
       })
       .catch((err) => {
@@ -62,17 +63,14 @@ function FreeBoardDetail() {
     // console.log(e);
     if (chat === "") return;
     const data = {
-      comments: [
-        {
-          content: e.target[0].value,
-          nickname: user.nickname,
-        },
-      ],
+      content: e.target[0].value,
+      nickname: user.nickname,
     };
+
     console.log(data);
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -167,7 +165,7 @@ function FreeBoardDetail() {
             width: "100%",
           }}
         >
-          <Box dangerouslySetInnerHTML={{ __html: { content } }} />
+          <Box dangerouslySetInnerHTML={{ __html: content }} />
         </Box>
         <Box
           sx={{
