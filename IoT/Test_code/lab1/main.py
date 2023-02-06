@@ -10,6 +10,7 @@ from datetime import datetime
 import threading
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
+from color import COLOR
 
 class ClientSocket:
     
@@ -17,6 +18,7 @@ class ClientSocket:
         self.TCP_SERVER_IP = ip
         self.TCP_SERVER_PORT = port
         self.connectCount = 0
+        self.gate_no = -1
         self.connectServer()
 
     def connectServer(self):
@@ -45,10 +47,19 @@ class ClientSocket:
             self.connectServer()
 
     def sendData(self):
+        global car_speed
+
+
+
         try:
             while True:
-                #data = "1"
-                #self.sock.send(data.encode())
+                timeStamp = time.time()
+                data = f"{{time: {timeStamp}, gate: {self.gate_no}}}"
+                length = str(len(data.encode()))
+                self.sock.sendall(length.encode('utf-8').ljust(128))  # timestamp의 length
+                # print(length)
+                # print(data.encode())
+                self.sock.send(data.encode())  # 실제 보낼 데이터
                 time.sleep(1)
 
         except Exception as e:
@@ -127,13 +138,21 @@ def handling():
             car_handle.steering('center')
             flag_release = False
 
+
+def gate_passing(self):
+    global car_color
+
+    while True:
+        self.gate_no = car_color.color_sensing()  # return 값으로 gate_no를 받음
+
 def main():
-    global recv_data, car_gear, car_handle, car_speed
+    global recv_data, car_gear, car_handle, car_speed, car_color
     global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release
     
     recv_data = 0
-    
-    TCP_IP = '127.0.0.1'
+
+    TCP_IP = "i8a403.p.ssafy.io"
+    #TCP_IP = '127.0.0.1'
     TCP_PORT = 8081
     client = ClientSocket(TCP_IP, TCP_PORT)
     
@@ -142,6 +161,10 @@ def main():
     dc_input_2 = 18
     
     servo_pin = 17
+
+    color_s2 = 23
+    color_s3 = 24
+    color_signal = 25
     
     car_speed = 0
     
@@ -154,16 +177,19 @@ def main():
     
     car_gear = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)
     car_handle = SERVO_MOTOR(servo_pin)
-    car_color = ''
+    car_color = COLOR(color_s2, color_s3, color_signal)
     
     gear_thread = threading.Thread(target=driving)
     handle_thread = threading.Thread(target=handling)
-    
+    color_sensing_thread = threading.Thread(target=gate_passing)
+
     gear_thread.start()
     handle_thread.start()
+    color_sensing_thread.start()
     
     gear_thread.join()
     handle_thread.join()
+    color_sensing_thread.join()
 
 
 if __name__ == "__main__":    
