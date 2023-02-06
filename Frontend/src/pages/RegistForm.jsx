@@ -35,7 +35,7 @@ export default function RegistForm() {
       .then((response) => {
         alert("회원가입 성공!");
         console.log(response);
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
