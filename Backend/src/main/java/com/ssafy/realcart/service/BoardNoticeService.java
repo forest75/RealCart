@@ -83,6 +83,7 @@ public class BoardNoticeService implements IBoardNoticeService {
 	@Override
 	@Transactional
 	public boolean deleteNotice(int id) {
+
 		return boardNoticeDAO.deleteNotice(id);
 	}
 
