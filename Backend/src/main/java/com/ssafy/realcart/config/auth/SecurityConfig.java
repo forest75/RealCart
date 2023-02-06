@@ -1,17 +1,8 @@
 package com.ssafy.realcart.config.auth;
 
-import com.ssafy.realcart.config.filter.TokenAuthenticationFilter;
-import com.ssafy.realcart.config.handler.OAuth2AuthenticationFailureHandler;
-import com.ssafy.realcart.config.handler.OAuth2AuthenticationSuccessHandler;
-import com.ssafy.realcart.config.handler.TokenAccessDeniedHandler;
-import com.ssafy.realcart.data.entity.auth.RoleType;
-import com.ssafy.realcart.data.repository.IUserRepository;
-import com.ssafy.realcart.data.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.ssafy.realcart.exception.RestAuthenticationEntryPoint;
-import com.ssafy.realcart.service.auth.AuthTokenProvider;
-import com.ssafy.realcart.service.auth.CustomOAuth2UserService;
-import com.ssafy.realcart.service.auth.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +16,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.util.Arrays;
+import com.ssafy.realcart.config.filter.TokenAuthenticationFilter;
+import com.ssafy.realcart.config.handler.OAuth2AuthenticationFailureHandler;
+import com.ssafy.realcart.config.handler.OAuth2AuthenticationSuccessHandler;
+import com.ssafy.realcart.config.handler.TokenAccessDeniedHandler;
+import com.ssafy.realcart.data.repository.IUserRepository;
+import com.ssafy.realcart.data.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.ssafy.realcart.exception.RestAuthenticationEntryPoint;
+import com.ssafy.realcart.service.auth.AuthTokenProvider;
+import com.ssafy.realcart.service.auth.CustomOAuth2UserService;
+import com.ssafy.realcart.service.auth.CustomUserDetailsService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -160,4 +163,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
     }
+    
 }
