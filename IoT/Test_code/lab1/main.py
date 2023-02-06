@@ -47,19 +47,16 @@ class ClientSocket:
             self.connectServer()
 
     def sendData(self):
-        global car_speed
-
-
-
+        global car_speed, car_gate
+        
         try:
             while True:
-                timeStamp = time.time()
-                data = f"{{time: {timeStamp}, gate: {self.gate_no}}}"
-                length = str(len(data.encode()))
-                self.sock.sendall(length.encode('utf-8').ljust(128))  # timestamp의 length
-                # print(length)
-                # print(data.encode())
-                self.sock.send(data.encode())  # 실제 보낼 데이터
+                #timeStamp = time.time()
+                #data = "{time:" + timeStamp + ", gate:" + car_gate + "}"
+                #length = str(len(data.encode()))
+                # timestamp의 length
+                #self.sock.sendall(length.encode('utf-8').ljust(128))
+                #self.sock.send(data.encode())  # 실제 보낼 데이터
                 time.sleep(1)
 
         except Exception as e:
@@ -117,7 +114,7 @@ def driving():
             car_speed *= 0.95
         
         car_gear.drive(car_speed)
-        print('car_speed :', car_speed)
+        #print('car_speed :', car_speed)
         time.sleep(0.1)
 
 
@@ -139,14 +136,17 @@ def handling():
             flag_release = False
 
 
-def gate_passing(self):
-    global car_color
+def gate_passing():
+    global car_color, car_gate
 
     while True:
-        self.gate_no = car_color.color_sensing()  # return 값으로 gate_no를 받음
+        gate_no = car_color.color_sensing()  # return 값으로 gate_no를 받음
+        
+        if (gate_no != -1):
+            car_gate = gate_no
 
 def main():
-    global recv_data, car_gear, car_handle, car_speed, car_color
+    global recv_data, car_gear, car_handle, car_speed, car_color, car_gate
     global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release
     
     recv_data = 0
@@ -167,6 +167,7 @@ def main():
     color_signal = 25
     
     car_speed = 0
+    car_gate = 0
     
     flag_up = False
     flag_down = False
@@ -181,15 +182,15 @@ def main():
     
     gear_thread = threading.Thread(target=driving)
     handle_thread = threading.Thread(target=handling)
-    color_sensing_thread = threading.Thread(target=gate_passing)
+    gate_sensing_thread = threading.Thread(target=gate_passing)
 
     gear_thread.start()
     handle_thread.start()
-    color_sensing_thread.start()
+    gate_sensing_thread.start()
     
     gear_thread.join()
     handle_thread.join()
-    color_sensing_thread.join()
+    gate_sensing_thread.join()
 
 
 if __name__ == "__main__":    

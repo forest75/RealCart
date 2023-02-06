@@ -17,7 +17,6 @@ class COLOR:
             self.color_s2 = color_s2
             self.color_s3 = color_s3
             self.color_signal = color_signal
-            self.gate_no = gate_no
 
             print('Color Sensing GPIO pin Setting complete')
 
@@ -25,11 +24,15 @@ class COLOR:
             print('Color Sensing GPIO pin Setting failed')
 
     def color_sensing(self):
-        global gate_no
+        gate_no = -1
 
         # color
-        color_pink = [2000, 4000, 1000, 3000, 2000, 4000]  # red_min, red_max, green_min, green_max, blue_min, blue_max
-        color_green = [550, 800, 1500, 2000, 800, 1100]
+        # red_min, red_max, green_min, green_max, blue_min, blue_max
+        # pink, green, ..., ...
+        gate_color = [[2000, 4000, 1000, 3000, 2000, 4000],
+                      [550, 800, 1500, 2000, 800, 1100],
+                      [0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0]]
 
         color_cycles = 10
 
@@ -71,21 +74,10 @@ class COLOR:
         duration = time.time() - start  # seconds to rn for loop
         green = color_cycles / duration
 
-        # print('r, g, b:', red, blue, green)
-
-        if color_green[0] < red < color_green[1] and color_green[2] < green < color_green[3] and color_green[4] < blue < \
-                color_green[5]:
-            print('Ready')
-            gate_no = 1
-
-        elif color_pink[0] < red < color_pink[1] and color_pink[2] < green < color_pink[3] and color_pink[4] < blue < \
-                color_pink[5]:
-            print('Goal')
-            gate_no = 4
-
+        print('r, g, b:', red, blue, green)
+        
+        for gate_idx in range(0, 4):
+            if gate_color[gate_idx][0] < red < gate_color[gate_idx][1] and gate_color[gate_idx][2] < green < gate_color[gate_idx][3] and gate_color[gate_idx][4] < blue < gate_color[gate_idx][5]:
+                gate_no = gate_idx
+        
         return gate_no
-
-    #
-    # def is_passing_gate(self):
-    #     while True:
-    #         self.color_sensing()
