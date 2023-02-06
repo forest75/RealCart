@@ -10,11 +10,14 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import SpectPage from "./pages/SpectPage";
 import PlayPage from "./pages/PlayPage";
-import NoticeBoard from "./pages/NoticeBoard";
+import NoticeBoard from "./pages/noticeboard/NoticeBoard";
+import NoticeBoardDetail from "./pages/noticeboard/NoticeBoardDetail";
+import NoticeBoardWrite from "./pages/noticeboard/NoticeBoardWrite";
+import NoticeBoardModify from "./pages/noticeboard/NoticeBoardModify";
 import FreeBoard from "./pages/freeboard/FreeBoard";
+import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
 import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
 import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
-import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
 import ReportBoard from "./pages/reportboard/ReportBoard";
 import ReportBoardWrite from "./pages/reportboard/ReportBoardWrite";
 import ReportBoardModify from "./pages/reportboard/ReportBoardModify";
@@ -35,15 +38,18 @@ function App() {
         <Route path="/myPage" element={<MyPage />} />
         <Route path="/spect" element={<SpectPage />} />
         <Route path="/play" element={<PlayPage />} />
-        <Route path="/noticeBoard" element={<NoticeBoard />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
         <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
         <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
-        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
         <Route path="/reportBoard/write" element={<ReportBoardWrite />} />
         <Route path="/reportBoard/modify" element={<ReportBoardModify />} />
         <Route path="/reportBoard/detail" element={<ReportBoardDetail />} />
+        <Route path="/noticeBoard" element={<NoticeBoard />} />
+        <Route path="/noticeBoard/detail" element={<NoticeBoardDetail />} />
+        <Route path="/noticeBoard/write" element={<NoticeBoardWrite />} />
+        <Route path="/noticeBoard/modify" element={<NoticeBoardModify />} />
         <Route path="/oauth/redirect" element={<AuthPage />} />
       </Routes>
       <AppFooter />

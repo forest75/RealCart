@@ -156,7 +156,7 @@ function FreeBoard() {
               sx={{
                 width: "80%",
               }}
-              board="freeboard"
+              board="noticeboard"
               key={article.no}
               no={article.no}
               title={article.title}
@@ -172,7 +172,7 @@ function FreeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/freeBoard/write">
+            <Link to="/noticeBoard/write">
               <AppButton
                 sx={{
                   border: 1,

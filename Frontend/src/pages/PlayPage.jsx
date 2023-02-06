@@ -14,12 +14,9 @@ function PlayPage() {
   const [imgSrc] = useState("");
   const user = useSelector((state) => state.login.user);
 
-  const ws = new WebSocket("wss://i8a403.p.ssafy.io:8887");
+  const ws = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
-  ws.onopen = function open() {
-    console.log("connected");
-    ws.send(Date.now());
-  };
+  // ws.onopen = function open() { };
 
   ws.onclose = function close() {
     console.log("disconnected");
