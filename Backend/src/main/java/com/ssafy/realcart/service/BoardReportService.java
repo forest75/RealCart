@@ -14,6 +14,7 @@ import com.ssafy.realcart.data.dao.inter.IUserDAO;
 import com.ssafy.realcart.data.dto.BoardReportDto;
 import com.ssafy.realcart.data.dto.BoardReportRequestDto;
 import com.ssafy.realcart.data.entity.BoardReport;
+import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.service.inter.IBoardReportService;
 @Service
 public class BoardReportService implements IBoardReportService {
@@ -29,11 +30,15 @@ public class BoardReportService implements IBoardReportService {
 	
 	@Override
 	@Transactional
-	public boolean createReport(BoardReportRequestDto boardDto) {
+	public boolean createReport(BoardReportRequestDto boardDto){
 		BoardReport boardReport = new BoardReport();
 		boardReport.setContent(boardDto.getContent());
 		boardReport.setTitle(boardDto.getTitle());
-		boardReport.setUser(userDAO.checkNickname(boardDto.getNickname()));
+		User user = userDAO.checkNickname(boardDto.getNickname());
+		if(user != null) {
+			boardReport.setUser(user);
+		}
+		else return false;
 		boardReport.setCategory(boardDto.getCategory());
 		return boardReportDAO.saveReport(boardReport);
 	}
