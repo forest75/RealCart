@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -19,6 +20,11 @@ function FreeBoard() {
   const [page, setPage] = useState(0);
   const [age, setAge] = React.useState("");
 
+  const [id, setId] = useState([]);
+  const [title, setTitle] = useState([]);
+  const [nickname, setNickname] = useState([]);
+  const [createdTime, setCreatedTime] = useState([]);
+
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -26,6 +32,29 @@ function FreeBoard() {
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/free`)
+      .then((res) => {
+        setId(res.data.id);
+        setTitle(res.data.title);
+        setNickname(res.data.nickname);
+        setCreatedTime(res.data.createdTime);
+        console.log(id);
+        console.log(title);
+        console.log(nickname);
+        console.log(createdTime);
+        console.log(res.data.id);
+        console.log(res.data.title);
+        console.log(res.data.nickname);
+        console.log(res.data.createdTime);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const articleList = [
     [
       {
@@ -156,7 +185,7 @@ function FreeBoard() {
               sx={{
                 width: "80%",
               }}
-              board="noticeboard"
+              board="freeboard"
               key={article.no}
               no={article.no}
               title={article.title}
@@ -172,7 +201,7 @@ function FreeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/noticeBoard/write">
+            <Link to="/freeBoard/write">
               <AppButton
                 sx={{
                   border: 1,

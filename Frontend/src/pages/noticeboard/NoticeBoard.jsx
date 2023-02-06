@@ -109,7 +109,7 @@ function NoticeBoard() {
                 width: "80%",
                 bgcolor: "#f5f5f5",
               }}
-              board="noticeboard"
+              board="notice"
               key={article.no}
               no={article.no}
               title={article.title}

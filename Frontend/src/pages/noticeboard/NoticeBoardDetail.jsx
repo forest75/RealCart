@@ -18,7 +18,7 @@ function FreeBoardDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/notice/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice/${no}`)
       .then((res) => {
         setTitle(res.data.title);
         setComments(res.data.coments);
