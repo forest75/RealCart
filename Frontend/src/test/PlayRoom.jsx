@@ -2,33 +2,25 @@
 import React, { useRef } from "react";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
+import TransparentImg from "./img/transparent-1px.png";
+import WebRtcImg from "./img/webrtc.png";
+import Spinner from "./img/spinner.gif";
+import Advertise from "./img/advertise.png";
 
 function PlayRoom() {
   var ws = new WebSocket("wss://13.125.13.39:8090/call");
   var socket = new WebSocket("wss://13.125.13.39:8090/chat");
-  var stompClient;
-  var stompClient = Stomp.over(socket);
-  stompClient.connect({}, function () {
-    stompClient.subscribe("/subscribe", function (greeting) {
-      console.log(greeting.body);
-    });
-  });
-  // useEffect(() => {
-  //   connect();
-  // }, []);
   var video = useRef(null);
   var text = useRef(null);
   var webRtcPeer;
   var mediaId;
-
   window.onload = function () {
     connect();
-    // video = document.getElementById("video");
-    // text = document.getElementById("text");
   };
 
   window.onbeforeunload = function () {
     ws.close();
+    socket.close();
   };
 
   ws.onmessage = function (message) {
@@ -87,14 +79,12 @@ function PlayRoom() {
       })
     );
   }
-
   function viewerResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
       console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
-      console.log("webrtcpeer", webRtcPeer);
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
         if (error) return console.error(error);
       });
@@ -103,7 +93,7 @@ function PlayRoom() {
 
   function presenter(num) {
     if (!webRtcPeer) {
-      // showSpinner(video);
+      showSpinner(video.current);
     }
     var options = {
       localVideo: video.current,
@@ -134,7 +124,7 @@ function PlayRoom() {
 
   function viewer(num) {
     if (!webRtcPeer) {
-      // showSpinner(video);
+      showSpinner(video.current);
     }
     mediaId = num;
     console.log(num);
@@ -188,7 +178,7 @@ function PlayRoom() {
       webRtcPeer.dispose();
       webRtcPeer = null;
     }
-    // hideSpinner(video);
+    hideSpinner(video.current);
   }
 
   function sendMessage(message) {
@@ -199,16 +189,17 @@ function PlayRoom() {
 
   function showSpinner() {
     for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = "./img/transparent-1px.png";
-      arguments[i].style.background =
-        'center transparent url("./img/spinner.gif") no-repeat';
+      arguments[i].poster = TransparentImg;
+      arguments[
+        i
+      ].style.background = `center transparent url(${Spinner}) no-repeat`;
     }
   }
 
   function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
       arguments[i].src = "";
-      arguments[i].poster = "./img/webrtc.png";
+      arguments[i].poster = WebRtcImg;
       arguments[i].style.background = "";
     }
   }
@@ -296,6 +287,7 @@ function PlayRoom() {
                 autoPlay
                 width="640px"
                 height="480px"
+                poster={Advertise}
               ></video>
             </div>
           </div>

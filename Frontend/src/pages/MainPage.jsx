@@ -6,20 +6,15 @@ import { DataGrid } from "@mui/x-data-grid";
 // import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
+import TransparentImg from "../assets/img/transparent-1px.png";
+import WebRtcImg from "../assets/img/webrtc.png";
+import Spinner from "../assets/img/spinner.gif";
+import Advertise from "../assets/img/advertise.png";
 
 function MainPage() {
   var ws = new WebSocket("wss://13.125.13.39:8090/call");
   var socket = new WebSocket("wss://13.125.13.39:8090/chat");
   var stompClient;
-  var stompClient = Stomp.over(socket);
-  stompClient.connect({}, function () {
-    stompClient.subscribe("/subscribe", function (greeting) {
-      console.log(greeting.body);
-    });
-  });
-  // useEffect(() => {
-  //   connect();
-  // }, []);
   var video = useRef(null);
   var text = useRef(null);
   var webRtcPeer;
@@ -27,8 +22,6 @@ function MainPage() {
 
   window.onload = function () {
     connect();
-    // video = document.getElementById("video");
-    // text = document.getElementById("text");
   };
 
   window.onbeforeunload = function () {
@@ -107,7 +100,7 @@ function MainPage() {
 
   function presenter(num) {
     if (!webRtcPeer) {
-      // showSpinner(video);
+      showSpinner(video.current);
     }
     var options = {
       localVideo: video.current,
@@ -138,7 +131,7 @@ function MainPage() {
 
   function viewer(num) {
     if (!webRtcPeer) {
-      // showSpinner(video);
+      showSpinner(video.current);
     }
     mediaId = num;
     console.log(num);
@@ -192,7 +185,7 @@ function MainPage() {
       webRtcPeer.dispose();
       webRtcPeer = null;
     }
-    // hideSpinner(video);
+    hideSpinner(video.current);
   }
 
   function sendMessage(message) {
@@ -203,16 +196,17 @@ function MainPage() {
 
   function showSpinner() {
     for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = "./img/transparent-1px.png";
-      arguments[i].style.background =
-        'center transparent url("./img/spinner.gif") no-repeat';
+      arguments[i].poster = TransparentImg;
+      arguments[
+        i
+      ].style.background = `center transparent url(${Spinner}) no-repeat`;
     }
   }
 
   function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
       arguments[i].src = "";
-      arguments[i].poster = "./img/webrtc.png";
+      arguments[i].poster = WebRtcImg;
       arguments[i].style.background = "";
     }
   }
@@ -258,6 +252,12 @@ function MainPage() {
     title: "많은 사랑 부탁드립니다.",
     date: "2023.01.27",
   });
+
+  ws.onopen = () => {
+    setTimeout(() => {
+      viewer(1);
+    }, 2000);
+  };
 
   return (
     <Box
@@ -376,6 +376,7 @@ function MainPage() {
                       autoPlay
                       width="640px"
                       height="480px"
+                      poster={Advertise}
                     ></video>
                   </div>
                 </div>
