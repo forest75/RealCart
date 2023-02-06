@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
-// import Button from "@mui/material/Button";
 
-function ArtcleBox({
+function ReportBoxTitle({
   sx,
   board,
   no,
@@ -40,19 +38,32 @@ function ArtcleBox({
         >
           {no}
         </Box>
-        <Link
-          to={`/${board}/detail?no=${no}`}
-          style={{
-            textDecoration: "none",
-            width: "60%",
+        <Box
+          sx={{
+            width: "10%",
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
-            color: "black",
           }}
         >
-          <Box>{title}</Box>
-        </Link>
+          카테고리
+        </Box>
+        <Box
+          sx={{
+            width: "50%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {title}
+          </Box>
+        </Box>
         <Box
           sx={{
             width: "10%",
@@ -64,7 +75,7 @@ function ArtcleBox({
         </Box>
         <Box
           sx={{
-            width: "15%",
+            width: "10%",
             display: "flex",
             justifyContent: "center",
           }}
@@ -73,23 +84,32 @@ function ArtcleBox({
         </Box>
         <Box
           sx={{
-            width: "10%",
+            width: "5%",
             display: "flex",
             justifyContent: "center",
           }}
         >
           {view}
         </Box>
+        <Box
+          sx={{
+            width: "10%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          상태
+        </Box>
       </Box>
     </Box>
   );
 }
 
-ArtcleBox.defaultProps = {
+ReportBoxTitle.defaultProps = {
   sx: {},
 };
 
-ArtcleBox.propTypes = {
+ReportBoxTitle.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
   board: PropTypes.string.isRequired,
@@ -100,4 +120,4 @@ ArtcleBox.propTypes = {
   view: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default ArtcleBox;
+export default ReportBoxTitle;

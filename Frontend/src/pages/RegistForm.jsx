@@ -31,11 +31,11 @@ export default function RegistForm() {
     };
 
     await axios
-      .post("http://3.34.23.91:8080/user/register", data)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/user/register`, data)
       .then((response) => {
         alert("회원가입 성공!");
         console.log(response);
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -46,7 +46,11 @@ export default function RegistForm() {
     e.preventDefault();
     const params = { email };
     await axios
-      .get("http://3.34.23.91:8080/user/checkemail", { params }, { headers })
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/user/checkemail`,
+        { params },
+        { headers }
+      )
       .then((response) => {
         setEmailCheck(response.data);
       })
@@ -59,7 +63,11 @@ export default function RegistForm() {
     e.preventDefault();
     const params = { nickname };
     await axios
-      .get("http://3.34.23.91:8080/user/checknickname", { params }, { headers })
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/user/checknickname`,
+        { params },
+        { headers }
+      )
       .then((response) => {
         setNicknameCheck(response.data);
       })
