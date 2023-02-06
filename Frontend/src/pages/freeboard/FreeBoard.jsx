@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import AppButton from "../../components/AppButton";
 import ArticleBox from "../../components/ArticleBox";
+import ArticleBoxTitle from "../../components/ArticleBoxTitle";
 
 function FreeBoard() {
   const [page, setPage] = useState(0);
@@ -140,7 +141,7 @@ function FreeBoard() {
             alignItems: "center",
           }}
         >
-          <ArticleBox
+          <ArticleBoxTitle
             sx={{
               width: "80%",
             }}
@@ -155,7 +156,7 @@ function FreeBoard() {
               sx={{
                 width: "80%",
               }}
-              board="freeboard"
+              board="noticeboard"
               key={article.no}
               no={article.no}
               title={article.title}
@@ -171,7 +172,7 @@ function FreeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/freeBoard/write">
+            <Link to="/noticeBoard/write">
               <AppButton
                 sx={{
                   border: 1,

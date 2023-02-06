@@ -7,12 +7,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardWrite() {
   const titleRef = useRef();
-  const navigate = useNavigate();
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
@@ -30,14 +29,13 @@ function FreeBoardWrite() {
       nickname: user.nickname,
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
+      .post("http://3.34.23.91:8080/board/notice", data, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
         console.log(res);
-        navigate("/freeBoard");
       })
       .catch((err) => {
         console.log(err);
@@ -63,7 +61,7 @@ function FreeBoardWrite() {
         }}
       >
         <Typography variant="h4" flexGrow={1}>
-          자유게시판
+          공지사항
         </Typography>
       </Box>
       <Box
@@ -141,7 +139,7 @@ function FreeBoardWrite() {
           >
             <Box flexGrow={1} />
             <Link
-              to="/FreeBoard"
+              to="/noticeboard"
               style={{ color: "black", textDecoration: "none" }}
             >
               <AppButton
