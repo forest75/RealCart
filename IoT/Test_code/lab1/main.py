@@ -51,7 +51,7 @@ class ClientSocket:
         
         try:
             while True:
-                #timeStamp = time.time()
+                #timeStamp = round(time.time() * 1000)
                 #data = "{time:" + timeStamp + ", gate:" + car_gate + "}"
                 #length = str(len(data.encode()))
                 # timestamp의 length
