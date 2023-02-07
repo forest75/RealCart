@@ -206,7 +206,7 @@ function MainPage() {
   function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
       arguments[i].src = "";
-      arguments[i].poster = WebRtcImg;
+      arguments[i].poster = Advertise;
       arguments[i].style.background = "";
     }
   }
@@ -376,7 +376,7 @@ function MainPage() {
                       autoPlay
                       width="640px"
                       height="480px"
-                      poster={Advertise}
+                      poster={WebRtcImg}
                     ></video>
                   </div>
                 </div>

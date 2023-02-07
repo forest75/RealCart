@@ -193,7 +193,7 @@ function SpectPage() {
   function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
       arguments[i].src = "";
-      arguments[i].poster = WebRtcImg;
+      arguments[i].poster = Advertise;
       arguments[i].style.background = "";
     }
   }
@@ -592,14 +592,14 @@ function SpectPage() {
                   transform: "rotate(180deg)",
                 }}
               /> */}
-              <header>
+              {/* <header>
                 <div className="navbar navbar-inverse navbar-fixed-top"></div>
                 <textarea id="text"></textarea>
                 <button onClick={sendChat}>sendMessage</button>
-              </header>
+              </header> */}
               <div>
                 <div className="row">
-                  <div className="col-md-5">
+                  {/* <div className="col-md-5">
                     <div className="row">
                       <div className="col-md-12">
                         <button
@@ -670,7 +670,7 @@ function SpectPage() {
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-md-7">
                     <div id="videoBig">
                       <video
@@ -679,7 +679,7 @@ function SpectPage() {
                         autoPlay
                         width="640px"
                         height="480px"
-                        poster={Advertise}
+                        poster={WebRtcImg}
                       ></video>
                     </div>
                   </div>
