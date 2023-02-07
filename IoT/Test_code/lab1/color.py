@@ -1,7 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-from DC_motor import DC_MOTOR
-
 
 class COLOR:
 

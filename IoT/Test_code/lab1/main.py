@@ -47,13 +47,13 @@ class ClientSocket:
             self.connectServer()
 
     def sendData(self):
-        global car_speed, car_gate
+        global car_speed, car_gate, car_state
         
         try:
             while True:
 
                 timeStamp = round(time.time() * 1000)
-                data = "{"time":" + timeStamp + ", "gate":" + car_gate + "}"
+                data = f"{{\"time\": timeStamp , \"speed\" : car_speed, \"gateNo\" : car_gate, \"status\" : car_state }}"
                 length = str(len(data.encode()))
                 # timestamp length
                 self.sock.sendall(length.encode('utf-8').ljust(128))
