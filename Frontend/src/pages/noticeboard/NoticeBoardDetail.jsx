@@ -10,6 +10,7 @@ import AppButton from "../../components/AppButton";
 function FreeBoardDetail() {
   // const chatRef = useRef();
   const [title, setTitle] = useState();
+  const [content, setContent] = useState();
   const [comments, setComments] = useState();
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
@@ -18,9 +19,10 @@ function FreeBoardDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/notice/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice/${no}`)
       .then((res) => {
         setTitle(res.data.title);
+        setContent(res.data.content);
         setComments(res.data.coments);
         // console.log(res.data.comments);
       })
@@ -57,7 +59,7 @@ function FreeBoardDetail() {
     console.log(data);
 
     await axios
-      .post(`http://3.34.23.91:8080/board/free`, data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -152,7 +154,7 @@ function FreeBoardDetail() {
           }}
         >
           <Box component="h3" sx={{ fontWeight: "300", padding: "20px" }}>
-            여기는 자유게시판인데 소정캡짱이 랭킹 1위 실화냐?
+            <Box dangerouslySetInnerHTML={{ __html: content }} />
           </Box>
         </Box>
         <Box

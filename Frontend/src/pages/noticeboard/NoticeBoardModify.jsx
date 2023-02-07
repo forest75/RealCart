@@ -20,7 +20,7 @@ function FreeBoardModify() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/free/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
         titleRef.current.value = res.data.title;
         let { content } = res.data;

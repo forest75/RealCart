@@ -7,12 +7,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardWrite() {
   const titleRef = useRef();
-
+  const navigate = useNavigate();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   const onEditorStateChange = (eState) => {
@@ -28,14 +28,16 @@ function FreeBoardWrite() {
       content: JSON.stringify(rawContentState),
       nickname: user.nickname,
     };
+    console.log(data);
     axios
-      .post("http://3.34.23.91:8080/board/notice", data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/notice`, data, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
         console.log(res);
+        navigate("/noticeBoard");
       })
       .catch((err) => {
         console.log(err);
