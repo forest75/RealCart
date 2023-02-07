@@ -140,7 +140,8 @@ def handling():
 
 
 def gate_passing():
-    global car_color, car_gate
+    global car_color
+    global car_gate
 
     while True:
         gate_no = car_color.color_sensing()  # return data = gate_no
