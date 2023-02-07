@@ -15,8 +15,8 @@
  *
  */
 
-var ws = new WebSocket('wss://13.125.13.39:8090/call');
-var socket = new WebSocket('wss://13.125.13.39:8090/chat');
+var ws = new WebSocket('wss://i8a403.p.ssafy.io:8070/call');
+var socket = new WebSocket('wss://i8a403.p.ssafy.io:8070/chat');
 var video;
 var text;
 var webRtcPeer;
