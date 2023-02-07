@@ -1,24 +1,26 @@
 package org.example;
 
+import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class GameServer {
-    static List<WebSocket> waitingQueue = null;
+
     public static void main(String[] args) {
-        Thread thread1 = new Thread(new RCcarThread(8081, 8887));
+        FlagClass flag = new FlagClass();
+        Thread thread1 = new Thread(new RCcarThread(8081, 8887, flag));
         thread1.start();
+        Thread thread2 = new Thread(new RCcarThread(8082, 8888, flag));
+        thread2.start();
     }
 
 }
@@ -29,10 +31,13 @@ class RCcarThread implements Runnable{
     Socket socket = null;
     BufferedReader br = null;
     PrintWriter pw = null;
-    WebSocketServer webSocketServer = null;
+    WebSocketServer webSocketServer = null;;
+    FlagClass flag = null;
+    Gson gson = new Gson();
 
-    RCcarThread(int socketPort, int webSocketPort){
+    RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
+            this.flag = flag;
             serverSocket = new ServerSocket(socketPort);
             System.out.println("server socket started on port " + socketPort);
             socket = serverSocket.accept();
@@ -53,61 +58,30 @@ class RCcarThread implements Runnable{
         System.out.println("thread started to run");
         try{
             while(br != null){
-                String imageLenStr = "";
+                String dataLenStr = "";
                 for(int i=0; i<128; i++){
-                    imageLenStr += (char) br.read();
+                    dataLenStr += (char) br.read();
                 }
-                int imageLen = Integer.parseInt(imageLenStr.trim());
-                String decImage = "";
+                int imageLen = Integer.parseInt(dataLenStr.trim());
+                String jsonData = "";
                 for(int i=0; i<imageLen; i++) {
-                    decImage += (char) br.read();
+                    jsonData += (char) br.read();
                 }
-                //System.out.println(decImage);
+                RcCarStatus rcCarStatus = gson.fromJson(jsonData, RcCarStatus.class);
+                switch(rcCarStatus.status){
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                }
+
+
             }
         } catch (IOException e){
             socket = null;
             System.out.println("Error on running thread");
             e.printStackTrace();
         }
-    }
-}
-
-class WsHandler extends WebSocketServer{
-
-    PrintWriter pw = null;
-    int port = 0;
-
-    public WsHandler(int port, PrintWriter pw){
-        super(new InetSocketAddress(port));
-        this.port = port;
-        this.pw = pw;
-    }
-
-    @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        System.out.println(conn.getLocalSocketAddress() + " is on open.");
-    }
-
-    @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println(conn.getLocalSocketAddress() + " closed connection.");
-        System.out.println("code: " + code + "Reason: " + reason);
-    }
-
-    @Override
-    public void onMessage(WebSocket conn, String message) {
-        pw.write(Integer.parseInt(message));
-        pw.flush();
-    }
-
-    @Override
-    public void onError(WebSocket conn, Exception ex) {
-        System.out.println("WebSocket on error.");
-        ex.printStackTrace();
-    }
-
-    @Override
-    public void onStart() {
-        System.out.println("WebSocket server started on port" + this.port);
     }
 }
