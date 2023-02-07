@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Textarea from "@mui/joy/Textarea";
 import { useSearchParams, Link } from "react-router-dom";
+import draftToHtml from "draftjs-to-html";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
 
@@ -21,10 +22,15 @@ function FreeBoardDetail() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice/${no}`)
       .then((res) => {
-        setTitle(res.data.title);
-        setContent(res.data.content);
-        setComments(res.data.coments);
-        // console.log(res.data.comments);
+        let resContent = res.data.content;
+        try {
+          resContent = JSON.parse(resContent);
+          resContent = draftToHtml(resContent);
+        } finally {
+          setTitle(res.data.title);
+          setContent(resContent);
+          setComments(res.data.coments);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -154,7 +160,11 @@ function FreeBoardDetail() {
           }}
         >
           <Box component="h3" sx={{ fontWeight: "300", padding: "20px" }}>
-            <Box dangerouslySetInnerHTML={{ __html: content }} />
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: content,
+              }}
+            />
           </Box>
         </Box>
         <Box
