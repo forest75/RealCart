@@ -1,8 +1,8 @@
 import time
 import threading
 import socket
-import cv2
-import numpy
+#import cv2
+#import numpy
 import time
 import base64
 import sys
@@ -51,12 +51,12 @@ class ClientSocket:
         
         try:
             while True:
-                #timeStamp = time.time()
-                #data = "{time:" + timeStamp + ", gate:" + car_gate + "}"
-                #length = str(len(data.encode()))
-                # timestamp의 length
-                #self.sock.sendall(length.encode('utf-8').ljust(128))
-                #self.sock.send(data.encode())  # 실제 보낼 데이터
+                timeStamp = time.time()
+                data = "{time:" + timeStamp + ", gate:" + car_gate + "}"
+                length = str(len(data.encode()))
+                # timestamp length
+                self.sock.sendall(length.encode('utf-8').ljust(128))
+                self.sock.send(data.encode())  # real send data
                 time.sleep(1)
 
         except Exception as e:
@@ -79,7 +79,7 @@ class ClientSocket:
             key_left = 37
             key_right = 39
             key_release = 41
-            
+            print('recv_data:', recv_data)
             if (recv_data == key_up and flag_up == False): flag_up = True
             if (recv_data == key_down and flag_down == False): flag_down = True
             if (recv_data == key_shift and flag_shift == False): flag_shift = True
@@ -111,7 +111,7 @@ def driving():
         
         else:
             if (car_speed < 1): car_speed = 0
-            car_speed *= 0.95
+            #car_speed *= 0.95
         
         car_gear.drive(car_speed)
         #print('car_speed :', car_speed)
@@ -140,7 +140,7 @@ def gate_passing():
     global car_color, car_gate
 
     while True:
-        gate_no = car_color.color_sensing()  # return 값으로 gate_no를 받음
+        gate_no = car_color.color_sensing()  # return data = gate_no
         
         if (gate_no != -1):
             car_gate = gate_no
