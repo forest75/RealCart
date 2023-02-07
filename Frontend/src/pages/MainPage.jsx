@@ -1,4 +1,5 @@
 import React from "react";
+// import axios from "axios";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
@@ -7,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const navigate = useNavigate();
+  // const [loading, setLoading] = useState(true);
+  // const [articleList, setArticleList] = useState([]);
 
   const columns = [
     { field: "id", headerName: "순위", width: 150 },
@@ -30,7 +33,48 @@ function MainPage() {
     { field: "title", headerName: "제목", width: 300, editable: true },
     { field: "date", headerName: "등록일", width: 150, editable: true },
   ];
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       const articles = res.data;
+  //       console.log(articles.nickname);
+  //       if (articles.length === 0) {
+  //         setArticleList([
+  //           [
+  //             {
+  //               id: "-",
+  //               title: "게시글이 없습니다.",
+  //               nickname: "-",
+  //               hit: "-",
+  //             },
+  //           ],
+  //         ]);
+  //       } else {
+  //         const numberOfArticlesPerUnit = 3;
+  //         const numberOfUnits = Math.ceil(
+  //           articles.length / numberOfArticlesPerUnit
+  //         );
+  //         const List = [];
+  //         for (let i = 0; i < numberOfUnits; i += 1) {
+  //           List.push(
+  //             {
+  //               id: {article.id},
+  //               title: {article.title},
+  //               date: {Date(article.createdTime)},
+  //             }
+  //           );
+  //         }
+  //         setArticleList(List);
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
   const notice = [];
   notice.push({
     id: 1,

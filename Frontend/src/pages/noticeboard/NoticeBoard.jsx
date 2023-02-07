@@ -21,9 +21,7 @@ function NoticeBoard() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
       .then((res) => {
-        console.log(res);
         const articles = res.data;
-        console.log(articles.nickname);
         if (articles.length === 0) {
           setArticleList([
             [
@@ -103,14 +101,13 @@ function NoticeBoard() {
             <ArticleBox
               sx={{
                 width: "80%",
-                bgcolor: "#f5f5f5",
               }}
               board="noticeBoard"
               key={article.id}
               no={article.id}
               title={article.title}
               author={article.nickname}
-              date={Date(article.createdTime)}
+              date={article.createdTime}
               view={article.hit}
             />
           ))}

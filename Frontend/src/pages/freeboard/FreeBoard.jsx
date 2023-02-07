@@ -155,7 +155,7 @@ function FreeBoard() {
               no={article.id}
               title={article.title}
               author={article.nickname}
-              date={Date(article.createdTime)}
+              date={article.createdTime}
               view={article.hit}
             />
           ))}

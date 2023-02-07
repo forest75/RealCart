@@ -3,20 +3,30 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Textarea from "@mui/joy/Textarea";
+import Pagination from "@mui/material/Pagination";
+// import { convertToRaw } from "draft-js";
+// import draftToHtml from "draftjs-to-html";
 import { useSearchParams, Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import CommentBox from "../../components/CommentBox";
 
 function FreeBoardDetail() {
   // const chatRef = useRef();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState([]);
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
   const [chat, setChat] = useState("");
   const [count, setCount] = useState(0);
-
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.login.user);
+  const [page, setPage] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(0);
+  const onChangePage = (event, value) => {
+    setPage(value - 1);
+  };
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
@@ -24,14 +34,40 @@ function FreeBoardDetail() {
         const article = res.data;
         setTitle(article.title);
         setContent(article.content);
-        setComments(article.comments);
-        // console.log(res.data.comments);
+
+        setCommentsCount(article.comments.length);
+        if (article.comments.length === 0) {
+          comments([
+            {
+              content: "댓글이 없습니다.",
+              nickname: "-",
+            },
+          ]);
+        } else {
+          const numberOfArticlesPerUnit = 5;
+          const numberOfUnits = Math.ceil(
+            article.comments.length / numberOfArticlesPerUnit
+          );
+          const List = [];
+          for (let i = 0; i < numberOfUnits; i += 1) {
+            List.push(
+              article.comments.slice(
+                i * numberOfArticlesPerUnit,
+                (i + 1) * numberOfArticlesPerUnit
+              )
+            );
+          }
+          setComments(List);
+        }
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   const handleDelete = () => {
     axios
       .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
@@ -56,7 +92,7 @@ function FreeBoardDetail() {
       setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
     }
   };
-  const user = useSelector((state) => state.login.user);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     // console.log(chat);
@@ -86,11 +122,15 @@ function FreeBoardDetail() {
     setChat("");
   };
 
+  // const MyComponent = () => {
+  //   <div dangerouslySetInnerHTML={{ __html: content }} />;
+  // };
+
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
-          height: "80vh",
+          height: "150vh",
           width: "80%",
           display: "flex",
           flexDirection: "column",
@@ -165,7 +205,7 @@ function FreeBoardDetail() {
             width: "100%",
           }}
         >
-          <Box dangerouslySetInnerHTML={{ __html: content }} />
+          <div dangerouslySetInnerHTML={{ __html: { content } }} />
         </Box>
         <Box
           sx={{
@@ -177,7 +217,13 @@ function FreeBoardDetail() {
           }}
         >
           <Link to="/freeBoard" sx={{ textDecoration: "none", color: "black" }}>
-            <AppButton sx={{ border: "solid 1px black", marginRight: "10px" }}>
+            <AppButton
+              sx={{
+                border: "solid 1px black",
+                marginRight: "10px",
+                height: "40px",
+              }}
+            >
               목록
             </AppButton>
           </Link>
@@ -187,6 +233,7 @@ function FreeBoardDetail() {
               color: "white",
               border: "solid 1px black",
               marginRight: "10px",
+              height: "40px",
             }}
           >
             수정
@@ -197,6 +244,7 @@ function FreeBoardDetail() {
               color: "white",
               border: "solid 1px black",
               marginRight: "10px",
+              height: "40px",
             }}
             onClick={handleDelete}
           >
@@ -215,7 +263,7 @@ function FreeBoardDetail() {
             댓글 :
           </Box>
           <Box component="h3" sx={{ fontWeight: "500", marginLeft: "20px" }}>
-            2개
+            {commentsCount} 개
           </Box>
         </Box>
         <Box
@@ -284,7 +332,35 @@ function FreeBoardDetail() {
             </Box>
           </Box>
         </Box>
-        <Box>{comments}</Box>
+        <CommentBox
+          sx={{
+            width: "100%",
+          }}
+          no="번호"
+          content="내용"
+          author="작성자"
+          date="등록일"
+        />
+        {comments[page].map((comment) => (
+          <CommentBox
+            sx={{
+              width: "100%",
+            }}
+            no={comment.id}
+            content={comment.content}
+            author={comment.nickname}
+            date={comment.createdTime}
+          />
+        ))}
+        <Pagination
+          count={comments.length}
+          variant="outlined"
+          shape="rounded"
+          onChange={onChangePage}
+          sx={{
+            margin: 2,
+          }}
+        />
       </Box>
     </Box>
   );

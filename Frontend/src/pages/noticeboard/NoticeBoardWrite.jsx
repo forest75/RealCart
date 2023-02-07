@@ -28,6 +28,7 @@ function FreeBoardWrite() {
       content: JSON.stringify(rawContentState),
       nickname: user.nickname,
     };
+    console.log(data);
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/board/notice`, data, {
         headers: {
