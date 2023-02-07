@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -18,6 +19,8 @@ import ArticleBoxTitle from "../../components/ArticleBoxTitle";
 function FreeBoard() {
   const [page, setPage] = useState(0);
   const [age, setAge] = React.useState("");
+  const [loading, setLoading] = useState(true);
+  const [articleList, setArticleList] = useState([]);
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -26,54 +29,45 @@ function FreeBoard() {
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
-  const articleList = [
-    [
-      {
-        no: 0,
-        title: "여기가 자유 게시판인가요?.",
-        author: "SSAFY1",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "리얼카트 너무 재밌어요.",
-        author: "김싸피",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "골드 미만 글 작성 금지",
-        author: "웅니",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-    [
-      {
-        no: 0,
-        title: "2페이지입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "3페이지는 없어요.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "만들면 생겨요",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-  ];
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/board/free`).then((res) => {
+      console.log(res);
+      const articles = res.data;
+      if (articles.length === 0) {
+        setArticleList([
+          [
+            {
+              id: "-",
+              title: "게시글이 없습니다.",
+              nickname: "-",
+              hit: "-",
+            },
+          ],
+        ]);
+      } else {
+        const numberOfArticlesPerUnit = 10;
+        const numberOfUnits = Math.ceil(
+          articles.length / numberOfArticlesPerUnit
+        );
+        const List = [];
+        for (let i = 0; i < numberOfUnits; i += 1) {
+          List.push(
+            articles.slice(
+              i * numberOfArticlesPerUnit,
+              (i + 1) * numberOfArticlesPerUnit
+            )
+          );
+        }
+        setArticleList(List);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Box
       sx={{
@@ -156,13 +150,13 @@ function FreeBoard() {
               sx={{
                 width: "80%",
               }}
-              board="noticeboard"
-              key={article.no}
-              no={article.no}
+              board="freeBoard"
+              key={article.id}
+              no={article.id}
               title={article.title}
-              author={article.author}
-              date={article.date}
-              view={article.view}
+              author={article.nickname}
+              date={article.createdTime}
+              view={article.hit}
             />
           ))}
           <Box
@@ -172,7 +166,7 @@ function FreeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/noticeBoard/write">
+            <Link to="/freeBoard/write">
               <AppButton
                 sx={{
                   border: 1,

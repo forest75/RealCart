@@ -32,6 +32,7 @@ function ReportBoardWrite() {
   const user = useSelector((state) => state.login.user);
 
   const handleSubmit = () => {
+    console.log(option);
     const rawContentState = convertToRaw(editorState.getCurrentContent());
     const data = {
       category: "신고",

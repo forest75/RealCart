@@ -12,6 +12,9 @@ import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
 
 function MainPage() {
+  const navigate = useNavigate();
+  // const [loading, setLoading] = useState(true);
+  // const [articleList, setArticleList] = useState([]);
   var ws = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
   var socket = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/chat`);
   var stompClient;
@@ -235,7 +238,48 @@ function MainPage() {
     { field: "title", headerName: "제목", width: 300, editable: true },
     { field: "date", headerName: "등록일", width: 150, editable: true },
   ];
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       const articles = res.data;
+  //       console.log(articles.nickname);
+  //       if (articles.length === 0) {
+  //         setArticleList([
+  //           [
+  //             {
+  //               id: "-",
+  //               title: "게시글이 없습니다.",
+  //               nickname: "-",
+  //               hit: "-",
+  //             },
+  //           ],
+  //         ]);
+  //       } else {
+  //         const numberOfArticlesPerUnit = 3;
+  //         const numberOfUnits = Math.ceil(
+  //           articles.length / numberOfArticlesPerUnit
+  //         );
+  //         const List = [];
+  //         for (let i = 0; i < numberOfUnits; i += 1) {
+  //           List.push(
+  //             {
+  //               id: {article.id},
+  //               title: {article.title},
+  //               date: {Date(article.createdTime)},
+  //             }
+  //           );
+  //         }
+  //         setArticleList(List);
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
   const notice = [];
   notice.push({
     id: 1,
