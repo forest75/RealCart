@@ -81,3 +81,7 @@ class COLOR:
                 gate_no = gate_idx
         
         return gate_no
+
+    def is_passing_gate(self):
+        while True:
+            self.color_sensing()

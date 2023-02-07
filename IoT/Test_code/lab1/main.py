@@ -51,12 +51,14 @@ class ClientSocket:
         
         try:
             while True:
-                timeStamp = time.time()
-                data = "{time:" + timeStamp + ", gate:" + car_gate + "}"
+
+                timeStamp = round(time.time() * 1000)
+                data = "{"time":" + timeStamp + ", "gate":" + car_gate + "}"
                 length = str(len(data.encode()))
                 # timestamp length
                 self.sock.sendall(length.encode('utf-8').ljust(128))
                 self.sock.send(data.encode())  # real send data
+
                 time.sleep(1)
 
         except Exception as e:
