@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import TransparentImg from "./img/transparent-1px.png";
@@ -7,45 +7,14 @@ import WebRtcImg from "./img/webrtc.png";
 import Spinner from "./img/spinner.gif";
 import Advertise from "./img/advertise.png";
 
-function PlayRoom() {
-  var ws = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
-  var socket = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/chat`);
-  var video = useRef(null);
-  var text = useRef(null);
+function PlayRoom2() {
+  const [ws, setWs] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+  const video = useRef(null);
+  const text = useRef(null);
   var webRtcPeer;
   var mediaId;
-  window.onload = function () {
-    connect();
-  };
-
-  window.onbeforeunload = function () {
-    ws.close();
-    socket.close();
-  };
-
-  ws.onmessage = function (message) {
-    var parsedMessage = JSON.parse(message.data);
-    console.info("Received message: " + message.data);
-
-    switch (parsedMessage.id) {
-      case "presenterResponse":
-        presenterResponse(parsedMessage);
-        break;
-      case "viewerResponse":
-        viewerResponse(parsedMessage);
-        break;
-      case "iceCandidate":
-        webRtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-          if (error) return console.error("Error adding candidate: " + error);
-        });
-        break;
-      case "stopCommunication":
-        dispose();
-        break;
-      default:
-        console.error("Unrecognized message", parsedMessage);
-    }
-  };
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -204,6 +173,66 @@ function PlayRoom() {
     }
   }
 
+  useEffect(() => {
+    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    const socketConst = new WebSocket(
+      `${process.env.REACT_APP_MEDIA_URL}/chat`
+    );
+    const stompClientConst = Stomp.over(socketConst);
+    stompClientConst.connect({}, function () {
+      stompClientConst.subscribe("/subscribe", function (greeting) {
+        console.log(greeting.body);
+      });
+    });
+
+    setWs(wsConst);
+    setSocket(socketConst);
+    setStompClient(stompClientConst);
+
+    return () => {
+      wsConst.close();
+      socketConst.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ws) {
+      ws.onmessage = function (message) {
+        var parsedMessage = JSON.parse(message.data);
+        console.info("Received message: " + message.data);
+
+        switch (parsedMessage.id) {
+          case "presenterResponse":
+            presenterResponse(parsedMessage);
+            break;
+          case "viewerResponse":
+            viewerResponse(parsedMessage);
+            break;
+          case "iceCandidate":
+            webRtcPeer.addIceCandidate(
+              parsedMessage.candidate,
+              function (error) {
+                if (error)
+                  return console.error("Error adding candidate: " + error);
+              }
+            );
+            break;
+          case "stopCommunication":
+            dispose();
+            break;
+          default:
+            console.error("Unrecognized message", parsedMessage);
+        }
+      };
+
+      ws.onopen = () => {
+        setTimeout(() => {
+          viewer(1);
+        }, 1000);
+      };
+    }
+  }, [ws]);
+
   return (
     <div className="App">
       <header>
@@ -297,4 +326,4 @@ function PlayRoom() {
   );
 }
 
-export default PlayRoom;
+export default PlayRoom2;
