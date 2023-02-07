@@ -23,7 +23,7 @@ import ReportBoardWrite from "./pages/reportboard/ReportBoardWrite";
 import ReportBoardModify from "./pages/reportboard/ReportBoardModify";
 import ReportBoardDetail from "./pages/reportboard/ReportBoardDetail";
 import AuthPage from "./pages/AuthPage";
-import PlayRoom from "./test/PlayRoom";
+import PlayRoom2 from "./test/PlayRoom2";
 
 function App() {
   return (
@@ -32,7 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/about" element={<PlayRoom />} />
+        <Route path="/about" element={<PlayRoom2 />} />
         <Route path="/regist" element={<RegistForm />} />
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />

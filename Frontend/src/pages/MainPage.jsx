@@ -12,8 +12,8 @@ import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
 
 function MainPage() {
-  var ws = new WebSocket("wss://13.125.13.39:8090/call");
-  var socket = new WebSocket("wss://13.125.13.39:8090/chat");
+  var ws = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+  var socket = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/chat`);
   var stompClient;
   var video = useRef(null);
   var text = useRef(null);
@@ -296,7 +296,7 @@ function MainPage() {
           >
             <div>
               <div className="row">
-                <div className="col-md-5">
+                {/* <div className="col-md-5">
                   <div className="row">
                     <div className="col-md-12">
                       <button
@@ -367,7 +367,7 @@ function MainPage() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="col-md-7">
                   <div id="videoBig">
                     <video
