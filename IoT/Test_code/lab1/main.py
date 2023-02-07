@@ -54,7 +54,7 @@ class ClientSocket:
             while True:
 
                 timeStamp = round(time.time() * 1000)
-                data = f"{{\"time\": timeStamp , \"speed\" : car_speed, \"gateNo\" : car_gate, \"status\" : car_state }}"
+                data = f"{{\"carNum\" : 1, \"time\": timeStamp , \"speed\" : car_speed, \"gateNo\" : car_gate, \"status\" : car_state }}"
                 length = str(len(data.encode()))
                 # timestamp length
                 self.sock.sendall(length.encode('utf-8').ljust(128))
