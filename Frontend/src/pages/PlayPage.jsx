@@ -1,32 +1,260 @@
+/* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-// import WebSocket from "isomorphic-ws";
+import kurentoUtils from "kurento-utils";
+import Stomp from "stompjs";
 import toturial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
-// import car from "../assets/car.jpg";
+import TransparentImg from "../assets/img/transparent-1px.png";
+import WebRtcImg from "../assets/img/webrtc.png";
+import Spinner from "../assets/img/spinner.gif";
+import Advertise from "../assets/img/advertise.png";
 
 function PlayPage() {
-  const [imgSrc] = useState("");
+  // const [imgSrc] = useState("");
   const user = useSelector((state) => state.login.user);
 
-  const ws = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+  const [ws, setWs] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+  const video = useRef(null);
+  const text = useRef(null);
+  var webRtcPeer;
+  var mediaId;
 
-  // ws.onopen = function open() { };
+  function presenterResponse(message) {
+    if (message.response != "accepted") {
+      var errorMsg = message.message ? message.message : "Unknow error";
+      console.info("Call not accepted for the following reason: " + errorMsg);
+      dispose();
+    } else {
+      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+        if (error) return console.error(error);
+      });
+    }
+  }
 
-  ws.onclose = function close() {
+  function sendChat(e) {
+    e.preventDefault();
+    if (text.current.value === "") return;
+    if (text.current.value.length > 100)
+      return alert("댓글은 100자 이내로 입력해주세요");
+    stompClient.send(
+      "/publish/messages",
+      {},
+      JSON.stringify({
+        message: `${user.nickname} : ${text.current.value}`,
+        senderId: 7,
+        receiverId: 14,
+      })
+    );
+    text.current.value = "";
+  }
+  function viewerResponse(message) {
+    if (message.response != "accepted") {
+      var errorMsg = message.message ? message.message : "Unknow error";
+      console.info("Call not accepted for the following reason: " + errorMsg);
+      dispose();
+    } else {
+      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+        if (error) return console.error(error);
+      });
+    }
+  }
+
+  function presenter(num) {
+    if (!webRtcPeer) {
+      showSpinner(video.current);
+    }
+    var options = {
+      localVideo: video.current,
+      onicecandidate: onIceCandidate,
+    };
+    mediaId = num;
+    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
+      options,
+      function (error) {
+        if (error) {
+          return console.error(error);
+        }
+        webRtcPeer.generateOffer(onOfferPresenter);
+      }
+    );
+  }
+
+  function onOfferPresenter(error, offerSdp) {
+    if (error) return console.error("Error generating the offer");
+    console.info("Invoking SDP offer callback function " + mediaId);
+    var message = {
+      id: "presenter",
+      sdpOffer: offerSdp,
+      mediaId: mediaId,
+    };
+    sendMessage(message);
+  }
+
+  function viewer(num) {
+    if (!webRtcPeer) {
+      showSpinner(video.current);
+    }
+    mediaId = num;
+    console.log(num);
+    var options = {
+      remoteVideo: video.current,
+      onicecandidate: onIceCandidate,
+    };
+    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+      options,
+      function (error) {
+        if (error) {
+          return console.error(error);
+        }
+        this.generateOffer(onOfferViewer);
+      }
+    );
+  }
+
+  function onOfferViewer(error, offerSdp) {
+    if (error) return console.error("Error generating the offer");
+    console.info("Invoking SDP offer callback function " + mediaId);
+    var message = {
+      id: "viewer",
+      sdpOffer: offerSdp,
+      mediaId: mediaId,
+    };
+    sendMessage(message);
+  }
+
+  function onIceCandidate(candidate) {
+    console.log("Local candidate" + JSON.stringify(candidate));
+
+    var message = {
+      id: "onIceCandidate",
+      candidate: candidate,
+      mediaId: mediaId,
+    };
+    sendMessage(message);
+  }
+
+  function stop() {
+    var message = {
+      id: "stop",
+    };
+    sendMessage(message);
+    dispose();
+  }
+
+  function dispose() {
+    if (webRtcPeer) {
+      webRtcPeer.dispose();
+      webRtcPeer = null;
+    }
+    hideSpinner(video.current);
+  }
+
+  function sendMessage(message) {
+    var jsonMessage = JSON.stringify(message);
+    console.log("Sending message: " + jsonMessage);
+    ws.send(jsonMessage);
+  }
+
+  function showSpinner() {
+    for (var i = 0; i < arguments.length; i++) {
+      arguments[i].poster = TransparentImg;
+      arguments[
+        i
+      ].style.background = `center transparent url(${Spinner}) no-repeat`;
+    }
+  }
+
+  function hideSpinner() {
+    for (var i = 0; i < arguments.length; i++) {
+      arguments[i].src = "";
+      arguments[i].poster = Advertise;
+      arguments[i].style.background = "";
+    }
+  }
+
+  useEffect(() => {
+    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    const socketConst = new WebSocket(
+      `${process.env.REACT_APP_MEDIA_URL}/chat`
+    );
+    const stompClientConst = Stomp.over(socketConst);
+    stompClientConst.connect({}, function () {
+      stompClientConst.subscribe("/subscribe", function (greeting) {
+        console.log(greeting.body);
+        // const newchat = `${user.nickname} : ` + greeting.body;
+        setChats((currentArray) => [...currentArray, greeting.body]);
+      });
+    });
+
+    setWs(wsConst);
+    setSocket(socketConst);
+    setStompClient(stompClientConst);
+
+    return () => {
+      wsConst.close();
+      socketConst.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ws) {
+      ws.onmessage = function (message) {
+        var parsedMessage = JSON.parse(message.data);
+        console.info("Received message: " + message.data);
+
+        switch (parsedMessage.id) {
+          case "presenterResponse":
+            presenterResponse(parsedMessage);
+            break;
+          case "viewerResponse":
+            viewerResponse(parsedMessage);
+            break;
+          case "iceCandidate":
+            webRtcPeer.addIceCandidate(
+              parsedMessage.candidate,
+              function (error) {
+                if (error)
+                  return console.error("Error adding candidate: " + error);
+              }
+            );
+            break;
+          case "stopCommunication":
+            dispose();
+            break;
+          default:
+            console.error("Unrecognized message", parsedMessage);
+        }
+      };
+
+      ws.onopen = () => {
+        setTimeout(() => {
+          viewer(1);
+        }, 1000);
+      };
+    }
+  }, [ws]);
+
+  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
+  // wss.onopen = function open() { };
+
+  wss.onclose = function close() {
     console.log("disconnected");
   };
 
-  ws.onmessage = function incoming(data) {
+  wss.onmessage = function incoming(data) {
     console.log(`Roundtrip time: ${Date.now() - data.data} ms`);
 
     setTimeout(function timeout() {
-      ws.send(Date.now());
+      wss.send(Date.now());
     }, 500);
   };
 
@@ -55,7 +283,7 @@ function PlayPage() {
         if (e.keyCode === 37 || e.keyCode === 39) {
           setTimeout(() => {
             console.log("stop");
-            ws.send(41);
+            wss.send(41);
           }, 100);
         }
         setKeyState((prevState) => ({
@@ -75,7 +303,7 @@ function PlayPage() {
       }));
       const interval = setInterval(() => {
         console.log(16);
-        ws.send("stop");
+        wss.send("stop");
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
@@ -92,7 +320,7 @@ function PlayPage() {
       }));
       const interval = setInterval(() => {
         console.log("left");
-        ws.send(37);
+        wss.send(37);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
@@ -109,7 +337,7 @@ function PlayPage() {
       }));
       const interval = setInterval(() => {
         console.log("up");
-        ws.send(38);
+        wss.send(38);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
@@ -126,7 +354,7 @@ function PlayPage() {
       }));
       const interval = setInterval(() => {
         console.log("right");
-        ws.send(39);
+        wss.send(39);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
@@ -143,7 +371,7 @@ function PlayPage() {
       }));
       const interval = setInterval(() => {
         console.log("down");
-        ws.send(40);
+        wss.send(40);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
@@ -155,21 +383,21 @@ function PlayPage() {
     }
   }, [keyState]);
 
-  const [chat, setChat] = useState("");
+  // const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
   const imgRef = useRef(null);
 
-  const onChange = (event) => setChat(event.target.value);
-  const onSubmit = (event) => {
-    // preve;
-    event.preventDefault();
-    if (chat === "") return;
-    const newChat = `${user.nickname} : ${chat}`;
-    setChats((currentArray) => [...currentArray, newChat]);
-    setChat("");
-  };
+  // const onChange = (event) => setChat(event.target.value);
+  // const onSubmit = (event) => {
+  //   // preve;
+  //   event.preventDefault();
+  //   if (chat === "") return;
+  //   const newChat = `${user.nickname} : ${chat}`;
+  //   setChats((currentArray) => [...currentArray, newChat]);
+  //   setChat("");
+  // };
 
   // const handleKeyPress = (e) => {
   //   e.preventDefault();
@@ -389,8 +617,8 @@ function PlayPage() {
         <Paper
           elevation={3}
           sx={{
-            width: "75%",
-            height: "65%",
+            width: "1003px",
+            height: "753px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -402,6 +630,7 @@ function PlayPage() {
               width: "90%",
               height: "90%",
               position: "relative",
+              bgcolor: "black",
             }}
           >
             <Box
@@ -551,14 +780,15 @@ function PlayPage() {
                 }}
               >
                 <form
-                  onSubmit={onSubmit}
+                  onSubmit={sendChat}
                   style={{
                     display: "flex",
                   }}
                 >
                   <input
-                    onChange={onChange}
-                    value={chat}
+                    // onChange={onChange}
+                    // value={chat}
+                    ref={text}
                     style={{
                       width: "100%",
                       padding: "10px 30px",
@@ -598,18 +828,27 @@ function PlayPage() {
                 zIndex: 1,
               }}
             />
-            {/* </div> */}
             <Box
-              component="img"
-              alt="car"
-              src={imgSrc}
               sx={{
                 width: "100%",
                 height: "100%",
-                transform: "rotate(180deg)",
-                zIndex: -1,
+                position: "absolute",
+                // top: "0%",
+                // left: "0%",
+                bottom: "10px",
               }}
-            />
+            >
+              <div>
+                <video
+                  ref={video}
+                  id="video"
+                  autoPlay
+                  width="100%"
+                  height="100%"
+                  poster={WebRtcImg}
+                />
+              </div>
+            </Box>
           </Box>
         </Paper>
 
