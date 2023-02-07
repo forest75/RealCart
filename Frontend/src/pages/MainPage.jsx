@@ -1,9 +1,9 @@
 /* eslint-disable */
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import TransparentImg from "../assets/img/transparent-1px.png";
@@ -13,47 +13,13 @@ import Advertise from "../assets/img/advertise.png";
 
 function MainPage() {
   const navigate = useNavigate();
-  // const [loading, setLoading] = useState(true);
-  // const [articleList, setArticleList] = useState([]);
-  var ws = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
-  var socket = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/chat`);
-  var stompClient;
-  var video = useRef(null);
-  var text = useRef(null);
+  const [ws, setWs] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+  const video = useRef(null);
+  const text = useRef(null);
   var webRtcPeer;
   var mediaId;
-
-  window.onload = function () {
-    connect();
-  };
-
-  window.onbeforeunload = function () {
-    ws.close();
-  };
-
-  ws.onmessage = function (message) {
-    var parsedMessage = JSON.parse(message.data);
-    console.info("Received message: " + message.data);
-
-    switch (parsedMessage.id) {
-      case "presenterResponse":
-        presenterResponse(parsedMessage);
-        break;
-      case "viewerResponse":
-        viewerResponse(parsedMessage);
-        break;
-      case "iceCandidate":
-        webRtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-          if (error) return console.error("Error adding candidate: " + error);
-        });
-        break;
-      case "stopCommunication":
-        dispose();
-        break;
-      default:
-        console.error("Unrecognized message", parsedMessage);
-    }
-  };
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -67,34 +33,12 @@ function MainPage() {
     }
   }
 
-  function connect() {
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function () {
-      stompClient.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
-  }
-
-  function sendChat() {
-    stompClient.send(
-      "/publish/messages",
-      {},
-      JSON.stringify({
-        message: text.current.value,
-        senderId: 7,
-        receiverId: 14,
-      })
-    );
-  }
-
   function viewerResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
       console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
-      console.log("webrtcpeer", webRtcPeer);
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
         if (error) return console.error(error);
       });
@@ -214,7 +158,65 @@ function MainPage() {
     }
   }
 
-  // const navigate = useNavigate();
+  useEffect(() => {
+    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    const socketConst = new WebSocket(
+      `${process.env.REACT_APP_MEDIA_URL}/chat`
+    );
+    const stompClientConst = Stomp.over(socketConst);
+    stompClientConst.connect({}, function () {
+      stompClientConst.subscribe("/subscribe", function (greeting) {
+        console.log(greeting.body);
+      });
+    });
+
+    setWs(wsConst);
+    setSocket(socketConst);
+    setStompClient(stompClientConst);
+
+    return () => {
+      wsConst.close();
+      socketConst.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ws) {
+      ws.onmessage = function (message) {
+        var parsedMessage = JSON.parse(message.data);
+        console.info("Received message: " + message.data);
+
+        switch (parsedMessage.id) {
+          case "presenterResponse":
+            presenterResponse(parsedMessage);
+            break;
+          case "viewerResponse":
+            viewerResponse(parsedMessage);
+            break;
+          case "iceCandidate":
+            webRtcPeer.addIceCandidate(
+              parsedMessage.candidate,
+              function (error) {
+                if (error)
+                  return console.error("Error adding candidate: " + error);
+              }
+            );
+            break;
+          case "stopCommunication":
+            dispose();
+            break;
+          default:
+            console.error("Unrecognized message", parsedMessage);
+        }
+      };
+
+      ws.onopen = () => {
+        setTimeout(() => {
+          viewer(1);
+        }, 1000);
+      };
+    }
+  }, [ws]);
 
   const columns = [
     { field: "id", headerName: "순위", width: 150 },
@@ -238,48 +240,7 @@ function MainPage() {
     { field: "title", headerName: "제목", width: 300, editable: true },
     { field: "date", headerName: "등록일", width: 150, editable: true },
   ];
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
-  //     .then((res) => {
-  //       console.log(res);
-  //       const articles = res.data;
-  //       console.log(articles.nickname);
-  //       if (articles.length === 0) {
-  //         setArticleList([
-  //           [
-  //             {
-  //               id: "-",
-  //               title: "게시글이 없습니다.",
-  //               nickname: "-",
-  //               hit: "-",
-  //             },
-  //           ],
-  //         ]);
-  //       } else {
-  //         const numberOfArticlesPerUnit = 3;
-  //         const numberOfUnits = Math.ceil(
-  //           articles.length / numberOfArticlesPerUnit
-  //         );
-  //         const List = [];
-  //         for (let i = 0; i < numberOfUnits; i += 1) {
-  //           List.push(
-  //             {
-  //               id: {article.id},
-  //               title: {article.title},
-  //               date: {Date(article.createdTime)},
-  //             }
-  //           );
-  //         }
-  //         setArticleList(List);
-  //       }
-  //       setLoading(false);
-  //     });
-  // }, []);
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
   const notice = [];
   notice.push({
     id: 1,
@@ -296,12 +257,6 @@ function MainPage() {
     title: "많은 사랑 부탁드립니다.",
     date: "2023.01.27",
   });
-
-  ws.onopen = () => {
-    setTimeout(() => {
-      viewer(1);
-    }, 2000);
-  };
 
   return (
     <Box
@@ -338,94 +293,17 @@ function MainPage() {
               alignItems: "center",
             }}
           >
-            <div>
-              <div className="row">
-                {/* <div className="col-md-5">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <button
-                        onClick={() => {
-                          presenter(1);
-                        }}
-                        id="presenter1"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter1{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          presenter(2);
-                        }}
-                        id="presenter2"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter2{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          presenter(3);
-                        }}
-                        id="presenter3"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter3{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(1);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer1
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(2);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer2
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(3);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer3
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
-                <div className="col-md-7">
-                  <div id="videoBig">
-                    <video
-                      ref={video}
-                      id="video"
-                      autoPlay
-                      width="640px"
-                      height="480px"
-                      poster={WebRtcImg}
-                    ></video>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <video
+              ref={video}
+              id="video"
+              autoPlay
+              width="640px"
+              height="480px"
+              poster={WebRtcImg}
+              onClick={() => {
+                navigate("/spect");
+              }}
+            />
           </Paper>
         </Box>
         <Box

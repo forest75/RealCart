@@ -48,6 +48,7 @@ function PlayRoom2() {
       })
     );
   }
+
   function viewerResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
@@ -168,7 +169,7 @@ function PlayRoom2() {
   function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
       arguments[i].src = "";
-      arguments[i].poster = WebRtcImg;
+      arguments[i].poster = Advertise;
       arguments[i].style.background = "";
     }
   }
@@ -316,8 +317,8 @@ function PlayRoom2() {
                 autoPlay
                 width="640px"
                 height="480px"
-                poster={Advertise}
-              ></video>
+                poster={WebRtcImg}
+              />
             </div>
           </div>
         </div>
