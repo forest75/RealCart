@@ -1,3 +1,4 @@
+import sys
 import time
 import threading
 import socket
@@ -154,7 +155,11 @@ def main():
     recv_data = 0
 
     TCP_IP = "i8a403.p.ssafy.io"
-    #TCP_IP = '127.0.0.1'
+    
+    if (len(sys.argv) == 2):
+        if (sys.argv[1] == "debug"):
+            TCP_IP = "127.0.0.1"
+    
     TCP_PORT = 8081
     client = ClientSocket(TCP_IP, TCP_PORT)
     
