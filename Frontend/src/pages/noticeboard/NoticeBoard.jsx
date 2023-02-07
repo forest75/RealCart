@@ -22,6 +22,7 @@ function NoticeBoard() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
       .then((res) => {
         const articles = res.data;
+        console.log(articles);
         if (articles.length === 0) {
           setArticleList([
             [
@@ -106,7 +107,7 @@ function NoticeBoard() {
               key={article.id}
               no={article.id}
               title={article.title}
-              author={article.nickname}
+              author="admin"
               date={article.createdTime}
               view={article.hit}
             />

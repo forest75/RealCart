@@ -7,6 +7,7 @@ import Pagination from "@mui/material/Pagination";
 // import { convertToRaw } from "draft-js";
 // import draftToHtml from "draftjs-to-html";
 import { useSearchParams, Link } from "react-router-dom";
+import draftToHtml from "draftjs-to-html";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
 import CommentBox from "../../components/CommentBox";
@@ -32,8 +33,16 @@ function FreeBoardDetail() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
         const article = res.data;
+
+        let resContent = article.content;
+        console.log(resContent);
+        try {
+          resContent = JSON.parse(resContent);
+          resContent = draftToHtml(resContent);
+        } finally {
+          setContent(resContent);
+        }
         setTitle(article.title);
-        setContent(article.content);
 
         setCommentsCount(article.comments.length);
         if (article.comments.length === 0) {
@@ -205,7 +214,7 @@ function FreeBoardDetail() {
             width: "100%",
           }}
         >
-          <div dangerouslySetInnerHTML={{ __html: { content } }} />
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </Box>
         <Box
           sx={{
