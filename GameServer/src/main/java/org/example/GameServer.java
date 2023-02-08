@@ -124,7 +124,7 @@ class RCcarThread implements Runnable{
                         if (flag.getRequestBody() == "") {
                             flag.setRequestBody(flag.getRequestBody() + bodySeg);
                         } else {
-                            flag.setRequestBody(flag.getRequestBody() + bodySeg);
+                            flag.setRequestBody(", "+ flag.getRequestBody() + bodySeg);
                             flag.requestToBackend(flag.getRequestBody());
                             flag.setRequestBody("");
                         }
