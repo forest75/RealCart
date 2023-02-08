@@ -18,4 +18,5 @@ public interface IUserService {
     boolean checkEmail(String email);
     boolean checkNickname(String nickname);
     boolean verifyEmail(String email, String salt);
+    void preprocessMail(UserDto userDto);
 }

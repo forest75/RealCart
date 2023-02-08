@@ -15,23 +15,31 @@
  *
  */
 
-var ws = new WebSocket("wss://13.125.13.39:8070/call");
-var socket = new WebSocket("wss://13.125.13.39:8070/chat");
+var ws = new WebSocket('wss://i8a403.p.ssafy.io:8070/call');
+var socket = new WebSocket('wss://i8a403.p.ssafy.io:8070/chat');
 var video;
 var text;
 var webRtcPeer;
 var mediaId;
-window.onload = function () {
-  video = document.getElementById("video");
-  text = document.getElementById("text");
-  connect();
-};
+window.onload = function() {
+	
+	video = document.getElementById('video');
+	text = document.getElementById('text');
+	video.autoplay = true;
+	video.muted = true;
+	connect();
+}
 
-window.onbeforeunload = function () {
-  ws.close();
-  socket.close();
-};
-
+window.onbeforeunload = function() {
+	ws.close();
+	socket.close();
+}
+ws.onopen = function(){
+	setTimeout(() => {
+		viewer(1);
+	  }, 2000);
+	  
+}
 // socket.onmessage = function(message){
 // 	console.log(message);
 // }
