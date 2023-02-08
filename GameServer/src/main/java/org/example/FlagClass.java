@@ -86,14 +86,14 @@ public class FlagClass {
         return startTime;
     }
 
-    public void setStartTime(Long startTime) {
+    public synchronized void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
     public Long getPlayer1Laptime() {
         return player1Laptime;
     }
 
-    public void setPlayer1Laptime(Long player1Laptime) {
+    public synchronized void setPlayer1Laptime(Long player1Laptime) {
         this.player1Laptime = player1Laptime;
     }
 
@@ -101,7 +101,7 @@ public class FlagClass {
         return player2Laptime;
     }
 
-    public void setPlayer2Laptime(Long player2Laptime) {
+    public synchronized void setPlayer2Laptime(Long player2Laptime) {
         this.player2Laptime = player2Laptime;
     }
 
@@ -109,11 +109,11 @@ public class FlagClass {
         return requestBody;
     }
 
-    public void setRequestBody(String requestBody) {
+    public synchronized void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
     }
 
-    public void initiateAll() {
+    public synchronized void initiateAll() {
         this.player1Nickname = "";
         this.player2Nickname = "";
         this.player1Status = 0;
