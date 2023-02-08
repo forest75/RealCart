@@ -7,3 +7,4 @@ class CAR:
         self.state = 0
         self.command = 0
         self.gate = 0
+        self.key_toggle = 0

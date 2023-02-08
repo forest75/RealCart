@@ -9,16 +9,15 @@ import threading
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
 from car import CAR
-import json
 
 class ClientSocket:
     
-    def __init__(self, ip, port, car_A):
+    def __init__(self, ip, port, car_A, car_gear, car_handle):
         self.TCP_SERVER_IP = ip
         self.TCP_SERVER_PORT = port
         self.car_A = car_A
-        #self.car_transmission = car_transmission
-        #self.car_handle = car_handle
+        self.car_gear = car_gear
+        self.car_handle = car_handle
         self.connectCount = 0
         self.connectServer()
 
@@ -48,30 +47,32 @@ class ClientSocket:
     def sendData(self):
         try:
             while True:
-                timeStamp = time()
-                gate = self.car_A.gate()
-                data = f"time: {timeStamp}, gate: {gate}"
-                length = str(len(data))
-                self.sock.sendall(length.encode('utf-8').ljust(64))  # timestamp의 length
-                self.sock.send(data)  # 실제 보낼 데이터
-                time.sleep(0.7)
+                timeStamp = time.time()
+                data = f"{{time: {timeStamp}, gate: {self.car_A.gate}}}"
+                length = str(len(data.encode()))    # b''
+                #self.sock.sendall(length.encode('utf-8').ljust(128))  # timestamp의 length
+                #print(length)
+                #print(data.encode())
+                #self.sock.send(data.encode())  # 실제 보낼 데이터
+                time.sleep(1)
 
         except Exception as e:
             print(e)
             self.sock.close()
             time.sleep(1)
             self.connectServer()
-            self.sendData()
+
 
     def recv(self):
+
+        flag_release = False
+        flag_handling = False
+
         while True:
             data = self.sock.recv(2)
-            int_data = int.from_bytes(data, byteorder='little')
-            self.car_A.command = int_data
+            int_data = int.from_bytes(data, byteorder='little')            
+            #print('Data :', int_data)
             
-            print('Data :', int_data)
-            
-            """
             stop  = 0
             forward  = 1
             backward = 2
@@ -80,31 +81,34 @@ class ClientSocket:
             key_down = 40
             key_left = 37
             key_right = 39
-            key_space = 32
-
-            self.car_A.handle = 'center'
-            
+            key_shift = 32
+            key_release = 41
+                                    
             if (int_data == key_up):
-                self.car_A.handle = 'center'
                 self.car_A.speed = self.car_A.speed + 10                
                 if (self.car_A.speed > 100): self.car_A.speed = 100
             
             if (int_data == key_down):
-                self.car_A.handle = 'center'
                 self.car_A.speed = self.car_A.speed - 10                
                 if (self.car_A.speed < -100): self.car_A.speed = -100
             
-            if (int_data == key_left):
-                self.car_A.handle = 'left'
-                self.car_handle.steering(self.car_A.handle)
+            if (int_data == key_left and flag_handling == False):
+                flag_handling = True
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('left', flag_handling))
             
-            if (int_data == key_right):
-                self.car_A.handle = 'right'
-                self.car_handle.steering(self.car_A.handle)
+            if (int_data == key_right and flag_handling == False):
+                flag_handling = True
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('right'))
             
-            if (int_data == key_space):
+            if (int_data == key_shift):
                 self.car_A.speed = 0
+                
+            if (int_data == key_release):
+                flag_release = True
             
-            self.car_transmission.drive(self.car_A.speed)
-            """
-           
+            if (flag_release == True):
+                handle_thread = threading.Thread(target=self.car_handle.steering, args=('center'))
+                flag_release = False            
+            
+            self.car_gear.drive(self.car_A.speed)
+
