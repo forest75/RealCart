@@ -68,6 +68,3 @@ class DC_MOTOR:
                 
         except:
             print('DC_MOTOR.drive Error')
-    
-    def cleanup(self):
-        GPIO.cleanup()

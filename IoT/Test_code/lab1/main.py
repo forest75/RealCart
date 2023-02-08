@@ -69,14 +69,7 @@ class ClientSocket:
     def recv(self):
         global recv_data
         global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release
-        
-        flag_up = False
-        flag_down = False
-        flag_left = False
-        flag_right = False
-        flag_release = False
-        flag_shift = False
-        
+                
         while True:
             data = self.sock.recv(2)
             recv_data = int.from_bytes(data, byteorder='little')
@@ -194,7 +187,6 @@ class MyApp(QMainWindow, Ui_MainWindow):
         tflag_gate_sensing = True
         gate_sensing_thread = threading.Thread(target=gate_sensing)
         gate_sensing_thread.start()
-        print_log('Gate Sensing Thread Start')
         
         if (car_gear.error == 0 and car_handle.error == 0 and car_color.error == 0):
             print_log('All of Sensor/Motor GPIO Pin Setting complete')
@@ -208,27 +200,32 @@ class MyApp(QMainWindow, Ui_MainWindow):
             
     def motorDisconnect(self):
         global tflag_gate_sensing, gate_sensing_thread
-        global car_gear, car_handle, car_color
+        global car_color, car_gear, car_handle
+
+        if (self.ui.lb_socket_param.text() == "Disconnect"):
+            tflag_gate_sensing = False
         
-        tflag_gate_sensing = False
-        print_log('Gate Sensing Thread Kill')
+            gate_sensing_thread.join()
+            print_log('Gate Sensing Thread Kill')
         
-        gate_sensing_thread.join()
+            del car_color
+            del car_gear
+            del car_handle
         
-        del car_gear
-        del car_handle
-        del car_color
+            GPIO.cleanup()
         
-        GPIO.cleanup()
+            print_log('Motor Disconnect')
+            self.ui.lb_motor_param.setText('Disconnect')
+            self.ui.lb_motor_param.setStyleSheet("Color : red")
         
-        print_log('GPIO Pin cleanup complete')
-        self.ui.lb_motor_param.setText('Disconnect')
-        self.ui.lb_motor_param.setStyleSheet("Color : red")
+        else:
+            print_log('Let Disconnect socket first!!!')
         
     
     def socketConnect(self):
         global TCP_IP, TCP_PORT, car_gear, car_handle, car_color
         global gear_thread, handle_thread, gate_sensing_thread
+        global tflag_driving, tflag_handling
         global client
         
         TCP_IP = self.ui.le_ip.text()
@@ -237,7 +234,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if (self.ui.lb_motor_param.text() == "Disconnect"):
             print_log('Sensor/Motor GPIO Pin Setting is not finished')
             print_log('please click the Motor Connect')
-            return        
+            return                
         
         client = ClientSocket(TCP_IP, TCP_PORT)
         
@@ -251,6 +248,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.ui.lb_socket_param.setStyleSheet("Color : red")
             return
         
+        
         tflag_driving = True
         tflag_handling = True
         
@@ -259,10 +257,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 
         gear_thread.start()
         handle_thread.start()
-        
-        print_log('Gear Thread Start...')
-        print_log('Handle Thread Start...')
-        
+                
 
     def up(self):
         self.ui.tb_log.append('up')
@@ -278,11 +273,28 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         
     def socketDisconnect(self):
-        pass
+        global tflag_driving, tflag_handling, gear_thread, handle_thread
+        
+        tflag_driving = False
+        tflag_handling = False
+        
+        gear_thread.join()
+        handle_thread.join()
+        
+        print_log('Gear Thread Kill')
+        print_log('Handle Thread Kill')
+        
+        print_log('Socket Disconnect')
+        self.ui.lb_socket_param.setText('Disconnect')
+        self.ui.lb_socket_param.setStyleSheet("Color : red")
         
         
     def colorMatching(self):
         global color_rgb
+        
+        if (self.ui.lb_motor_param.text() == "Disconnect"):
+            print_log('Please Connect motor')
+            return
         
         data_count = 100
         offset = 100
@@ -379,57 +391,71 @@ def print_rgb(color_rgb):
     
 def driving():
     global car_gear, car_speed
-    global flag_up, flag_down, flag_shift
+    global flag_up, flag_down, flag_shift, tflag_driving
+    
+    try:
+        print('driving start...')
         
-    while tflag_driving:
+        while tflag_driving:
+            
+            if flag_up:
+                car_speed += 1
+                if (car_speed > 100): car_speed = 100
+                flag_up = False
         
-        if event_off.is_set():
-            return
+            elif flag_down:
+                car_speed -= 1
+                if (car_speed < -100): car_speed = -100
+                flag_down = False
         
-        if flag_up:
-            car_speed += 1
-            if (car_speed > 100): car_speed = 100
-            flag_up = False
+            elif flag_shift:
+                car_speed = 0
+                flag_shift = False
         
-        elif flag_down:
-            car_speed -= 1
-            if (car_speed < -100): car_speed = -100
-            flag_down = False
+            else:
+                if (car_speed < 1): car_speed = 0
         
-        elif flag_shift:
-            car_speed = 0
-            flag_shift = False
+            car_gear.drive(car_speed)
         
-        else:
-            if (car_speed < 1): car_speed = 0
-        
-        car_gear.drive(car_speed)
-        time.sleep(0.1)
+        print('driving end...')
+    
+    except Exception as e:
+        print(e)
+    
 
 
 def handling():
     global car_handle
-    global flag_left, flag_right, flag_release
+    global flag_left, flag_right, flag_release, tflag_handling
     
-    while tflag_handling:
+    try:
+        print('handling start...')
         
-        if flag_left:
-            car_handle.steering('left')
-            flag_left = False
+        while tflag_handling:
         
-        if flag_right:
-            car_handle.steering('right')
-            flag_right = False
+            if flag_left:
+                car_handle.steering('left')
+                flag_left = False
         
-        if flag_release:
-            car_handle.steering('center')
-            flag_release = False
+            if flag_right:
+                car_handle.steering('right')
+                flag_right = False
+        
+            if flag_release:
+                car_handle.steering('center')
+                flag_release = False
+        
+        print('handling end...')
+        
+    except Exception as e:
+        print(e)
+
 
 
 def gate_sensing():
     global car_color, tflag_gate_sensing
     global car_gate, color_rgb
-
+        
     while tflag_gate_sensing:    
         color_rgb = car_color.color_sensing()
         print_rgb(color_rgb)
@@ -438,9 +464,13 @@ def gate_sensing():
 if __name__ == "__main__":
     global car_model, car_no, car_speed, car_gate, car_status
     global tflag_gate_sensing, tflag_driving, tflag_handling
+    global flag_up, flag_down, flag_left, flag_right, flag_shift, flag_ctrl, flag_release
     global TCP_IP, TCP_PORT
     global win
-
+    
+    
+    lock = threading.Lock()
+    
     car_model = "SSAFY_01"
     car_no = '1'
     car_speed = 0
@@ -453,6 +483,14 @@ if __name__ == "__main__":
     tflag_gate_sensing = False
     tflag_driving = False
     tflag_handling = False
+    
+    flag_up = False
+    flag_down = False
+    flag_left = False
+    flag_right = False
+    flag_shift = False
+    flag_ctrl = False
+    flag_release = False
 
     app = QApplication()
     win = MyApp()

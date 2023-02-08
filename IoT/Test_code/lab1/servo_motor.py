@@ -28,12 +28,10 @@ class SERVO_MOTOR:
             elif (direction == 'left'):
                 self.pwm.ChangeDutyCycle(5.5)
                 time.sleep(0.3)
-                print('left')
                 
             elif (direction == 'right'):
                 self.pwm.ChangeDutyCycle(9)
                 time.sleep(0.3)
-                print('right')
             
             flag_handling = False
         
