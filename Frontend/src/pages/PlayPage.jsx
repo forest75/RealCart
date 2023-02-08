@@ -14,6 +14,10 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
+import CountdownOne from "../assets/count_1.png";
+import CountdownTwo from "../assets/count_2.png";
+import CountdownThree from "../assets/count_3.png";
+import CountdownStart from "../assets/START.png";
 
 function PlayPage() {
   // const [imgSrc] = useState("");
@@ -249,15 +253,37 @@ function PlayPage() {
   wss.onclose = function close() {
     console.log("disconnected");
   };
+  const images = [CountdownThree, CountdownTwo, CountdownOne, CountdownStart];
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+    }, 1000);
+    return () => clearInterval(intervalId);
+
+    // setTimeout(() => {
+    //   for (let i = 0; i < 4; i++) {
+    //     setTimeout(() => {
+    //       setComp(<Box component="img" src={images[i]} alt={slides[i]} />);
+    //       // return <Box component="img" src={images[i]} alt="slide" />;
+    //     }, 1000);
+    //   }
+    // }, 2000);
+  }, []);
 
   wss.onmessage = function incoming(data) {
-    console.log(`Roundtrip time: ${Date.now() - data.data} ms`);
-
-    setTimeout(function timeout() {
-      wss.send(Date.now());
-    }, 500);
+    if (data === "1") {
+      setInterval(() => {
+        for (let i = 0; i < 4; i++) {
+          setInterval(() => {
+            return <Box component="img" src={images[i]} alt="slide" />;
+          }, 1000);
+        }
+      }, 2000);
+    }
   };
-
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
     16: false,
@@ -848,6 +874,13 @@ function PlayPage() {
                   poster={WebRtcImg}
                 />
               </div>
+            </Box>
+            <Box
+              sx={{
+                zIndex: 2,
+              }}
+            >
+              <img src={images[currentImage]} alt="slide" />
             </Box>
           </Box>
         </Paper>
