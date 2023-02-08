@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import axios from "axios";
-import toturial from "../assets/toturial.png";
+import tutorial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
@@ -22,6 +22,7 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 
 function PlayPage() {
+  const [isTutorial, setIsTutorial] = useState(true);
   const [ParticipantA, setParticipantA] = useState("의권짱짱33");
   const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
   const user = useSelector((state) => state.login.user);
@@ -305,6 +306,9 @@ function PlayPage() {
     40: false,
   });
   useEffect(() => {
+    setTimeout(() => {
+      setIsTutorial(false);
+    }, 10000);
     window.addEventListener(
       "keydown",
       (e) => {
@@ -312,6 +316,10 @@ function PlayPage() {
           ...prevState,
           [e.keyCode || e.which]: true,
         }));
+        if (e.keyCode === 86) {
+          console.log(isTutorial);
+          setIsTutorial((prevState) => !prevState);
+        }
       },
       true
     );
@@ -852,20 +860,22 @@ function PlayPage() {
             </Box>
 
             {/* <div onKeyDown={handleKeyPress}> */}
-            <Box
-              component="img"
-              alt="toturial"
-              src={toturial}
-              sx={{
-                width: "40%",
-                height: "50%",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                opacity: "60%",
-                zIndex: 1,
-              }}
-            />
+            {isTutorial && (
+              <Box
+                component="img"
+                alt="tutorial"
+                src={tutorial}
+                sx={{
+                  width: "40%",
+                  height: "50%",
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  opacity: "60%",
+                  zIndex: 1,
+                }}
+              />
+            )}
             <Box
               sx={{
                 width: "100%",
