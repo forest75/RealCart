@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
 import org.java_websocket.server.WebSocketServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class GameServer {
@@ -78,15 +77,15 @@ class RCcarThread implements Runnable{
                     5. 스타트 타임을 flag에 기록하고 gameStatus를 3으로 바꾼다.
                      */
                     case 1:
-                        while(true){
-                            if(flag.getPlayer1Status() == 1 && flag.getPlayer2Status() == 1){
+                        while (true) {
+                            if (flag.getPlayer1Status() == 1 && flag.getPlayer2Status() == 1) {
                                 break;
                             }
                             Thread.sleep(2000);
                         }
 
                         flag.setGameStatus(1);
-                        for(WebSocket client : webSocketServer.getConnections()){
+                        for (WebSocket client : webSocketServer.getConnections()) {
                             client.send("1");
                         }
                         Thread.sleep(5000);
@@ -95,23 +94,46 @@ class RCcarThread implements Runnable{
                         flag.setStartTime(System.currentTimeMillis());
                         flag.setGameStatus(3);
                     /*
-                    2일 때...
-                    1. 웹소켓 연결을 끊는다.
-                    1. 기록을 위해 timestamp를 받는다.
-                    2. 백엔드로 랩타임을 넘긴다.
-                    3. 각 플레이어에 맞는 flag 변수를 초기화한다.
-                    4. 게임끝 신호 "2" 를 프론트에게 보낸다.
+                    2일 때..
+                    1-1. 게임끝 신호 "2" 를 프론트에게 보낸다.
+                    1-2. 웹소켓 연결을 끊는다.
+                    2. 기록을 위해 timestamp를 받는다.
+                    3. 백엔드로 랩타임을 넘긴다.
+                    4. gameState를 1로 만든다.
                     5. initiateAll() 함수를 실행한다.
 
                      */
                     case 2:
-                        for(WebSocket client : webSocketServer.getConnections()){
+                        // 1
+                        for (WebSocket client : webSocketServer.getConnections()) {
+                            client.send("2");
                             client.close();
                         }
+                        // 2
                         Long endTime = rcCarStatus.timestamp;
                         Long labTime = flag.getStartTime() - endTime;
-
-
+                        // 3
+                        String bodySeg = "";
+                        if (rcCarStatus.carNum == 1) {
+                            bodySeg = flag.getPlayer1Nickname() + ", " + Long.toString(labTime);
+                            flag.setPlayer1Status(2);
+                        } else if (rcCarStatus.carNum == 2) {
+                            bodySeg = flag.getPlayer2Nickname() + Long.toString(labTime);
+                            flag.setPlayer2Status(2);
+                        }
+                        if (flag.getRequestBody() == "") {
+                            flag.setRequestBody(flag.getRequestBody() + bodySeg);
+                        } else {
+                            flag.setRequestBody(flag.getRequestBody() + bodySeg);
+                            flag.requestToBackend(flag.getRequestBody());
+                            flag.setRequestBody("");
+                        }
+                        // 4
+                        flag.setGameStatus(1);
+                        // 5
+                        if(flag.getPlayer1Status() == 2 && flag.getPlayer1Status() == 2){
+                            flag.initiateAll();
+                        }
                 }
             }
         } catch (IOException | InterruptedException e){
