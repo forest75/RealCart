@@ -11,12 +11,11 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class GameServer {
 
     public static void main(String[] args) {
-        FlagClass flag = new FlagClass();
+        FlagClass flag = FlagClass.getInstance();
         Thread thread1 = new Thread(new RCcarThread(8081, 8887, flag));
         thread1.start();
         Thread thread2 = new Thread(new RCcarThread(8082, 8888, flag));
@@ -31,7 +30,7 @@ class RCcarThread implements Runnable{
     Socket socket = null;
     BufferedReader br = null;
     PrintWriter pw = null;
-    WebSocketServer webSocketServer = null;;
+    WebSocketServer webSocketServer = null;
     FlagClass flag = null;
     Gson gson = new Gson();
 
@@ -57,28 +56,65 @@ class RCcarThread implements Runnable{
     public void run() {
         System.out.println("thread started to run");
         try{
-            while(br != null){
+            while(br != null) {
                 String dataLenStr = "";
-                for(int i=0; i<128; i++){
+                for (int i = 0; i < 128; i++) {
                     dataLenStr += (char) br.read();
                 }
                 int imageLen = Integer.parseInt(dataLenStr.trim());
                 String jsonData = "";
-                for(int i=0; i<imageLen; i++) {
+                for (int i = 0; i < imageLen; i++) {
                     jsonData += (char) br.read();
                 }
-                RcCarStatus rcCarStatus = gson.fromJson(jsonData, RcCarStatus.class);
-                switch(rcCarStatus.status){
-                    case 0:
+                RcCarStatusDto rcCarStatus = gson.fromJson(jsonData, RcCarStatusDto.class);
+                // 0: NULL, 1: Ready, 2: Finish, 3: Running
+                switch (rcCarStatus.status) {
+                    /*
+                    1일 때...
+                    1. Flag 상에 Player1과 Player2의 웹소켓 연결 여부를 물어본다.
+                    2. 만일 모두 준비가 완료되었다면 flag.gamestatus를 1로 만든다.
+                    3. Frontend 서버에 5초 뒤 게임을 시작한다는 신호(1)를 wss를 통해 보낸다.
+                    4. 3번 직후 Thread.sleep(5000)으로 5초 쉰다.
+                    5. 스타트 타임을 flag에 기록하고 gameStatus를 3으로 바꾼다.
+                     */
                     case 1:
+                        while(true){
+                            if(flag.getPlayer1Status() == 1 && flag.getPlayer2Status() == 1){
+                                break;
+                            }
+                            Thread.sleep(2000);
+                        }
+
+                        flag.setGameStatus(1);
+                        for(WebSocket client : webSocketServer.getConnections()){
+                            client.send("1");
+                        }
+                        Thread.sleep(5000);
+                        pw.write((byte) '1');
+                        pw.flush();
+                        flag.setStartTime(System.currentTimeMillis());
+                        flag.setGameStatus(3);
+                    /*
+                    2일 때...
+                    1. 웹소켓 연결을 끊는다.
+                    1. 기록을 위해 timestamp를 받는다.
+                    2. 백엔드로 랩타임을 넘긴다.
+                    3. 각 플레이어에 맞는 flag 변수를 초기화한다.
+                    4. 게임끝 신호 "2" 를 프론트에게 보낸다.
+                    5. initiateAll() 함수를 실행한다.
+
+                     */
                     case 2:
-                    case 3:
-                    case 4:
+                        for(WebSocket client : webSocketServer.getConnections()){
+                            client.close();
+                        }
+                        Long endTime = rcCarStatus.timestamp;
+                        Long labTime = flag.getStartTime() - endTime;
+
+
                 }
-
-
             }
-        } catch (IOException e){
+        } catch (IOException | InterruptedException e){
             socket = null;
             System.out.println("Error on running thread");
             e.printStackTrace();

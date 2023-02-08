@@ -1,12 +1,14 @@
 package org.example;
 
-public class RcCarStatus {
+public class RcCarStatusDto {
+    int carNum;
     Long timestamp;
     int speed;
     int gateNo;
-    int status;
+    int status;  // 0: prepare, 1: ready, 2: start, 3: running, 4: finish
 
-    public RcCarStatus(Long timestamp, int speed, int gateNo, int status) {
+    public RcCarStatusDto(int carNum, Long timestamp, int speed, int gateNo, int status) {
+        this.carNum = carNum;
         this.timestamp = timestamp;
         this.speed = speed;
         this.gateNo = gateNo;
@@ -15,8 +17,9 @@ public class RcCarStatus {
 
     @Override
     public String toString() {
-        return "RcCarStatus{" +
-                "timestamp=" + timestamp +
+        return "RcCarStatusDto{" +
+                "carNum=" + carNum +
+                ", timestamp=" + timestamp +
                 ", speed=" + speed +
                 ", gateNo=" + gateNo +
                 ", status=" + status +
