@@ -5,6 +5,7 @@ import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
+import axios from "axios";
 import toturial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
@@ -21,7 +22,8 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 
 function PlayPage() {
-  // const [imgSrc] = useState("");
+  const [ParticipantA, setParticipantA] = useState("의권짱짱33");
+  const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
   const user = useSelector((state) => state.login.user);
 
   const [ws, setWs] = useState(null);
@@ -186,6 +188,16 @@ function PlayPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
+        const users = res.data;
+        const ran1 = Math.floor(Math.random() * users.length);
+        const ran2 = Math.floor(Math.random() * users.length);
+        setParticipantA(users[ran1].nickname);
+        setParticipantB(users[ran2].nickname);
+      });
+    }, 5000);
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -506,7 +518,7 @@ function PlayPage() {
                       justifyContent: "center",
                     }}
                   >
-                    <h2>A 의권짱짱33</h2>
+                    <h2>A {ParticipantA}</h2>
                   </Box>
                   <Box
                     sx={{
@@ -550,7 +562,7 @@ function PlayPage() {
                       justifyContent: "center",
                     }}
                   >
-                    <h2>B 지존ㅎHzㅣㄴ</h2>
+                    <h2>B {ParticipantB}</h2>
                   </Box>
                   <Box
                     sx={{
@@ -701,7 +713,7 @@ function PlayPage() {
               }}
             />
             <Box
-              component="h5"
+              // component="h5"
               sx={{
                 width: "20%",
                 height: "9%",

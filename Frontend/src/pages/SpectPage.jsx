@@ -26,10 +26,8 @@ import Advertise from "../assets/img/advertise.png";
 import axios from "axios";
 
 function SpectPage() {
-  const [ParticipantA, setParticipantA] = useState([]);
-  const [ParticipantB, setParticipantB] = useState([]);
-  const [tmpNum, setTmpNum] = useState(8);
-  const [tmpNum2, setTmpNum2] = useState(9);
+  const [ParticipantA, setParticipantA] = useState("의권짱짱33");
+  const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
   const user = useSelector((state) => state.login.user);
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -203,6 +201,10 @@ function SpectPage() {
 
   useEffect(() => {
     setInterval(() => {
+      setSelectedIndex((selectedIndex + 1) % options.length);
+    }, 5000);
+
+    setInterval(() => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
         const users = res.data;
         const ran1 = Math.floor(Math.random() * users.length);
@@ -274,8 +276,12 @@ function SpectPage() {
   }, [ws]);
 
   const navigate = useNavigate();
-  const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
-  // let idx = 0;
+  const [options, setOptions] = useState([
+    "1. 상우짱, 성현카트",
+    "2. 의권짱짱33, 지존ㅎHzㅣㄴ",
+    "3. 소정캡짱, 떵미니",
+  ]);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [wait, setWait] = React.useState(1);
@@ -1044,6 +1050,10 @@ function SpectPage() {
                   handleModalOpen={handleModalOpen}
                   handleModalClose={handleModalClose}
                   setIsReady={setIsReady}
+                  setSelectedIndex={setSelectedIndex}
+                  options={options}
+                  setOptions={setOptions}
+                  nickname={user.nickname}
                 />
               )}
             </Box>
