@@ -15,11 +15,12 @@ class COLOR:
             self.color_s2 = color_s2
             self.color_s3 = color_s3
             self.color_signal = color_signal
+            self.error = 0
 
-            print('Color Sensing GPIO pin Setting complete')
-
-        except:
-            print('Color Sensing GPIO pin Setting failed')
+        except Exception as e:
+            self.error = 1
+            
+            print('Color Sensor Error :', e)
 
     def color_sensing(self):
         gate_no = -1
