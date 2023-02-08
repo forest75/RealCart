@@ -158,6 +158,7 @@ function ReportBoard() {
               board="reportboard"
               key={article.id}
               no={article.id}
+              category={article.category}
               title={article.title}
               author={article.nickname}
               date={Date(article.createdTime)}

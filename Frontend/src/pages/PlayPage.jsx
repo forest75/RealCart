@@ -235,9 +235,9 @@ function PlayPage() {
       };
 
       ws.onopen = () => {
-        setTimeout(() => {
-          viewer(1);
-        }, 1000);
+        // setTimeout(() => {
+        viewer(1);
+        // }, 1000);
       };
     }
   }, [ws]);
@@ -842,10 +842,11 @@ function PlayPage() {
                 <video
                   ref={video}
                   id="video"
-                  autoPlay
+                  autoPlay={true}
                   width="100%"
                   height="100%"
                   poster={WebRtcImg}
+                  muted={true}
                 />
               </div>
             </Box>

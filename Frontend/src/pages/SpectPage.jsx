@@ -254,9 +254,9 @@ function SpectPage() {
       };
 
       ws.onopen = () => {
-        setTimeout(() => {
-          viewer(1);
-        }, 1000);
+        // setTimeout(() => {
+        viewer(1);
+        // }, 1000);
       };
     }
   }, [ws]);
@@ -677,10 +677,11 @@ function SpectPage() {
                       <video
                         ref={video}
                         id="video"
-                        autoPlay
+                        autoPlay={true}
                         width="640px"
                         height="480px"
                         poster={WebRtcImg}
+                        muted={true}
                       ></video>
                     </div>
                   </div>

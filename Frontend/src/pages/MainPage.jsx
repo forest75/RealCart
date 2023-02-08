@@ -211,9 +211,9 @@ function MainPage() {
       };
 
       ws.onopen = () => {
-        setTimeout(() => {
-          viewer(1);
-        }, 1000);
+        // setTimeout(() => {
+        viewer(1);
+        // }, 1000);
       };
     }
   }, [ws]);
@@ -296,13 +296,14 @@ function MainPage() {
             <video
               ref={video}
               id="video"
-              autoPlay
+              autoPlay={true}
               width="640px"
               height="480px"
               poster={WebRtcImg}
               onClick={() => {
                 navigate("/spect");
               }}
+              muted={true}
             />
           </Paper>
         </Box>
