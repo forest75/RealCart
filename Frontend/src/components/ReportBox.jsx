@@ -8,6 +8,7 @@ function ArtcleBox({
   sx,
   board,
   no,
+  category,
   title,
   author,
   date,
@@ -17,6 +18,11 @@ function ArtcleBox({
   const mergedSx = {
     ...{ bgcolor: "white", color: "black", borderBottom: 1 },
     ...sx,
+  };
+  const categoryDict = {
+    BUG: "버그리포트",
+    REPORT: "신고",
+    QUESTION: "이용문의",
   };
   return (
     <Box
@@ -47,7 +53,7 @@ function ArtcleBox({
             justifyContent: "center",
           }}
         >
-          카테고리
+          {categoryDict[category]}
         </Box>
         <Box
           sx={{
@@ -128,6 +134,7 @@ ArtcleBox.propTypes = {
   sx: PropTypes.object,
   board: PropTypes.string.isRequired,
   no: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  category: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
