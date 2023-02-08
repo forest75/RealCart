@@ -23,8 +23,6 @@ class COLOR:
             print('Color Sensor Error :', e)
 
     def color_sensing(self):
-        gate_no = -1
-
         # color
         # red_min, red_max, green_min, green_max, blue_min, blue_max
         # pink, green, ..., ...
@@ -72,14 +70,10 @@ class COLOR:
 
         duration = time.time() - start  # seconds to rn for loop
         green = color_cycles / duration
-
-        print('r, g, b:', red, blue, green)
         
-        for gate_idx in range(0, 4):
-            if gate_color[gate_idx][0] < red < gate_color[gate_idx][1] and gate_color[gate_idx][2] < green < gate_color[gate_idx][3] and gate_color[gate_idx][4] < blue < gate_color[gate_idx][5]:
-                gate_no = gate_idx
+        color_rgb = [red, green, blue]
         
-        return gate_no
+        return color_rgb
 
     def is_passing_gate(self):
         while True:

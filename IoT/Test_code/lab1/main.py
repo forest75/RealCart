@@ -165,6 +165,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             print_log('Color Sensor GPIO Pin Setting Fail')
         
+        gate_sensing_thread = threading.Thread(target=gate_passing)
+        gate_sensing_thread.start()
+        print_log('Gate Sensing Thread Start')
+        
         if (car_gear.error == 0 and car_handle.error == 0 and car_color.error == 0):
             print_log('All of Sensor/Motor GPIO Pin Setting complete')
             self.ui.lb_motor_param.setText('Setting Done')
@@ -203,7 +207,6 @@ class MyApp(QMainWindow, Ui_MainWindow):
             
         gear_thread = threading.Thread(target=driving)
         handle_thread = threading.Thread(target=handling)
-        gate_sensing_thread = threading.Thread(target=gate_passing)
                 
         gear_thread.start()
         handle_thread.start()
@@ -211,7 +214,6 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         print_log('Gear Thread Start...')
         print_log('Handle Thread Start...')
-        print_log('Gate Sensing Thread Start')
         
 
     def up(self):
@@ -261,6 +263,11 @@ def print_log(msg):
 def print_recv_data(data):
     global win
     win.ui.tb_recv_Data.append(str(data))
+
+def print_rgb(color_rgb):
+    global win
+    color_data = "{0}, {1}, {2}".format(int(color_rgb[0]), int(color_rgb[1]), int(color_rgb[2]))
+    win.ui.lb_rgb_param.setText(color_data)
 
     
 def driving():
@@ -318,18 +325,13 @@ def handling():
 
 
 def gate_passing():
-    global car_color, event_off
+    global car_color
     global car_gate
 
-    while True:
-    
-        if event_off.is_set():
-            return 
-    
-        gate_no = car_color.color_sensing()  # return data = gate_no
+    while True:    
+        color_rgb = car_color.color_sensing()
+        print_rgb(color_rgb)
         
-        if (gate_no != -1):
-            car_gate = gate_no
 
 
 def main():
