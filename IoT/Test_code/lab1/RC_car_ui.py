@@ -17,7 +17,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide2.QtWidgets import (QApplication, QGroupBox, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QTextBrowser, QWidget)
+    QSpinBox, QStatusBar, QTextBrowser, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -166,10 +166,15 @@ class Ui_MainWindow(object):
         self.gb_function.setGeometry(QRect(490, 270, 311, 91))
         self.btn_color_matching = QPushButton(self.gb_function)
         self.btn_color_matching.setObjectName(u"btn_color_matching")
-        self.btn_color_matching.setGeometry(QRect(10, 30, 141, 41))
-        self.btn_spare = QPushButton(self.gb_function)
-        self.btn_spare.setObjectName(u"btn_spare")
-        self.btn_spare.setGeometry(QRect(160, 30, 141, 41))
+        self.btn_color_matching.setGeometry(QRect(160, 30, 141, 41))
+        self.lb_gate_2 = QLabel(self.gb_function)
+        self.lb_gate_2.setObjectName(u"lb_gate_2")
+        self.lb_gate_2.setGeometry(QRect(10, 40, 51, 16))
+        self.sb_gate = QSpinBox(self.gb_function)
+        self.sb_gate.setObjectName(u"sb_gate")
+        self.sb_gate.setGeometry(QRect(70, 40, 71, 22))
+        self.sb_gate.setMinimum(1)
+        self.sb_gate.setMaximum(4)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -230,6 +235,6 @@ class Ui_MainWindow(object):
         self.btn_ready_2.setText(QCoreApplication.translate("MainWindow", u"Finish", None))
         self.gb_function.setTitle(QCoreApplication.translate("MainWindow", u"Function", None))
         self.btn_color_matching.setText(QCoreApplication.translate("MainWindow", u"Color Matching", None))
-        self.btn_spare.setText(QCoreApplication.translate("MainWindow", u"Spare", None))
+        self.lb_gate_2.setText(QCoreApplication.translate("MainWindow", u"Gate :", None))
     # retranslateUi
 

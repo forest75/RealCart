@@ -71,7 +71,7 @@ class COLOR:
         duration = time.time() - start  # seconds to rn for loop
         green = color_cycles / duration
         
-        color_rgb = [red, green, blue]
+        color_rgb = [int(red), int(green), int(blue)]
         
         return color_rgb
 

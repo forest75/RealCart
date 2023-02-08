@@ -55,7 +55,6 @@ class ClientSocket:
 
     def sendData(self, data):        
         try:
-            #data = f"{{\"timestamp\": {timestamp} , \"speed\" : {speed}, \"gateNo\" : {gateNo}, \"status\" : {status} }}"
             length = str(len(data.encode()))
             self.sock.sendall(length.encode('utf-8').ljust(128))
             self.sock.send(data.encode())
@@ -206,6 +205,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.ui.lb_motor_param.setText('Disconnect')
             self.ui.lb_motor_param.setStyleSheet("Color : red")
             
+            
     def motorDisconnect(self):
         global tflag_gate_sensing, gate_sensing_thread
         global car_gear, car_handle, car_color
@@ -280,8 +280,53 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def socketDisconnect(self):
         pass
         
+        
     def colorMatching(self):
-        pass
+        global color_rgb
+        
+        data_count = 100
+        offset = 100
+        
+        min_red = 987654321
+        max_red = 0
+        min_green = 987654321
+        max_green = 0
+        min_blue = 987654321
+        max_blue = 0
+        
+        while (data_count):
+            min_red = min(min_red, color_rgb[0])
+            max_red = max(max_red, color_rgb[0])
+            min_green = min(min_green, color_rgb[1])
+            max_green = max(max_green, color_rgb[1])
+            min_blue = min(min_blue, color_rgb[2])
+            max_blue = max(max_blue, color_rgb[2])
+            
+            data_count -= 1
+        
+        min_red -= offset
+        max_red += offset
+        min_green -= offset
+        max_green += offset
+        min_blue -= offset
+        max_blue += offset
+        
+        temp_no = self.ui.sb_gate.value()
+        gate = [min_red, max_red, min_green, max_green, min_blue, max_blue]
+        
+        str_gate = "{0},{1},{2},{3},{4},{5}".format(min_red, max_red, min_green, max_green, min_blue, max_blue)
+        
+        if (temp_no == 1):
+            self.ui.le_gate1.setText(str_gate)
+        elif (temp_no == 2):
+            self.ui.le_gate2.setText(str_gate)
+        elif (temp_no == 3):
+            self.ui.le_gate3.setText(str_gate)
+        elif (temp_no == 4):
+            self.ui.le_gate4.setText(str_gate)
+        
+        print_log("gate {0} Color Matching is finished".format(temp_no))
+        
         
     def closeEvent(self, event):
         global gear_thread, handle_thread, gate_sensing_thread
@@ -328,7 +373,7 @@ def print_send_data(data):
 
 def print_rgb(color_rgb):
     global win
-    color_data = "{0}, {1}, {2}".format(int(color_rgb[0]), int(color_rgb[1]), int(color_rgb[2]))
+    color_data = "{0}, {1}, {2}".format(color_rgb[0], color_rgb[1], color_rgb[2])
     win.ui.lb_rgb_param.setText(color_data)
 
     
@@ -383,7 +428,7 @@ def handling():
 
 def gate_sensing():
     global car_color, tflag_gate_sensing
-    global car_gate
+    global car_gate, color_rgb
 
     while tflag_gate_sensing:    
         color_rgb = car_color.color_sensing()
