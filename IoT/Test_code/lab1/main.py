@@ -36,10 +36,10 @@ class ClientSocket:
             self.error = 0
             
             recv_thread = threading.Thread(target=self.recv)
-            send_thread = threading.Thread(target=self.sendData)
+            #send_thread = threading.Thread(target=self.sendData)
             
             recv_thread.start()
-            send_thread.start()
+            #send_thread.start()
 
         except Exception as e:
             print(e)
@@ -54,13 +54,12 @@ class ClientSocket:
                 self.connectServer()
 
     def sendData(self):
-        global car_speed, car_gate, car_state
+        global car_speed, car_gate, car_status
         
         try:
             while True:
-
-                timeStamp = round(time.time() * 1000)
-                data = f"{{\"time\": timeStamp , \"speed\" : car_speed, \"gateNo\" : car_gate, \"status\" : car_state }}"
+                cur_time = round(time.time() * 1000)
+                data = f"{{\"timestamp\": {cur_time} , \"speed\" : {car_speed}, \"gateNo\" : {car_gate}, \"status\" : {car_status} }}"
                 length = str(len(data.encode()))
                 # timestamp length
                 self.sock.sendall(length.encode('utf-8').ljust(128))
@@ -114,7 +113,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.lb_model_param.setText(car_model)
-        self.ui.lb_car_no_param.setText(car_no)
+        self.ui.le_car_no.setText(car_no)
         self.ui.lb_speed_param.setText(str(car_speed))
         self.ui.lb_gate_param.setText(str(car_gate))
         self.ui.le_ip.setText(TCP_IP)
@@ -124,7 +123,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def readySignal(self):
-        self.ui.tb_log.append('ready')
+        pass
+        
         
     def finishSignal(self):
         pass
@@ -234,16 +234,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def socketDisconnect(self):
         pass
         
+    def colorMatching(self):
+        pass
+        
     def closeEvent(self, event):
-        global gear_thread, handle_thread, gate_sensing_thread, thread_off, event_off
+        global gear_thread, handle_thread, gate_sensing_thread, thread_off
         
         quit_msg = "Do you want to close this window?"
         reply = QMessageBox.question(self, 'Message', quit_msg, QMessageBox.Yes, QMessageBox.No)
         
         if reply == QMessageBox.Yes:
-            
-            event_off.set()
-            
             gear_thread.join()
             handle_thread.join()
             gate_sensing_thread.join()
@@ -262,7 +262,7 @@ def print_log(msg):
 
 def print_recv_data(data):
     global win
-    win.ui.tb_recv_Data.append(str(data))
+    win.ui.tb_recv_data.append(str(data))
 
 def print_rgb(color_rgb):
     global win
@@ -271,7 +271,7 @@ def print_rgb(color_rgb):
 
     
 def driving():
-    global car_gear, car_speed, event_off
+    global car_gear, car_speed
     global flag_up, flag_down, flag_shift
         
     while True:
@@ -295,10 +295,8 @@ def driving():
         
         else:
             if (car_speed < 1): car_speed = 0
-            #car_speed *= 0.95
         
         car_gear.drive(car_speed)
-        #print('car_speed :', car_speed)
         time.sleep(0.1)
 
 
@@ -307,10 +305,7 @@ def handling():
     global flag_left, flag_right, flag_release
     
     while True:
-    
-        if event_off.is_set():
-            return 
-    
+        
         if flag_left:
             car_handle.steering('left')
             flag_left = False
@@ -332,67 +327,6 @@ def gate_passing():
         color_rgb = car_color.color_sensing()
         print_rgb(color_rgb)
         
-
-
-def main():
-    global recv_data, car_gear, car_handle, car_speed, car_color, car_gate
-    global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release
-    
-    app = QApplication()
-    win = MyApp()
-    win.show()
-    app.exec_()
-    
-    recv_data = 0
-
-    TCP_IP = "i8a403.p.ssafy.io"
-    
-    if (len(sys.argv) == 2):
-        if (sys.argv[1] == "debug"):
-            TCP_IP = "127.0.0.1"
-    
-    TCP_PORT = 8081
-    client = ClientSocket(TCP_IP, TCP_PORT)
-    
-    dc_enable = 27
-    dc_input_1 = 15
-    dc_input_2 = 18
-    
-    servo_pin = 17
-
-    color_s2 = 23
-    color_s3 = 24
-    color_signal = 25
-    
-    car_speed = 0
-    car_gate = 0
-    
-    flag_up = False
-    flag_down = False
-    flag_shift = False
-    flag_left = False
-    flag_right = False
-    flag_release = False
-    
-    car_gear = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)
-    car_handle = SERVO_MOTOR(servo_pin)
-    car_color = COLOR(color_s2, color_s3, color_signal)
-    
-    
-    gear_thread = threading.Thread(target=driving)
-    handle_thread = threading.Thread(target=handling)
-    gate_sensing_thread = threading.Thread(target=gate_passing)
-
-    gear_thread.start()
-    handle_thread.start()
-    gate_sensing_thread.start()
-    
-    gear_thread.join()
-    handle_thread.join()
-    gate_sensing_thread.join()
-    
-    
-
 
 if __name__ == "__main__":
     global car_model, car_no, car_speed, car_gate, TCP_IP, TCP_PORT
