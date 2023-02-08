@@ -24,14 +24,8 @@ class COLOR:
 
     def color_sensing(self):
         # color
-        # red_min, red_max, green_min, green_max, blue_min, blue_max
-        # pink, green, ..., ...
-        gate_color = [[2000, 4000, 1000, 3000, 2000, 4000],
-                      [550, 800, 1500, 2000, 800, 1100],
-                      [0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0, 0]]
 
-        color_cycles = 10
+        color_cycles = 20
 
         # Red
         GPIO.output(self.color_s2, GPIO.LOW)
@@ -41,7 +35,7 @@ class COLOR:
 
         for impulse_count in range(color_cycles):
             GPIO.wait_for_edge(self.color_signal, GPIO.FALLING)
-
+        
         duration = time.time() - start  # seconds to rn for loop
         red = color_cycles / duration
 

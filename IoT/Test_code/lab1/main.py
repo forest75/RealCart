@@ -188,7 +188,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         gate_sensing_thread = threading.Thread(target=gate_sensing)
         gate_sensing_thread.start()
         
-        if (car_gear.error == 0 and car_handle.error == 0 and car_color.error == 0):
+        if (car_gear.error == 0 and car_handle.error == 0):
             print_log('All of Sensor/Motor GPIO Pin Setting complete')
             self.ui.lb_motor_param.setText('Connect')
             self.ui.lb_motor_param.setStyleSheet("Color : green")
@@ -254,7 +254,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         gear_thread = threading.Thread(target=driving)
         handle_thread = threading.Thread(target=handling)
-                
+        
         gear_thread.start()
         handle_thread.start()
                 
@@ -276,10 +276,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         global tflag_driving, tflag_handling, gear_thread, handle_thread
         
         tflag_driving = False
-        tflag_handling = False
+        #tflag_handling = False
         
         gear_thread.join()
-        handle_thread.join()
+        #handle_thread.join()
         
         print_log('Gear Thread Kill')
         print_log('Handle Thread Kill')
@@ -416,11 +416,14 @@ def driving():
                 if (car_speed < 1): car_speed = 0
         
             car_gear.drive(car_speed)
+            time.sleep(0.01)
+           
         
         print('driving end...')
-    
+        
     except Exception as e:
         print(e)
+    
     
 
 
@@ -444,6 +447,8 @@ def handling():
             if flag_release:
                 car_handle.steering('center')
                 flag_release = False
+                
+            time.sleep(0.01)
         
         print('handling end...')
         
@@ -459,6 +464,7 @@ def gate_sensing():
     while tflag_gate_sensing:    
         color_rgb = car_color.color_sensing()
         print_rgb(color_rgb)
+        time.sleep(0.01)
         
 
 if __name__ == "__main__":
