@@ -23,6 +23,7 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
+// import Auth from "./Auth";
 // import car from "../assets/car.jpg";
 // import tmpmain from "../assets/map_keyboard.png";
 
