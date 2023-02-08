@@ -23,10 +23,13 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
-// import car from "../assets/car.jpg";
-// import tmpmain from "../assets/map_keyboard.png";
+import axios from "axios";
 
 function SpectPage() {
+  const [ParticipantA, setParticipantA] = useState([]);
+  const [ParticipantB, setParticipantB] = useState([]);
+  const [tmpNum, setTmpNum] = useState(8);
+  const [tmpNum2, setTmpNum2] = useState(9);
   const user = useSelector((state) => state.login.user);
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -35,7 +38,7 @@ function SpectPage() {
   const text = useRef(null);
   var webRtcPeer;
   var mediaId;
-
+  1;
   function presenterResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
@@ -199,6 +202,16 @@ function SpectPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
+        const users = res.data;
+        const ran1 = Math.floor(Math.random() * users.length);
+        const ran2 = Math.floor(Math.random() * users.length);
+        setParticipantA(users[ran1].nickname);
+        setParticipantB(users[ran2].nickname);
+      });
+    }, 5000);
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -448,7 +461,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h2>A 의권짱짱33</h2>
+                <h2>A {ParticipantA}</h2>
               </Box>
               <Box
                 display="flex"
@@ -470,7 +483,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h2>B 지존ㅎHzㅣㄴ</h2>
+                <h2>B {ParticipantB}</h2>
               </Box>
             </Box>
           </Box>
