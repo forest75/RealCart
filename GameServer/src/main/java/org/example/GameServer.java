@@ -131,7 +131,7 @@ class RCcarThread implements Runnable{
                         // 4
                         flag.setGameStatus(1);
                         // 5
-                        if(flag.getPlayer1Status() == 2 && flag.getPlayer1Status() == 2){
+                        if(flag.getPlayer1Status() == 2 && flag.getPlayer2Status() == 2){
                             flag.initiateAll();
                         }
                 }
