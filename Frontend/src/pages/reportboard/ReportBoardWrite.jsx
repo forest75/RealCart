@@ -7,7 +7,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AppButton from "../../components/AppButton";
 
 function ReportBoardWrite() {
+  const navigate = useNavigate();
   const [option, setOption] = React.useState("");
 
   const handleChange = (event) => {
@@ -34,7 +35,7 @@ function ReportBoardWrite() {
   const handleSubmit = () => {
     const rawContentState = convertToRaw(editorState.getCurrentContent());
     const data = {
-      category: "신고",
+      category: option,
       title: titleRef.current.value,
       content: JSON.stringify(rawContentState),
       nickname: user.nickname,
@@ -47,6 +48,7 @@ function ReportBoardWrite() {
       })
       .then((res) => {
         console.log(res);
+        navigate("/reportboard");
       })
       .catch((err) => {
         console.log(err);
@@ -100,9 +102,9 @@ function ReportBoardWrite() {
             label="Option"
             onChange={handleChange}
           >
-            <MenuItem value={10}>버그리포트</MenuItem>
-            <MenuItem value={20}>신고</MenuItem>
-            <MenuItem value={30}>이용문의</MenuItem>
+            <MenuItem value="BUG">버그리포트</MenuItem>
+            <MenuItem value="REPORT">신고</MenuItem>
+            <MenuItem value="QUESTION">이용문의</MenuItem>
           </Select>
         </FormControl>
         <TextField

@@ -23,7 +23,17 @@ import ReportBoardWrite from "./pages/reportboard/ReportBoardWrite";
 import ReportBoardModify from "./pages/reportboard/ReportBoardModify";
 import ReportBoardDetail from "./pages/reportboard/ReportBoardDetail";
 import AuthPage from "./pages/AuthPage";
-import PlayRoom from "./test/PlayRoom";
+import PlayRoom2 from "./test/PlayRoom2";
+import Auth from "./pages/Auth";
+
+const SpectPageWithAuth = Auth(SpectPage);
+const PlayPageWithAuth = Auth(PlayPage);
+const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
+const NoticeBoardWriteWithAuth = Auth(NoticeBoardWrite);
+const FreeBoardDetailWithAuth = Auth(FreeBoardDetail);
+const FreeBoardWriteWithAuth = Auth(FreeBoardWrite);
+const ReportBoardDetailWithAuth = Auth(ReportBoardDetail);
+const ReportBoardWriteWithAuth = Auth(ReportBoardWrite);
 
 function App() {
   return (
@@ -32,23 +42,35 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/about" element={<PlayRoom />} />
+        <Route path="/about" element={<PlayRoom2 />} />
         <Route path="/regist" element={<RegistForm />} />
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
-        <Route path="/spect" element={<SpectPage />} />
-        <Route path="/play" element={<PlayPage />} />
+        <Route path="/spect" element={<SpectPageWithAuth />} />
+        <Route path="/play" element={<PlayPageWithAuth />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
-        <Route path="/freeBoard/detail" element={<FreeBoardDetail />} />
-        <Route path="/freeBoard/write" element={<FreeBoardWrite />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />
+        <Route path="/freeBoard/write" element={<FreeBoardWriteWithAuth />} />
         <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
-        <Route path="/reportBoard/write" element={<ReportBoardWrite />} />
+        <Route
+          path="/reportBoard/write"
+          element={<ReportBoardWriteWithAuth />}
+        />
         <Route path="/reportBoard/modify" element={<ReportBoardModify />} />
-        <Route path="/reportBoard/detail" element={<ReportBoardDetail />} />
+        <Route
+          path="/reportBoard/detail"
+          element={<ReportBoardDetailWithAuth />}
+        />
         <Route path="/noticeBoard" element={<NoticeBoard />} />
-        <Route path="/noticeBoard/detail" element={<NoticeBoardDetail />} />
-        <Route path="/noticeBoard/write" element={<NoticeBoardWrite />} />
+        <Route
+          path="/noticeBoard/detail"
+          element={<NoticeBoardDetailWithAuth />}
+        />
+        <Route
+          path="/noticeBoard/write"
+          element={<NoticeBoardWriteWithAuth />}
+        />
         <Route path="/noticeBoard/modify" element={<NoticeBoardModify />} />
         <Route path="/oauth/redirect" element={<AuthPage />} />
       </Routes>

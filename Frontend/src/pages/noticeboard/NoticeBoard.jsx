@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -13,54 +14,48 @@ function NoticeBoard() {
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
-  const articleList = [
-    [
-      {
-        no: 0,
-        title: "여기는 공지사항 게시판입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "적당히 적어도 줄이 맞아요",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "리얼카트 정.말.좋.습.니.다",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-    [
-      {
-        no: 0,
-        title: "2페이지입니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 1,
-        title: "페이지네이션을 구현해보았습니다.",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-      {
-        no: 2,
-        title: "우리모두화이팅!",
-        author: "운영자",
-        date: "2023.01.11",
-        view: 356,
-      },
-    ],
-  ];
+  const [loading, setLoading] = useState(true);
+  const [articleList, setArticleList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
+      .then((res) => {
+        const articles = res.data;
+        console.log(articles);
+        if (articles.length === 0) {
+          setArticleList([
+            [
+              {
+                id: "-",
+                title: "게시글이 없습니다.",
+                nickname: "-",
+                hit: "-",
+              },
+            ],
+          ]);
+        } else {
+          const numberOfArticlesPerUnit = 10;
+          const numberOfUnits = Math.ceil(
+            articles.length / numberOfArticlesPerUnit
+          );
+          const List = [];
+          for (let i = 0; i < numberOfUnits; i += 1) {
+            List.push(
+              articles.slice(
+                i * numberOfArticlesPerUnit,
+                (i + 1) * numberOfArticlesPerUnit
+              )
+            );
+          }
+          setArticleList(List);
+        }
+        setLoading(false);
+      });
+  }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Box
       sx={{
@@ -69,7 +64,7 @@ function NoticeBoard() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: 700,
+        height: 1000,
       }}
     >
       <Box
@@ -107,15 +102,14 @@ function NoticeBoard() {
             <ArticleBox
               sx={{
                 width: "80%",
-                bgcolor: "#f5f5f5",
               }}
-              board="noticeboard"
-              key={article.no}
-              no={article.no}
+              board="noticeBoard"
+              key={article.id}
+              no={article.id}
               title={article.title}
-              author={article.author}
-              date={article.date}
-              view={article.view}
+              author="admin"
+              date={article.createdTime}
+              view={article.hit}
             />
           ))}
           <Box

@@ -3,45 +3,97 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Textarea from "@mui/joy/Textarea";
-import { useSearchParams, Link } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+// import { convertToRaw } from "draft-js";
+// import draftToHtml from "draftjs-to-html";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import draftToHtml from "draftjs-to-html";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import CommentBox from "../../components/CommentBox";
 
 function FreeBoardDetail() {
-  // const chatRef = useRef();
+  const navigate = useNavigate();
   const [title, setTitle] = useState();
-  const [comments, setComments] = useState();
+  const [content, setContent] = useState();
+  const [comments, setComments] = useState([]);
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
   const [chat, setChat] = useState("");
   const [count, setCount] = useState(0);
-
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.login.user);
+  const [page, setPage] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(0);
+  const onChangePage = (event, value) => {
+    setPage(value - 1);
+  };
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
       .then((res) => {
-        setTitle(res.data.title);
-        setComments(res.data.coments);
-        // console.log(res.data.comments);
+        const article = res.data;
+
+        let resContent = article.content;
+        console.log(resContent);
+        try {
+          resContent = JSON.parse(resContent);
+          resContent = draftToHtml(resContent);
+        } finally {
+          setContent(resContent);
+        }
+        setTitle(article.title);
+
+        setCommentsCount(article.comments.length);
+        if (article.comments.length === 0) {
+          setComments([
+            [
+              {
+                content: "댓글이 없습니다.",
+                nickname: "-",
+              },
+            ],
+          ]);
+        } else {
+          const numberOfArticlesPerUnit = 5;
+          const numberOfUnits = Math.ceil(
+            article.comments.length / numberOfArticlesPerUnit
+          );
+          const List = [];
+          for (let i = 0; i < numberOfUnits; i += 1) {
+            List.push(
+              article.comments.slice(
+                i * numberOfArticlesPerUnit,
+                (i + 1) * numberOfArticlesPerUnit
+              )
+            );
+          }
+          setComments(List);
+        }
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const handleDelete = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
-      .then((res) => {
-        console.log(res);
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirm) return;
+    await axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, {})
+      .then((response) => {
+        navigate("/freeboard");
+        console.log(response);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
       });
   };
-
-  // const [chats, setChats] = useState([]);
-  // const chatRef = useRef(null);
 
   const onChange = (event) => {
     setChat(event.target.value);
@@ -53,24 +105,21 @@ function FreeBoardDetail() {
       setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
     }
   };
-  const user = useSelector((state) => state.login.user);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     // console.log(chat);
     // console.log(e);
     if (chat === "") return;
     const data = {
-      comments: [
-        {
-          content: e.target[0].value,
-          nickname: user.nickname,
-        },
-      ],
+      content: e.target[0].value,
+      nickname: user.nickname,
     };
+
     console.log(data);
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free`, data, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -85,11 +134,16 @@ function FreeBoardDetail() {
 
     setChat("");
   };
+
+  // const MyComponent = () => {
+  //   <div dangerouslySetInnerHTML={{ __html: content }} />;
+  // };
+
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
-          height: "80vh",
+          height: "150vh",
           width: "80%",
           display: "flex",
           flexDirection: "column",
@@ -164,9 +218,7 @@ function FreeBoardDetail() {
             width: "100%",
           }}
         >
-          <Box component="h3" sx={{ fontWeight: "300", padding: "20px" }}>
-            여기는 자유게시판인데 소정캡짱이 랭킹 1위 실화냐?
-          </Box>
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </Box>
         <Box
           sx={{
@@ -178,8 +230,30 @@ function FreeBoardDetail() {
           }}
         >
           <Link to="/freeBoard" sx={{ textDecoration: "none", color: "black" }}>
-            <AppButton sx={{ border: "solid 1px black", marginRight: "10px" }}>
+            <AppButton
+              sx={{
+                border: "solid 1px black",
+                marginRight: "10px",
+                height: "40px",
+              }}
+            >
               목록
+            </AppButton>
+          </Link>
+          <Link
+            to={`/freeBoard/modify?no=${no}`}
+            sx={{ textDecoration: "none", color: "black" }}
+          >
+            <AppButton
+              sx={{
+                backgroundColor: "black",
+                color: "white",
+                border: "solid 1px black",
+                marginRight: "10px",
+                height: "40px",
+              }}
+            >
+              수정
             </AppButton>
           </Link>
           <AppButton
@@ -188,16 +262,7 @@ function FreeBoardDetail() {
               color: "white",
               border: "solid 1px black",
               marginRight: "10px",
-            }}
-          >
-            수정
-          </AppButton>
-          <AppButton
-            sx={{
-              backgroundColor: "black",
-              color: "white",
-              border: "solid 1px black",
-              marginRight: "10px",
+              height: "40px",
             }}
             onClick={handleDelete}
           >
@@ -216,7 +281,7 @@ function FreeBoardDetail() {
             댓글 :
           </Box>
           <Box component="h3" sx={{ fontWeight: "500", marginLeft: "20px" }}>
-            2개
+            {commentsCount} 개
           </Box>
         </Box>
         <Box
@@ -285,7 +350,35 @@ function FreeBoardDetail() {
             </Box>
           </Box>
         </Box>
-        <Box>{comments}</Box>
+        <CommentBox
+          sx={{
+            width: "100%",
+          }}
+          no="번호"
+          content="내용"
+          author="작성자"
+          date="등록일"
+        />
+        {comments[page].map((comment) => (
+          <CommentBox
+            sx={{
+              width: "100%",
+            }}
+            no={comment.id}
+            content={comment.content}
+            author={comment.nickname}
+            date={comment.createdTime}
+          />
+        ))}
+        <Pagination
+          count={comments.length}
+          variant="outlined"
+          shape="rounded"
+          onChange={onChangePage}
+          sx={{
+            margin: 2,
+          }}
+        />
       </Box>
     </Box>
   );

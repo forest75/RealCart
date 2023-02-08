@@ -3,16 +3,7 @@ import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 // import Button from "@mui/material/Button";
 
-function ArtcleBox({
-  sx,
-  board,
-  no,
-  title,
-  author,
-  date,
-  view,
-  ...otherProps
-}) {
+function ArtcleBoxTitle({ sx, no, title, author, date, view, ...otherProps }) {
   const mergedSx = {
     ...{ bgcolor: "white", color: "black", borderBottom: 1 },
     ...sx,
@@ -82,14 +73,13 @@ function ArtcleBox({
   );
 }
 
-ArtcleBox.defaultProps = {
+ArtcleBoxTitle.defaultProps = {
   sx: {},
 };
 
-ArtcleBox.propTypes = {
+ArtcleBoxTitle.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
-  board: PropTypes.string.isRequired,
   no: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
@@ -97,4 +87,4 @@ ArtcleBox.propTypes = {
   view: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default ArtcleBox;
+export default ArtcleBoxTitle;

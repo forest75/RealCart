@@ -7,10 +7,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardModify() {
+  const navigate = useNavigate();
   const titleRef = useRef();
 
   const [searchParams] = useSearchParams();
@@ -20,7 +21,7 @@ function FreeBoardModify() {
 
   useEffect(() => {
     axios
-      .get(`http://3.34.23.91:8080/board/free/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice/${no}`)
       .then((res) => {
         titleRef.current.value = res.data.title;
         let { content } = res.data;
@@ -60,13 +61,14 @@ function FreeBoardModify() {
       nickname: user.nickname,
     };
     axios
-      .put(`http://3.34.23.91:8080/board/notice/${no}`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/board/notice/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
         console.log(res);
+        navigate(`/noticeboard/detail?no=${no}`);
       })
       .catch((err) => {
         console.log(err);
@@ -170,7 +172,7 @@ function FreeBoardModify() {
           >
             <Box flexGrow={1} />
             <Link
-              to="/FreeBoard"
+              to="/NoticeBoard"
               style={{ color: "black", textDecoration: "none" }}
             >
               <AppButton

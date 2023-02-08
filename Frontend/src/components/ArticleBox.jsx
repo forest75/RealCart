@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 // import Button from "@mui/material/Button";
 
-function ArtcleBox({
+function ArticleBox({
   sx,
   board,
   no,
@@ -85,11 +85,11 @@ function ArtcleBox({
   );
 }
 
-ArtcleBox.defaultProps = {
+ArticleBox.defaultProps = {
   sx: {},
 };
 
-ArtcleBox.propTypes = {
+ArticleBox.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
   board: PropTypes.string.isRequired,
@@ -100,4 +100,4 @@ ArtcleBox.propTypes = {
   view: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default ArtcleBox;
+export default ArticleBox;
