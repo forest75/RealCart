@@ -11,6 +11,7 @@ import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
 import TransparentImg from "../assets/img/transparent-1px.png";
+import TransparentImg2 from "../assets/img/transparent-copy.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
@@ -248,12 +249,17 @@ function PlayPage() {
 
   const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
-  // wss.onopen = function open() { };
-
   wss.onclose = function close() {
     console.log("disconnected");
   };
-  const images = [CountdownThree, CountdownTwo, CountdownOne, CountdownStart];
+  const images = [
+    TransparentImg2,
+    CountdownThree,
+    CountdownTwo,
+    CountdownOne,
+    CountdownStart,
+    TransparentImg,
+  ];
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -261,16 +267,9 @@ function PlayPage() {
     const intervalId = setInterval(() => {
       setCurrentImage((currentImage) => (currentImage + 1) % images.length);
     }, 1000);
-    return () => clearInterval(intervalId);
-
-    // setTimeout(() => {
-    //   for (let i = 0; i < 4; i++) {
-    //     setTimeout(() => {
-    //       setComp(<Box component="img" src={images[i]} alt={slides[i]} />);
-    //       // return <Box component="img" src={images[i]} alt="slide" />;
-    //     }, 1000);
-    //   }
-    // }, 2000);
+    setTimeout(() => {
+      clearInterval(intervalId);
+    }, 5500);
   }, []);
 
   wss.onmessage = function incoming(data) {
@@ -284,6 +283,7 @@ function PlayPage() {
       }, 2000);
     }
   };
+
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
     16: false,
@@ -864,23 +864,43 @@ function PlayPage() {
                 bottom: "10px",
               }}
             >
-              <div>
-                <video
-                  ref={video}
-                  id="video"
-                  autoPlay
-                  width="100%"
-                  height="100%"
-                  poster={WebRtcImg}
-                />
-              </div>
-            </Box>
-            <Box
-              sx={{
-                zIndex: 2,
-              }}
-            >
-              <img src={images[currentImage]} alt="slide" />
+              <Box
+                sx={{
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      zIndex: 1,
+                      width: "30%",
+                      height: "50%",
+                    }}
+                    component="img"
+                    alt="slide"
+                    src={images[currentImage]}
+                  />
+                </Box>
+                <div>
+                  <video
+                    ref={video}
+                    id="video"
+                    autoPlay
+                    width="100%"
+                    height="100%"
+                    poster={WebRtcImg}
+                  />
+                </div>
+              </Box>
             </Box>
           </Box>
         </Paper>
