@@ -79,7 +79,7 @@ public class UserController {
         
         try {
             if(userService.createUser(userDto)){
-            	userService.preprocessMail(userDto);
+//            	userService.preprocessMail(userDto);
             	
             	String msg = "회원가입 성공";
                 return new ResponseEntity<String>(msg, HttpStatus.OK);

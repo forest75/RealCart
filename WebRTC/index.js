@@ -25,6 +25,8 @@ window.onload = function() {
 	
 	video = document.getElementById('video');
 	text = document.getElementById('text');
+	video.autoplay = true;
+	video.muted = true;
 	connect();
 }
 
@@ -32,7 +34,12 @@ window.onbeforeunload = function() {
 	ws.close();
 	socket.close();
 }
-
+ws.onopen = function(){
+	setTimeout(() => {
+		viewer(1);
+	  }, 2000);
+	  
+}
 // socket.onmessage = function(message){
 // 	console.log(message);
 // }
