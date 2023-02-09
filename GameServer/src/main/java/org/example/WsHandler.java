@@ -76,7 +76,7 @@ class WsHandler extends WebSocketServer {
                 Long labTime = endTime - flag.getStartTime();
                 // 3
                 String bodySeg = "";
-                bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
+                bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
                 if (flag.getRequestBody() == "") {
                     flag.setRequestBody(flag.getRequestBody() + bodySeg);
                 } else {

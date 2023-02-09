@@ -183,7 +183,7 @@ public class FlagClass {
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "text/plain; charset=UTF-8");
+            con.setRequestProperty("Content-Type", "Application/json;charset=UTF-8");
             con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
             con.setUseCaches(false);
 

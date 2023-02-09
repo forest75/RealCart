@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +78,7 @@ public class GameController {
         return new ResponseEntity<>(queue, HttpStatus.OK);
     }
     
-    @PostMapping(value="/result")
+    @PostMapping(value="/result", consumes = "text/plain")
     public ResponseEntity<String> endGame(@RequestBody String string) {
         LOGGER.info("endGame 메서드가 gameController에서 호출되었습니다.");
         System.out.println(string);

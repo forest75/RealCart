@@ -144,6 +144,7 @@ class RCcarThread implements Runnable{
                             bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
                             flag.setPlayer2Status(0);
                         }
+                        //////////
                         if (flag.getRequestBody() == "") {
                             flag.setRequestBody(flag.getRequestBody() + bodySeg);
                         } else {
@@ -151,6 +152,7 @@ class RCcarThread implements Runnable{
                             flag.sendResultToBackend(flag.getRequestBody());
                             flag.setGameStatus(0);
                         }
+                        /////////////
                         // 4
                         if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                             flag.initiateAll();
