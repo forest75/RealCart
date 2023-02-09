@@ -68,7 +68,7 @@ class RCcarThread implements Runnable{
                 // 0: NULL, 1: Ready, 2: Finish, 3: Running
                 switch (rcCarStatus.status) {
                     /*
-                    1일 때...
+                    1일 때...(Ready)
                     1. 만일 모두 준비가 완료되었다면 flag.gamestatus를 1로 만든다.
                     2. Frontend 서버에 5초 뒤 게임을 시작한다는 신호(1)를 wss를 통해 보낸다.
                     3. Thread.sleep(5000)으로 5초 쉬고 RC카에 start 신호를 보낸다.
@@ -113,7 +113,7 @@ class RCcarThread implements Runnable{
                         System.out.println("Game Start >>> " + flag);
                         break;
                     /*
-                    2일 때..
+                    2일 때..(Finish)
                     1-1. 게임끝 신호 "2" 를 프론트에게 보낸다.
                     1-2. 플레이어 상태를 0으로 만든다.
                     1-3. 웹소켓 연결을 끊는다.
@@ -144,7 +144,6 @@ class RCcarThread implements Runnable{
                             bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
                             flag.setPlayer2Status(0);
                         }
-                        //////////
                         if (flag.getRequestBody() == "") {
                             flag.setRequestBody(flag.getRequestBody() + bodySeg);
                         } else {
@@ -152,7 +151,6 @@ class RCcarThread implements Runnable{
                             flag.sendResultToBackend(flag.getRequestBody());
                             flag.setGameStatus(0);
                         }
-                        /////////////
                         // 4
                         if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                             flag.initiateAll();

@@ -14,7 +14,7 @@ public class Test {
         try {
             String requestBody = "닉1,12342,닉2,195812";
             // EC2에서는 수정
-            String url = "http://127.0.0.1:8080/game/result";
+            String url = "http://127.0.0.1:8060/game/result";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

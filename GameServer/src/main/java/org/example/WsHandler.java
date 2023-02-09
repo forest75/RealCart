@@ -36,7 +36,7 @@ class WsHandler extends WebSocketServer {
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(conn.getLocalSocketAddress() + " closed connection.");
-        System.out.println("code: " + code + "Reason: " + reason);
+        System.out.println("code: " + code + ", Reason: " + reason);
         if(port == 8886){
             // 게임 시작 전에 한명이 나가면
             if(flag.getPlayer1Status() == 1){
@@ -57,6 +57,7 @@ class WsHandler extends WebSocketServer {
                     flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
                     flag.sendResultToBackend(flag.getRequestBody());
                 }
+                flag.setPlayer1Status(0);
                 if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                     flag.initiateAll();
                 }
@@ -83,6 +84,7 @@ class WsHandler extends WebSocketServer {
                     flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
                     flag.sendResultToBackend(flag.getRequestBody());
                 }
+                flag.setPlayer2Status(0);
                 if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                     flag.initiateAll();
                 }
@@ -92,8 +94,6 @@ class WsHandler extends WebSocketServer {
         } else {
             System.out.println("Invalidate port is closed");
         }
-        // 중도탈퇴같은 경우는, timestamp를 0으로 만들어 finish 신호를 보냈을 때 함수를 실행
-
     }
 
     @Override
@@ -122,7 +122,7 @@ class WsHandler extends WebSocketServer {
 
     @Override
     public void onStart() {
-        System.out.println("WebSocket server started on port" + this.port);
+        System.out.println("WebSocket server started on port " + this.port);
         System.out.println(flag);
     }
 }
