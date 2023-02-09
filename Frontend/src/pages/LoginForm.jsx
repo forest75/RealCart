@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import cookie from "js-cookie";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -23,7 +24,9 @@ function LoginForm() {
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
       .then((response) => {
-        console.log(response);
+        cookie.set("refreshToken", response.data.refreshToken, {
+          secure: true,
+        });
         localStorage.setItem("user", JSON.stringify(response.data));
         dispatch(login(response.data));
         navigate("/");

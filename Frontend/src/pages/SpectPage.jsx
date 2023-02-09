@@ -23,11 +23,11 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
-// import Auth from "./Auth";
-// import car from "../assets/car.jpg";
-// import tmpmain from "../assets/map_keyboard.png";
+import axios from "axios";
 
 function SpectPage() {
+  const [ParticipantA, setParticipantA] = useState("의권짱짱33");
+  const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
   const user = useSelector((state) => state.login.user);
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -36,7 +36,7 @@ function SpectPage() {
   const text = useRef(null);
   var webRtcPeer;
   var mediaId;
-
+  1;
   function presenterResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
@@ -200,6 +200,20 @@ function SpectPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      setSelectedIndex((selectedIndex + 1) % options.length);
+    }, 5000);
+
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
+        const users = res.data;
+        const ran1 = Math.floor(Math.random() * users.length);
+        const ran2 = Math.floor(Math.random() * users.length);
+        setParticipantA(users[ran1].nickname);
+        setParticipantB(users[ran2].nickname);
+      });
+    }, 5000);
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -262,8 +276,12 @@ function SpectPage() {
   }, [ws]);
 
   const navigate = useNavigate();
-  const options = ["1. 상우짱, 성현카트", "2. 의권짱짱33, 지존ㅎHzㅣㄴ"];
-  // let idx = 0;
+  const [options, setOptions] = useState([
+    "1. 상우짱, 성현카트",
+    "2. 의권짱짱33, 지존ㅎHzㅣㄴ",
+    "3. 소정캡짱, 떵미니",
+  ]);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [wait, setWait] = React.useState(1);
@@ -449,7 +467,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h2>A 의권짱짱33</h2>
+                <h2>A {ParticipantA}</h2>
               </Box>
               <Box
                 display="flex"
@@ -471,7 +489,7 @@ function SpectPage() {
                   justifyContent: "center",
                 }}
               >
-                <h2>B 지존ㅎHzㅣㄴ</h2>
+                <h2>B {ParticipantB}</h2>
               </Box>
             </Box>
           </Box>
@@ -1033,6 +1051,10 @@ function SpectPage() {
                   handleModalOpen={handleModalOpen}
                   handleModalClose={handleModalClose}
                   setIsReady={setIsReady}
+                  setSelectedIndex={setSelectedIndex}
+                  options={options}
+                  setOptions={setOptions}
+                  nickname={user.nickname}
                 />
               )}
             </Box>

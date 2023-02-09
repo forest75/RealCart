@@ -5,18 +5,26 @@ import { Box, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
-import toturial from "../assets/toturial.png";
+import axios from "axios";
+import tutorial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
 import TransparentImg from "../assets/img/transparent-1px.png";
+import TransparentImg2 from "../assets/img/transparent-copy.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
+import CountdownOne from "../assets/count_1.png";
+import CountdownTwo from "../assets/count_2.png";
+import CountdownThree from "../assets/count_3.png";
+import CountdownStart from "../assets/START.png";
 
 function PlayPage() {
-  // const [imgSrc] = useState("");
+  const [isTutorial, setIsTutorial] = useState(true);
+  const [ParticipantA, setParticipantA] = useState("의권짱짱33");
+  const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
   const user = useSelector((state) => state.login.user);
 
   const [ws, setWs] = useState(null);
@@ -181,6 +189,16 @@ function PlayPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
+        const users = res.data;
+        const ran1 = Math.floor(Math.random() * users.length);
+        const ran2 = Math.floor(Math.random() * users.length);
+        setParticipantA(users[ran1].nickname);
+        setParticipantB(users[ran2].nickname);
+      });
+    }, 5000);
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -244,18 +262,39 @@ function PlayPage() {
 
   const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
-  // wss.onopen = function open() { };
-
   wss.onclose = function close() {
     console.log("disconnected");
   };
+  const images = [
+    TransparentImg2,
+    CountdownThree,
+    CountdownTwo,
+    CountdownOne,
+    CountdownStart,
+    TransparentImg,
+  ];
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(intervalId);
+    }, 5500);
+  }, []);
 
   wss.onmessage = function incoming(data) {
-    console.log(`Roundtrip time: ${Date.now() - data.data} ms`);
-
-    setTimeout(function timeout() {
-      wss.send(Date.now());
-    }, 500);
+    if (data === "1") {
+      setInterval(() => {
+        for (let i = 0; i < 4; i++) {
+          setInterval(() => {
+            return <Box component="img" src={images[i]} alt="slide" />;
+          }, 1000);
+        }
+      }, 2000);
+    }
   };
 
   const [keyState, setKeyState] = useState({});
@@ -267,6 +306,9 @@ function PlayPage() {
     40: false,
   });
   useEffect(() => {
+    setTimeout(() => {
+      setIsTutorial(false);
+    }, 10000);
     window.addEventListener(
       "keydown",
       (e) => {
@@ -274,6 +316,10 @@ function PlayPage() {
           ...prevState,
           [e.keyCode || e.which]: true,
         }));
+        if (e.keyCode === 86) {
+          console.log(isTutorial);
+          setIsTutorial((prevState) => !prevState);
+        }
       },
       true
     );
@@ -480,7 +526,7 @@ function PlayPage() {
                       justifyContent: "center",
                     }}
                   >
-                    <h2>A 의권짱짱33</h2>
+                    <h2>A {ParticipantA}</h2>
                   </Box>
                   <Box
                     sx={{
@@ -524,7 +570,7 @@ function PlayPage() {
                       justifyContent: "center",
                     }}
                   >
-                    <h2>B 지존ㅎHzㅣㄴ</h2>
+                    <h2>B {ParticipantB}</h2>
                   </Box>
                   <Box
                     sx={{
@@ -675,7 +721,7 @@ function PlayPage() {
               }}
             />
             <Box
-              component="h5"
+              // component="h5"
               sx={{
                 width: "20%",
                 height: "9%",
@@ -814,20 +860,22 @@ function PlayPage() {
             </Box>
 
             {/* <div onKeyDown={handleKeyPress}> */}
-            <Box
-              component="img"
-              alt="toturial"
-              src={toturial}
-              sx={{
-                width: "40%",
-                height: "50%",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                opacity: "60%",
-                zIndex: 1,
-              }}
-            />
+            {isTutorial && (
+              <Box
+                component="img"
+                alt="tutorial"
+                src={tutorial}
+                sx={{
+                  width: "40%",
+                  height: "50%",
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  opacity: "60%",
+                  zIndex: 1,
+                }}
+              />
+            )}
             <Box
               sx={{
                 width: "100%",
@@ -838,17 +886,43 @@ function PlayPage() {
                 bottom: "10px",
               }}
             >
-              <div>
-                <video
-                  ref={video}
-                  id="video"
-                  autoPlay={true}
-                  width="100%"
-                  height="100%"
-                  poster={WebRtcImg}
-                  muted={true}
-                />
-              </div>
+              <Box
+                sx={{
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      zIndex: 1,
+                      width: "30%",
+                      height: "50%",
+                    }}
+                    component="img"
+                    alt="slide"
+                    src={images[currentImage]}
+                  />
+                </Box>
+                <div>
+                  <video
+                    ref={video}
+                    id="video"
+                    autoPlay
+                    width="100%"
+                    height="100%"
+                    poster={WebRtcImg}
+                  />
+                </div>
+              </Box>
             </Box>
           </Box>
         </Paper>
