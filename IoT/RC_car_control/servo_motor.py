@@ -18,8 +18,8 @@ class SERVO_MOTOR:
         except:
             print('servo_motor GPIO pin setting failed')
     
-    def steering(self, direction):
-                
+    def steering(self, direction, flag_handling):
+        print('flag_handling :', flag_handling)
         try:
             if (direction == 'center'):
                 self.pwm.ChangeDutyCycle(7.75)
@@ -34,6 +34,8 @@ class SERVO_MOTOR:
                 self.pwm.ChangeDutyCycle(9)
                 time.sleep(0.3)
                 print('right')
+            
+            flag_handling = False
         
         except:
             print('servo_motor.steering Error')

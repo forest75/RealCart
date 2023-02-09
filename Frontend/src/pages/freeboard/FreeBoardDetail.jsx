@@ -6,14 +6,14 @@ import Textarea from "@mui/joy/Textarea";
 import Pagination from "@mui/material/Pagination";
 // import { convertToRaw } from "draft-js";
 // import draftToHtml from "draftjs-to-html";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
 import CommentBox from "../../components/CommentBox";
 
 function FreeBoardDetail() {
-  // const chatRef = useRef();
+  const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [comments, setComments] = useState([]);
@@ -46,11 +46,13 @@ function FreeBoardDetail() {
 
         setCommentsCount(article.comments.length);
         if (article.comments.length === 0) {
-          comments([
-            {
-              content: "댓글이 없습니다.",
-              nickname: "-",
-            },
+          setComments([
+            [
+              {
+                content: "댓글이 없습니다.",
+                nickname: "-",
+              },
+            ],
           ]);
         } else {
           const numberOfArticlesPerUnit = 5;
@@ -77,19 +79,21 @@ function FreeBoardDetail() {
   if (loading) {
     return <div>Loading...</div>;
   }
-  const handleDelete = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
-      .then((res) => {
-        console.log(res);
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirm) return;
+    await axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, {})
+      .then((response) => {
+        navigate("/freeboard");
+        console.log(response);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
       });
   };
-
-  // const [chats, setChats] = useState([]);
-  // const chatRef = useRef(null);
 
   const onChange = (event) => {
     setChat(event.target.value);
@@ -236,17 +240,22 @@ function FreeBoardDetail() {
               목록
             </AppButton>
           </Link>
-          <AppButton
-            sx={{
-              backgroundColor: "black",
-              color: "white",
-              border: "solid 1px black",
-              marginRight: "10px",
-              height: "40px",
-            }}
+          <Link
+            to={`/freeBoard/modify?no=${no}`}
+            sx={{ textDecoration: "none", color: "black" }}
           >
-            수정
-          </AppButton>
+            <AppButton
+              sx={{
+                backgroundColor: "black",
+                color: "white",
+                border: "solid 1px black",
+                marginRight: "10px",
+                height: "40px",
+              }}
+            >
+              수정
+            </AppButton>
+          </Link>
           <AppButton
             sx={{
               backgroundColor: "black",

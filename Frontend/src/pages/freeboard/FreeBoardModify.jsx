@@ -7,10 +7,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function FreeBoardModify() {
+  const navigate = useNavigate();
   const titleRef = useRef();
 
   const [searchParams] = useSearchParams();
@@ -67,6 +68,7 @@ function FreeBoardModify() {
       })
       .then((res) => {
         console.log(res);
+        navigate(`/freeboard/detail?no=${no}`);
       })
       .catch((err) => {
         console.log(err);

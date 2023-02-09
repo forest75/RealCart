@@ -64,17 +64,8 @@ public class UserService implements IUserService {
         user.setProviderType(userDto.getProviderType() == null ? ProviderType.LOCAL : userDto.getProviderType());
         byte[] emailSalt = getSalt();
         user.setEmailSalt(bytesToHex(emailSalt));
-        if(userDAO.createUser(user)){
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
-                            .append("\n").append("http://3.34.23.91/:8080/user/verifyemail/").append(user.getEmail()).append("/").append(bytesToHex(emailSalt));
-            sendMail(user.getEmail(), "RealCart Email Verification", sb.toString());
-            return true;
-        }
-        else{
-            return false;
-        }
+        return userDAO.createUser(user);
+        
     }
 
     private void sendMail(String email, String title, String content) {
@@ -224,4 +215,15 @@ public class UserService implements IUserService {
         return userDAO.verifyEmail(email, salt);
 
     }
+
+	@Override
+	public void preprocessMail(UserDto userDto) {
+		User user = userDAO.getUser(userDto.getEmail());
+		StringBuilder sb = new StringBuilder();
+
+        sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
+                        .append("\n").append("https://i8a403.p.ssafy.io/user/verifyemail/").append(userDto.getEmail()).append("/").append(user.getEmailSalt());
+        sendMail(userDto.getEmail(), "RealCart Email Verification", sb.toString());
+		
+	}
 }

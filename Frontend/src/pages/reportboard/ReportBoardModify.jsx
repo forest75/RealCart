@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
@@ -7,22 +6,27 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
 
 function ReportBoardModify() {
+  const navigate = useNavigate();
   const titleRef = useRef();
 
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [nickname, setNickname] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/report/${no}`)
       .then((res) => {
         titleRef.current.value = res.data.title;
+        setNickname(res.data.nickname);
+        setCategory(res.data.category);
         let { content } = res.data;
         try {
           content = JSON.parse(content);
@@ -50,23 +54,23 @@ function ReportBoardModify() {
     setEditorState(eState);
   };
 
-  const user = useSelector((state) => state.login.user);
-
   const handleSubmit = () => {
     const rawContentState = convertToRaw(editorState.getCurrentContent());
     const data = {
       title: titleRef.current.value,
       content: JSON.stringify(rawContentState),
-      nickname: user.nickname,
+      nickname,
+      category,
     };
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/board/report/${no}`, data, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
         console.log(res);
+        navigate(`/reportboard/detail?no=${no}`);
       })
       .catch((err) => {
         console.log(err);
@@ -92,7 +96,7 @@ function ReportBoardModify() {
         }}
       >
         <Typography variant="h4" flexGrow={1}>
-          자유게시판
+          문의게시판
         </Typography>
       </Box>
       <Box

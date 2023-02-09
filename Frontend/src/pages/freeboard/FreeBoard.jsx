@@ -76,7 +76,7 @@ function FreeBoard() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: 700,
+        height: 1000,
       }}
     >
       <Box
