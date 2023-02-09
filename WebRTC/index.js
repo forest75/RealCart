@@ -40,9 +40,9 @@ ws.onopen = function(){
 	  }, 2000);
 	  
 }
-// socket.onmessage = function(message){
-// 	console.log(message);
-// }
+socket.onmessage = function(message){
+	console.log(message);
+}
 ws.onmessage = function (message) {
   var parsedMessage = JSON.parse(message.data);
   console.info("Received message: " + message.data);
