@@ -36,7 +36,7 @@ window.onbeforeunload = function() {
 }
 ws.onopen = function(){
 	setTimeout(() => {
-		viewer(1);
+		viewer(2);
 	  }, 2000);
 	  
 }
