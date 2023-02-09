@@ -148,7 +148,7 @@ public class FlagClass {
     public synchronized void sendNewGameToBackend() {
         try {
             // EC2에서는 수정
-            String url = "http://127.0.0.1:8080/game";
+            String url = "http://127.0.0.1:8060/game";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -177,7 +177,7 @@ public class FlagClass {
     public synchronized void sendResultToBackend(String requestBody) {
         try {
             // EC2에서는 수정
-            String url = "http://127.0.0.1:8080/game/result";
+            String url = "http://127.0.0.1:8060/game/result";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

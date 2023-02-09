@@ -13,9 +13,9 @@ public class GameServer {
 
     public static void main(String[] args) {
         FlagClass flag = FlagClass.getInstance();
-        Thread thread1 = new Thread(new RCcarThread(8081, 8887, flag));
+        Thread thread1 = new Thread(new RCcarThread(8081, 8886, flag));
         thread1.start();
-        Thread thread2 = new Thread(new RCcarThread(8082, 8888, flag));
+        Thread thread2 = new Thread(new RCcarThread(8082, 8887, flag));
         thread2.start();
     }
 

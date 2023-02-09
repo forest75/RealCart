@@ -22,10 +22,10 @@ class WsHandler extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         System.out.println(conn.getLocalSocketAddress() + " is on open.");
-        if(port == 8887){
+        if(port == 8886){
             flag.setPlayer1Status(1);
             System.out.println(flag);
-        } else if (port == 8888){
+        } else if (port == 8887){
             flag.setPlayer2Status(1);
             System.out.println(flag);
         } else {
@@ -37,10 +37,10 @@ class WsHandler extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(conn.getLocalSocketAddress() + " closed connection.");
         System.out.println("code: " + code + "Reason: " + reason);
-        if(port == 8887){
+        if(port == 8886){
             flag.setPlayer1Status(0);
             System.out.println("websocket closed on " + port + " >>> " + flag);
-        } else if (port == 8888){
+        } else if (port == 8887){
             flag.setPlayer2Status(0);
             System.out.println("websocket closed on " + port + " >>> " + flag);
         } else {
@@ -57,9 +57,9 @@ class WsHandler extends WebSocketServer {
             Long labTime = endTime - flag.getStartTime();
             // 3
             String bodySeg = "";
-            if (port == 8887) {
+            if (port == 8886) {
                 bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
-            } else if (port == 8888) {
+            } else if (port == 8887) {
                 bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
             }
             if (flag.getRequestBody() == "") {
@@ -80,11 +80,11 @@ class WsHandler extends WebSocketServer {
             pw.write(Integer.parseInt(message));
             pw.flush();
         } else {
-            if(port == 8887){
+            if(port == 8886){
                 flag.setPlayer1Nickname(message);
                 System.out.println("flag.setPlayer1Nickname " + message);
                 System.out.println(flag);
-            } else if(port == 8888){
+            } else if(port == 8887){
                 flag.setPlayer2Nickname(message);
                 System.out.println("flag.setPlayer2Nickname " + message);
                 System.out.println(flag);
