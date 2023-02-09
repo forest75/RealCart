@@ -80,6 +80,7 @@ public class GameController {
     @PostMapping(value="/result")
     public ResponseEntity<String> endGame(@RequestBody String string) {
         LOGGER.info("endGame 메서드가 gameController에서 호출되었습니다.");
+        System.out.println(string);
         StringTokenizer st = new StringTokenizer(string, ",");
         PlayDto playDto = new PlayDto();
         playDto.setNickname1(st.nextToken());

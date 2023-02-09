@@ -107,22 +107,29 @@ class RCcarThread implements Runnable{
                         pw.flush();
                         // 4
                         flag.setStartTime(System.currentTimeMillis());
+                        flag.setPlayer1Status(2);
+                        flag.setPlayer2Status(2);
                         flag.setGameStatus(1);
                         System.out.println("Game Start >>> " + flag);
                         break;
                     /*
                     2일 때..
                     1-1. 게임끝 신호 "2" 를 프론트에게 보낸다.
-                    1-2. 웹소켓 연결을 끊는다.
+                    1-2. 플레이어 상태를 0으로 만든다.
+                    1-3. 웹소켓 연결을 끊는다.
                     2. 기록을 위해 timestamp를 받는다.
-                    3. 백엔드로 랩타임을 넘긴다.
+                    3. 백엔드로 랩타임을 넘기고 setGameStatus(0)을 실행
                     4. initiateAll()로 모두 초기화한다.
                      */
                     case 2:
-                        System.out.println("115 " + rcCarStatus);
                         // 1
                         for (WebSocket client : webSocketServer.getConnections()) {
                             client.send("2");
+                            if(rcCarStatus.carNum == 1){
+                                flag.setPlayer1Status(0);
+                            } else if(rcCarStatus.carNum == 2){
+                                flag.setPlayer2Status(0);
+                            }
                             client.close();
                         }
                         // 2
@@ -142,6 +149,7 @@ class RCcarThread implements Runnable{
                         } else {
                             flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
                             flag.sendResultToBackend(flag.getRequestBody());
+                            flag.setGameStatus(0);
                         }
                         // 4
                         if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){

@@ -9,7 +9,7 @@ import java.net.URL;
 public class FlagClass {
     private String player1Nickname = "";
     private String player2Nickname = "";
-    // playerStatus 0: closed 1: onOpen
+    // playerStatus 0: closed 1: onOpen(ready) 2: gaming
     private int player1Status;
     private int player2Status;
     private int car1Status;
@@ -148,13 +148,13 @@ public class FlagClass {
     public synchronized void sendNewGameToBackend() {
         try {
             // EC2에서는 수정
-            String url = "http://127.0.0.1:8060/game";
+            String url = "http://127.0.0.1:8080/game";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Content-Length", Integer.toString(0));
             con.setUseCaches(false);
 
@@ -177,19 +177,20 @@ public class FlagClass {
     public synchronized void sendResultToBackend(String requestBody) {
         try {
             // EC2에서는 수정
-            String url = "http://127.0.0.1:8060/game/result";
+            String url = "http://127.0.0.1:8080/game/result";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Content-Type", "text/plain; charset=UTF-8");
             con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
             con.setUseCaches(false);
 
             System.out.println(requestBody);
             try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
-                dos.writeBytes(requestBody);
+//                dos.writeBytes(requestBody);
+                dos.writeUTF(requestBody);
             }
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(
