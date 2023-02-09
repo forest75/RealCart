@@ -37,10 +37,8 @@ class ClientSocket:
             self.error = 0
             
             recv_thread = threading.Thread(target=self.recv)
-            #send_thread = threading.Thread(target=self.sendData)
             
             recv_thread.start()
-            #send_thread.start()
 
         except Exception as e:
             print(e)
@@ -69,7 +67,8 @@ class ClientSocket:
 
     def recv(self):
         global recv_data
-        global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release
+        global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release, flag_start
+        global send_racing_data_thread
                 
         while True:
             data = self.sock.recv(2)
@@ -81,6 +80,7 @@ class ClientSocket:
             key_left = 37
             key_right = 39
             key_release = 41
+            start_signal = 49
             
             print_recv_data(recv_data)
             
@@ -90,6 +90,11 @@ class ClientSocket:
             if (recv_data == key_left and flag_left == False): flag_left = True
             if (recv_data == key_right and flag_right == False): flag_right = True
             if (recv_data == key_release and flag_release == False): flag_release = True
+            if (recv_data == start_signal and flag_start == False) : 
+                flag_start = True
+                send_racing_data_thread = threading.Thread(target=send_racing_data)
+                send_racing_data_thread.start()
+
 
 class MyApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -112,7 +117,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def readySignal(self):
         global client
-        global car_speed, car_gate, car_status
+        global car_no, car_speed, car_gate, car_status
         
         if (self.ui.lb_socket_param.text() != "Connect"):
             print_log('Please Connect Socket')
@@ -120,19 +125,28 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         cur_time = round(time.time() * 1000)
         car_status = 1
-        temp_data = make_json(cur_time, car_speed, car_gate, car_status)
+        temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
         
         client.sendData(temp_data)
         print_send_data(temp_data)
         
-        car_status = 0
         print_log('Completed sending Ready Signal')
         
         
+    def startSignal(self):
+        global flag_start
+        global send_racing_data_thread
+        
+        if (flag_start == False):
+            flag_start = True
+            send_racing_data_thread = threading.Thread(target=send_racing_data)
+            send_racing_data_thread.start()
+        
         
     def finishSignal(self):
-        global client
-        global car_speed, car_gate, car_status
+        global client, flag_start
+        global car_no, car_speed, car_gate, car_status
+        global send_racing_data_thread
         
         if (self.ui.lb_socket_param.text() != "Connect"):
             print_log('Please Connect Socket')
@@ -140,18 +154,23 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         cur_time = round(time.time() * 1000)
         car_status = 2
-        temp_data = make_json(cur_time, car_speed, car_gate, car_status)
+        temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
+        
+        if flag_start:
+            flag_start = False
+            send_racing_data_thread.join()
+        
         
         client.sendData(temp_data)
         print_send_data(temp_data)
         
-        car_status = 0
         print_log('Completed sending Finish Signal')
 
 
     def motorConnect(self):
         global car_gear, car_handle, car_color
         global tflag_gate_sensing, gate_sensing_thread
+        global flag_motor_connect
     
         dc_enable = 27
         dc_input_1 = 15
@@ -185,29 +204,33 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             print_log('Color Sensor GPIO Pin Setting Fail')
         
-        tflag_gate_sensing = True
-        gate_sensing_thread = threading.Thread(target=gate_sensing)
-        gate_sensing_thread.start()
+        if (tflag_gate_sensing == False):
+            tflag_gate_sensing = True
+            gate_sensing_thread = threading.Thread(target=gate_sensing)
+            gate_sensing_thread.start()
         
         if (car_gear.error == 0 and car_handle.error == 0):
             print_log('All of Sensor/Motor GPIO Pin Setting complete')
             self.ui.lb_motor_param.setText('Connect')
             self.ui.lb_motor_param.setStyleSheet("Color : green")
+            flag_motor_connect = True
         else:
             print_log('Sensor/Motor GPIO Pin Setting Fail')
             self.ui.lb_motor_param.setText('Disconnect')
             self.ui.lb_motor_param.setStyleSheet("Color : red")
+            flag_motor_connect = False
             
             
     def motorDisconnect(self):
         global tflag_gate_sensing, gate_sensing_thread
         global car_color, car_gear, car_handle
+        global flag_motor_connect
 
         if (self.ui.lb_socket_param.text() == "Disconnect"):
-            tflag_gate_sensing = False
-        
-            gate_sensing_thread.join()
-            print_log('Gate Sensing Thread Kill')
+            if tflag_gate_sensing:
+                tflag_gate_sensing = False
+                gate_sensing_thread.join()
+                print_log('Gate Sensing Thread Kill')
         
             del car_color
             del car_gear
@@ -218,6 +241,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             print_log('Motor Disconnect')
             self.ui.lb_motor_param.setText('Disconnect')
             self.ui.lb_motor_param.setStyleSheet("Color : red")
+            flag_motor_connect = False
         
         else:
             print_log('Let Disconnect socket first!!!')
@@ -226,7 +250,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def socketConnect(self):
         global TCP_IP, TCP_PORT, car_gear, car_handle, car_color
         global gear_thread, handle_thread, gate_sensing_thread
-        global tflag_driving, tflag_handling
+        global tflag_driving, driving_thread
+        global tflag_handling, handling_thread
         global client
         
         TCP_IP = self.ui.le_ip.text()
@@ -249,28 +274,30 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.ui.lb_socket_param.setStyleSheet("Color : red")
             return
         
-        
-        tflag_driving = True
-        tflag_handling = True
-        
-        gear_thread = threading.Thread(target=driving)
-        handle_thread = threading.Thread(target=handling)
-        
-        gear_thread.start()
-        handle_thread.start()
+        if (tflag_driving == False):
+            tflag_driving = True
+            driving_thread = threading.Thread(target=driving)
+            driving_thread.start()
+            
+        if (tflag_handling == False):
+            tflag_handling = True
+            handling_thread = threading.Thread(target=handling) 
+            handling_thread.start()
                 
 
     def socketDisconnect(self):
-        global tflag_driving, tflag_handling, gear_thread, handle_thread
+        global tflag_driving, tflag_handling, driving_thread, handling_thread
         
-        tflag_driving = False
-        tflag_handling = False
+        if tflag_driving:
+            tflag_driving = False
+            driving_thread.join()
+            print_log('driving Thread Kill')
         
-        gear_thread.join()
-        handle_thread.join()
+        if tflag_handling:
+            tflag_handling = False
+            handling_thread.join()
+            print_log('Handling Thread Kill')
         
-        print_log('Gear Thread Kill')
-        print_log('Handle Thread Kill')
         
         print_log('Socket Disconnect')
         self.ui.lb_socket_param.setText('Disconnect')
@@ -345,31 +372,37 @@ class MyApp(QMainWindow, Ui_MainWindow):
         os.system('"./WebRTC/index.html"')
         
     def closeEvent(self, event):
-        global gear_thread, handle_thread, gate_sensing_thread
+        global driving_thread, handling_thread, gate_sensing_thread
         global tflag_handling, tflag_driving, tflag_gate_sensing
+        global flag_motor_connect
             
         quit_msg = "Do you want to close this window?"
         reply = QMessageBox.question(self, 'Message', quit_msg, QMessageBox.Yes, QMessageBox.No)
         
         if reply == QMessageBox.Yes:
             
-            tflag_handling = False
-            tflag_driving = False
-            tflag_gate_sensing = False
+            if tflag_driving:
+                tflag_driving = False
+                driving_thread.join()
             
-            gear_thread.join()
-            handle_thread.join()
-            gate_sensing_thread.join()
-                        
-            GPIO.cleanup()
+            if tflag_handling:
+                tflag_handling = False
+                handling_thread.join()            
+            
+            if tflag_gate_sensing:
+                tflag_gate_sensing = False
+                gate_sensing_thread.join()
+          
+            if flag_motor_connect:
+                GPIO.cleanup()
             
             event.accept()
         else:
             event.ignore()
     
             
-def make_json(timestamp, speed, gateNo, status):
-    json_data = f"{{\"timestamp\": {timestamp} , \"speed\" : {speed}, \"gateNo\" : {gateNo}, \"status\" : {status} }}"
+def make_json(carNum, timestamp, speed, gateNo, status):
+    json_data = f"{{\"carNum\": {carNum}, \"timestamp\": {timestamp}, \"speed\" : {speed}, \"gateNo\" : {gateNo}, \"status\" : {status} }}"
     return json_data
 
 def print_log(msg):
@@ -428,8 +461,6 @@ def driving():
     except Exception as e:
         print(e)
     
-    
-
 
 def handling():
     global car_handle
@@ -460,27 +491,53 @@ def handling():
         print(e)
 
 
-
 def gate_sensing():
     global car_color, tflag_gate_sensing
     global car_gate, color_rgb
+    
+    try:
+        print('gate_sensing_thread start...')
         
-    while tflag_gate_sensing:    
-        color_rgb = car_color.color_sensing()
-        print_rgb(color_rgb)
-        time.sleep(0.01)
+        while tflag_gate_sensing:    
         
+            color_rgb = car_color.color_sensing()
+            print_rgb(color_rgb)
+            time.sleep(0.01)
+        
+        print('gate_sensing_thread end!')
+    
+    except Exception as e:
+        print(e)
+        
+def send_racing_data():
+    global client, flag_start
+    global car_no, car_speed, car_gate, car_status
+    
+    try:
+        print('send_racing_data thread start')
+        
+        while flag_start:
+            cur_time = round(time.time() * 1000)
+            car_status = 3
+            temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
+            client.sendData(temp_data)
+            time.sleep(0.1)
+        
+        print('send_racing_data thread kill')
+    
+    except Exception as e:
+        print(e)
+
 
 if __name__ == "__main__":
     global car_model, car_no, car_speed, car_gate, car_status
     global tflag_gate_sensing, tflag_driving, tflag_handling
-    global flag_up, flag_down, flag_left, flag_right, flag_shift, flag_ctrl, flag_release
+    global flag_up, flag_down, flag_left, flag_right, flag_shift, flag_ctrl, flag_release, flag_start
+    global flag_motor_connect
     global TCP_IP, TCP_PORT
     global win
     
-    
-    lock = threading.Lock()
-    
+    ############### Global Variable ###############
     car_model = "SSAFY_01"
     car_no = '1'
     car_speed = 0
@@ -494,6 +551,8 @@ if __name__ == "__main__":
     tflag_driving = False
     tflag_handling = False
     
+    flag_motor_connect = False
+    
     flag_up = False
     flag_down = False
     flag_left = False
@@ -501,8 +560,14 @@ if __name__ == "__main__":
     flag_shift = False
     flag_ctrl = False
     flag_release = False
-
+    
+    flag_start = False   
+    
+    ############### Global Variable ###############
+    
+    ############### QT GUI ###############
     app = QApplication()
     win = MyApp()
     win.show()
     app.exec_()
+    ############### QT GUI ###############
