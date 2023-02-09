@@ -1,11 +1,16 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Box, Paper } from "@mui/material";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import AppButton from "../components/AppButton";
 import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import axios from "axios";
+import RaceTime from "../components/RaceTime";
 import tutorial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
@@ -20,8 +25,14 @@ import CountdownOne from "../assets/count_1.png";
 import CountdownTwo from "../assets/count_2.png";
 import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
+import CarHandle from "../assets/car_handle.png";
 
 function PlayPage() {
+  const [carSpeed, setCarSpeed] = useState(0);
+  const [lap, setLap] = useState(1);
+  const [totalLap, setTotalLap] = useState(2);
+  const [isBoost, setIsBoost] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
   const [ParticipantA, setParticipantA] = useState("의권짱짱33");
   const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
@@ -189,7 +200,13 @@ function PlayPage() {
   }
 
   useEffect(() => {
-    setInterval(() => {
+    // RACE TIME 5초 후에 시작
+    const endRunInterval = setTimeout(() => {
+      setIsRunning(true);
+    }, 5000);
+
+    // 참가자 A, B 5초마다 교체
+    const endParticipantInterval = setInterval(() => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
         const users = res.data;
         const ran1 = Math.floor(Math.random() * users.length);
@@ -199,6 +216,7 @@ function PlayPage() {
       });
     }, 5000);
 
+    // 미디어 websocket 연결
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -216,7 +234,10 @@ function PlayPage() {
     setSocket(socketConst);
     setStompClient(stompClientConst);
 
+    // 종료 시
     return () => {
+      clearTimeout(endRunInterval);
+      clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
     };
@@ -319,6 +340,9 @@ function PlayPage() {
         if (e.keyCode === 86) {
           console.log(isTutorial);
           setIsTutorial((prevState) => !prevState);
+        }
+        if (e.keyCode === 66) {
+          setIsBoost((prevState) => !prevState);
         }
       },
       true
@@ -692,7 +716,6 @@ function PlayPage() {
                 zIndex: 1,
               }}
             />
-
             <Box
               component="h4"
               sx={{
@@ -706,6 +729,7 @@ function PlayPage() {
               }}
             >
               RACE TIME
+              <RaceTime isRunning={isRunning} />
             </Box>
             <Box
               component="img"
@@ -734,6 +758,20 @@ function PlayPage() {
             >
               <h3>BEST</h3>
             </Box>
+            {isBoost && (
+              <Alert
+                // icon={false}
+                severity="error"
+                sx={{
+                  top: "-1.5%",
+                  right: "40%",
+                  position: "absolute",
+                  zIndex: 1,
+                }}
+              >
+                부스터 사용 중
+              </Alert>
+            )}
             <Box
               component="img"
               alt="rhombusLap"
@@ -759,6 +797,7 @@ function PlayPage() {
               }}
             >
               LAP
+              <p>{`${lap} / ${totalLap}`}</p>
             </Box>
             <Box
               component="img"
@@ -776,6 +815,57 @@ function PlayPage() {
                 alignItems: "center",
               }}
             />
+            <Box
+              component="img"
+              alt="rhombusPlace"
+              src={CarHandle}
+              sx={{
+                width: "35%",
+                height: "35%",
+                top: "62%",
+                right: "0%",
+                position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            />
+            <Typography
+              variant="h3"
+              sx={{
+                position: "absolute",
+                top: "73%",
+                right: "16%",
+                zIndex: 1,
+              }}
+            >
+              {carSpeed}
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                position: "absolute",
+                top: "79.5%",
+                right: "14%",
+                zIndex: 1,
+              }}
+            >
+              km/h
+            </Typography>
+            <AppButton
+              sx={{
+                width: "13%",
+                height: "6%",
+                top: "84%",
+                right: "10.5%",
+                position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <h3>BOOST</h3>
+            </AppButton>
             <Box
               component="h4"
               sx={{
