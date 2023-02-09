@@ -10,6 +10,10 @@ function InitialContent({
   handleModalOpen,
   handleModalClose,
   setIsReady,
+  setSelectedIndex,
+  options,
+  setOptions,
+  nickname,
 }) {
   const [isInitial, setIsInitial] = useState(true);
   return (
@@ -64,6 +68,11 @@ function InitialContent({
                 onClick={() => {
                   setWait(wait + 1);
                   setIsInitial(false);
+                  setOptions([
+                    ...options,
+                    `${options.length + 1}. ${nickname}`,
+                  ]);
+                  setSelectedIndex(options.length);
                 }}
               >
                 대기하기
@@ -111,6 +120,11 @@ InitialContent.propTypes = {
   handleModalOpen: PropTypes.func.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   setIsReady: PropTypes.func.isRequired,
+  setSelectedIndex: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  options: PropTypes.array.isRequired,
+  setOptions: PropTypes.func.isRequired,
+  nickname: PropTypes.string.isRequired,
 };
 
 export default InitialContent;
