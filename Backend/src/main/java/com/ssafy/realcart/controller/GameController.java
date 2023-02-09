@@ -86,6 +86,12 @@ public class GameController {
         playDto.setLaptime1(Long.parseLong(st.nextToken()));
         playDto.setNickname2(st.nextToken());
         playDto.setLaptime2(Long.parseLong(st.nextToken()));
+        if(playDto.getLaptime1() <= 0) {
+        	playDto.setLaptime1(Long.MAX_VALUE);
+        }
+        if(playDto.getLaptime2() <= 0) {
+        	playDto.setLaptime2(Long.MAX_VALUE);
+        }
         if(gameService.endGame(playDto)) {
         	return new ResponseEntity<>("Good", HttpStatus.OK);
         }
@@ -95,9 +101,11 @@ public class GameController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createGame(@RequestBody GameDto gameDto){
-
-        return ResponseEntity.status(HttpStatus.OK).body("게임 생성 완료");
+    public ResponseEntity<String> createGame(){
+    	if(gameService.createGame()) {
+    		return ResponseEntity.status(HttpStatus.OK).body("게임 생성 완료");
+    	}
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게임 생성 실패");
     }
 
     @PutMapping()

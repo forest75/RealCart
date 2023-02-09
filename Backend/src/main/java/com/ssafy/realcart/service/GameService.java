@@ -2,6 +2,7 @@ package com.ssafy.realcart.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
@@ -19,11 +20,14 @@ import com.ssafy.realcart.data.entity.Play;
 import com.ssafy.realcart.data.entity.Record;
 import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.service.inter.IGameService;
+
+import io.netty.util.internal.ConcurrentSet;
 @Service
 public class GameService implements IGameService{
 
 	private final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
-	private String[] currentUsers = new String[2];
+	private final ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<String, Integer>();
+	private String[] currentUsers = {"admin", "admin"};
 	private String[] waitingUsers = new String[2];
 	private long timeLimit = -1;
 	private int recent = -1;
@@ -43,8 +47,7 @@ public class GameService implements IGameService{
     }
 
 	@Override
-	public int participateGame(String nickname) {
-		LOGGER.info("1");
+	public synchronized int participateGame(String nickname) {
 		if(timeLimit != -1) { // 미리 예약된 유저가 있을 수 있다. (있다면 시간 내에 들어와야한다.)
 			Long currentTime = System.currentTimeMillis();
 			if(currentTime - timeLimit > 30000) { // 제한 시간이 지나버렸다면 더 이상 우선 순위자가 아님
@@ -68,8 +71,13 @@ public class GameService implements IGameService{
 		}
 		
 		//존재하지 않는 닉네임의 이용자라면 -100을 리턴
-		User user = userDAO.checkNickname(nickname);
-		if(user == null) return -100;
+		if(map.getOrDefault(nickname, 0) == 0) {
+			User user = userDAO.checkNickname(nickname);
+			if(user == null) return -100;
+			else {
+				map.put(nickname, 1);
+			}
+		}
 		
 		//Queue에 있는 이용자라면 자신의 앞에 몇 명 있는지 체크해서 보내 줌 
 		int index = 0;
@@ -129,16 +137,16 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[1] = nickname;
-				createGame();
-				return -1;
+				startGame();
+				return -2;
 			}
 			//WaitingUsers가 1명이라면
 			else if(waitingUsers[0] != null && waitingUsers[1] == null) {
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -150,8 +158,8 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -163,14 +171,14 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -183,16 +191,16 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[0] = nickname;
-				createGame();
-				return -1;
+				startGame();
+				return -2;
 			}
 			//WaitingUsers가 1명이라면
 			else if(waitingUsers[0] != null && waitingUsers[1] == null) {
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -204,8 +212,8 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -217,14 +225,14 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					createGame();
-					return -1;
+					startGame();
+					return -2;
 				}
 				else {
 					queue.add(nickname);
@@ -242,20 +250,13 @@ public class GameService implements IGameService{
 	}
 
 	@Override
-	public void createGame() {
-		LOGGER.info("2");
-		Game game = gameDAO.createGame();
-		LOGGER.info("3");
-		recent = game.getId();
-		LOGGER.info("4");
+	public void startGame() {
+		
+		Game game = gameDAO.getGame(recent);
 		Play play1 = new Play();
-		LOGGER.info("5");
 		User user1 = userDAO.checkNickname(currentUsers[0]);
-		LOGGER.info("6");
 		play1.setUser(user1);
-		LOGGER.info("7");
 		play1.setGame(game);
-		LOGGER.info("8");
 		playDAO.createPlay(play1);
 		Play play2 = new Play();
 		User user2 = userDAO.checkNickname(currentUsers[1]);
@@ -286,12 +287,10 @@ public class GameService implements IGameService{
 		}
 		Game game = gameDAO.getGame(recent);
 		List<Play> list = playDAO.getPlay(game.getId());
-		LOGGER.info(playDto.toString());
 		for (Play play : list) {
 			String nickName = play.getUser().getNickname();
 			LOGGER.info(nickName);
 			if(nickName.equals(playDto.getNickname1())) {
-				LOGGER.info("1");
 				play.setLapTime(playDto.getLaptime1());
 				Record record = recordDAO.getRecord(play.getUser().getUserId());
 				if(record == null) {
@@ -308,7 +307,6 @@ public class GameService implements IGameService{
 				play.setIsWin(isWin);
 			}
 			else {
-				LOGGER.info("2");
 				play.setLapTime(playDto.getLaptime2());
 				Record record = recordDAO.getRecord(play.getUser().getUserId());
 				if(record == null) {
@@ -326,6 +324,16 @@ public class GameService implements IGameService{
 			}
 			playDAO.createPlay(play);
 		}
+		currentUsers[0] = "admin";
+		currentUsers[1] = "admin";
+		return true;
+		
+	}
+
+	@Override
+	public boolean createGame() {
+		Game game = gameDAO.createGame();
+		recent = game.getId();
 		Arrays.fill(currentUsers, null);
 		int size = queue.size();
 		int index = 0;
@@ -335,7 +343,6 @@ public class GameService implements IGameService{
 			timeLimit = System.currentTimeMillis(); // 시간제한이 다시 생김
 		}
 		return true;
-		
 	}
 	
 	
