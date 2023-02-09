@@ -9,11 +9,12 @@ import java.net.URL;
 public class FlagClass {
     private String player1Nickname = "";
     private String player2Nickname = "";
+    // playerStatus 0: closed 1: onOpen
     private int player1Status;
     private int player2Status;
     private int car1Status;
     private int car2Status;
-    private int gameStatus;
+    private int gameStatus;  // 0: Ready, 1: Running
     private Long startTime;
     private Long player1Laptime;
     private Long player2Laptime;
@@ -127,10 +128,56 @@ public class FlagClass {
         this.requestBody = "";
     }
 
+    @Override
+    public String toString() {
+        return "FlagClass{" +
+                "player1Nickname='" + player1Nickname + '\'' +
+                ", player2Nickname='" + player2Nickname + '\'' +
+                ", player1Status=" + player1Status +
+                ", player2Status=" + player2Status +
+                ", car1Status=" + car1Status +
+                ", car2Status=" + car2Status +
+                ", gameStatus=" + gameStatus +
+                ", startTime=" + startTime +
+                ", player1Laptime=" + player1Laptime +
+                ", player2Laptime=" + player2Laptime +
+                ", requestBody='" + requestBody + '\'' +
+                '}';
+    }
 
-    public synchronized void requestToBackend(String requestBody) {
+    public synchronized void sendNewGameToBackend() {
         try {
-            String url = "http://127.0.0.1:8060/game/result";
+            // EC2에서는 수정
+            String url = "http://127.0.0.1:8080/game";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Content-Length", Integer.toString(0));
+            con.setUseCaches(false);
+
+            try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
+                dos.writeBytes("");
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void sendResultToBackend(String requestBody) {
+        try {
+            // EC2에서는 수정
+            String url = "http://127.0.0.1:8080/game/result";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -140,6 +187,7 @@ public class FlagClass {
             con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
             con.setUseCaches(false);
 
+            System.out.println(requestBody);
             try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
                 dos.writeBytes(requestBody);
             }

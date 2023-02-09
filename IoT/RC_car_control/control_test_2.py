@@ -46,11 +46,12 @@ class ClientSocket:
         try:
             cnt = 0
             while True:
-                stringData = "asdf2".encode()
+                command = input()
+                stringData = command.encode()
                 length = str(len(stringData))
                 self.sock.sendall(length.encode('utf-8').ljust(128))
                 self.sock.send(stringData)
-                print(u'send images %d' % (cnt))
+                print(stringData)
                 time.sleep(1)
         except Exception as e:
             print(e)

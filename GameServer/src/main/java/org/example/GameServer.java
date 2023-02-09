@@ -5,10 +5,8 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class GameServer {
@@ -60,50 +58,68 @@ class RCcarThread implements Runnable{
                 for (int i = 0; i < 128; i++) {
                     dataLenStr += (char) br.read();
                 }
-                int imageLen = Integer.parseInt(dataLenStr.trim());
+                int dataLen = Integer.parseInt(dataLenStr.trim());
                 String jsonData = "";
-                for (int i = 0; i < imageLen; i++) {
+                for (int i = 0; i < dataLen; i++) {
                     jsonData += (char) br.read();
                 }
                 RcCarStatusDto rcCarStatus = gson.fromJson(jsonData, RcCarStatusDto.class);
+                System.out.println(rcCarStatus);
                 // 0: NULL, 1: Ready, 2: Finish, 3: Running
                 switch (rcCarStatus.status) {
                     /*
                     1일 때...
-                    1. Flag 상에 Player1과 Player2의 웹소켓 연결 여부를 물어본다.
-                    2. 만일 모두 준비가 완료되었다면 flag.gamestatus를 1로 만든다.
-                    3. Frontend 서버에 5초 뒤 게임을 시작한다는 신호(1)를 wss를 통해 보낸다.
-                    4. 3번 직후 Thread.sleep(5000)으로 5초 쉰다.
-                    5. 스타트 타임을 flag에 기록하고 gameStatus를 3으로 바꾼다.
+                    1. 만일 모두 준비가 완료되었다면 flag.gamestatus를 1로 만든다.
+                    2. Frontend 서버에 5초 뒤 게임을 시작한다는 신호(1)를 wss를 통해 보낸다.
+                    3. Thread.sleep(5000)으로 5초 쉬고 RC카에 start 신호를 보낸다.
+                    4. 스타트 타임을 flag에 기록하고 gameStatus를 1으로 바꾼다.
                      */
                     case 1:
+                        if(rcCarStatus.carNum == 1){
+                            flag.setCar1Status(1);
+                            if(flag.getCar2Status() == 1){
+                                flag.sendNewGameToBackend();
+                            }
+                        }else if(rcCarStatus.carNum == 2){
+                            flag.setCar2Status(1);
+                            if(flag.getCar1Status() == 1){
+                                flag.sendNewGameToBackend();
+                            }
+                        }
+                        // 1
                         while (true) {
-                            if (flag.getPlayer1Status() == 1 && flag.getPlayer2Status() == 1) {
+                            if (flag.getCar1Status() == 1 &&
+                                flag.getCar2Status() == 1 &&
+                                flag.getPlayer1Status() == 1 &&
+                                flag.getPlayer2Status() == 1) {
+                                System.out.println("We All Ready >>> " + flag);
                                 break;
                             }
                             Thread.sleep(2000);
                         }
-
-                        flag.setGameStatus(1);
+                        // 2
                         for (WebSocket client : webSocketServer.getConnections()) {
                             client.send("1");
                         }
+                        // 3
                         Thread.sleep(5000);
                         pw.write((byte) '1');
                         pw.flush();
+                        // 4
                         flag.setStartTime(System.currentTimeMillis());
-                        flag.setGameStatus(3);
+                        flag.setGameStatus(1);
+                        System.out.println("Game Start >>> " + flag);
+                        break;
                     /*
                     2일 때..
                     1-1. 게임끝 신호 "2" 를 프론트에게 보낸다.
                     1-2. 웹소켓 연결을 끊는다.
                     2. 기록을 위해 timestamp를 받는다.
                     3. 백엔드로 랩타임을 넘긴다.
-                    4. gameState를 1로 만든다.
-                    5. initiateAll() 함수를 실행한다.
-
+                    4. initiateAll()로 모두 초기화한다.
                      */
                     case 2:
+                        System.out.println("115 " + rcCarStatus);
                         // 1
                         for (WebSocket client : webSocketServer.getConnections()) {
                             client.send("2");
@@ -111,29 +127,27 @@ class RCcarThread implements Runnable{
                         }
                         // 2
                         Long endTime = rcCarStatus.timestamp;
-                        Long labTime = flag.getStartTime() - endTime;
+                        Long labTime = endTime - flag.getStartTime();
                         // 3
                         String bodySeg = "";
                         if (rcCarStatus.carNum == 1) {
-                            bodySeg = flag.getPlayer1Nickname() + ", " + Long.toString(labTime);
-                            flag.setPlayer1Status(2);
+                            bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
+                            flag.setPlayer1Status(0);
                         } else if (rcCarStatus.carNum == 2) {
-                            bodySeg = flag.getPlayer2Nickname() + Long.toString(labTime);
-                            flag.setPlayer2Status(2);
+                            bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
+                            flag.setPlayer2Status(0);
                         }
                         if (flag.getRequestBody() == "") {
                             flag.setRequestBody(flag.getRequestBody() + bodySeg);
                         } else {
-                            flag.setRequestBody(flag.getRequestBody() + bodySeg);
-                            flag.requestToBackend(flag.getRequestBody());
-                            flag.setRequestBody("");
+                            flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
+                            flag.sendResultToBackend(flag.getRequestBody());
                         }
                         // 4
-                        flag.setGameStatus(1);
-                        // 5
-                        if(flag.getPlayer1Status() == 2 && flag.getPlayer2Status() == 2){
+                        if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                             flag.initiateAll();
                         }
+                        break;
                 }
             }
         } catch (IOException | InterruptedException e){
