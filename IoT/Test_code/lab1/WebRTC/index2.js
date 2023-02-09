@@ -27,7 +27,7 @@ window.onload = function () {
   video.autoplay = true;
   video.muted = true;
   connect();
-  presenter(1);
+  presenter(2);
 };
 
 window.onbeforeunload = function () {
