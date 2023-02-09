@@ -29,6 +29,8 @@ class ClientSocket:
         self.connectServer()
 
     def connectServer(self):
+        global tflag_recv_data, recv_thread
+        
         print_log("initial connecting...")
         try:
             self.sock = socket.socket()
@@ -39,6 +41,7 @@ class ClientSocket:
             self.connectCount = 0
             self.error = 0
             
+            tflag_recv_data = True
             recv_thread = threading.Thread(target=self.recv)
             
             recv_thread.start()
@@ -69,11 +72,13 @@ class ClientSocket:
 
 
     def recv(self):
-        global recv_data
+        global recv_data, tflag_recv_data
         global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release, flag_start
-        global send_racing_data_thread
-                
-        while True:
+        global car_speed_limit
+        
+        print('recv thread start...')
+        
+        while tflag_recv_data:
             data = self.sock.recv(2)
             recv_data = int.from_bytes(data, byteorder='little')
             
@@ -83,6 +88,8 @@ class ClientSocket:
             key_left = 37
             key_right = 39
             key_release = 41
+            key_ctrl = 17
+            
             start_signal = 49
             
             print_recv_data(recv_data)
@@ -93,10 +100,15 @@ class ClientSocket:
             if (recv_data == key_left and flag_left == False): flag_left = True
             if (recv_data == key_right and flag_right == False): flag_right = True
             if (recv_data == key_release and flag_release == False): flag_release = True
+            if (recv_data == key_ctrl): 
+                print('ctrl key pressed')
+                car_speed_limit = 100
             if (recv_data == start_signal and flag_start == False) : 
                 flag_start = True
                 send_racing_data_thread = threading.Thread(target=send_racing_data)
                 send_racing_data_thread.start()
+        
+        print('recv thread end...')
 
 ############### Client Socket ###############
 
@@ -349,8 +361,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.lb_socket_param.setText('Disconnect')
         self.ui.lb_socket_param.setStyleSheet("Color : red")
         
-        self.ui.btn_socket_connect.setEnabled(False)
-        self.ui.btn_socket_disconnect.setEnabled(True)
+        self.ui.btn_socket_connect.setEnabled(True)
+        self.ui.btn_socket_disconnect.setEnabled(False)
         self.ui.btn_ready.setEnabled(False)
         self.ui.btn_start.setEnabled(False)
         self.ui.btn_finish.setEnabled(False)
@@ -395,7 +407,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             max_blue = max(max_blue, color_rgb[2])
             
             data_count -= 1
-            sleep(0.01)
+            time.sleep(0.01)
         
         min_red -= offset
         max_red += offset
@@ -432,8 +444,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         os.system('chromium-browser')
         
     def closeEvent(self, event):
-        global driving_thread, handling_thread, gate_sensing_thread
-        global tflag_handling, tflag_driving, tflag_gate_sensing
+        global driving_thread, handling_thread, gate_sensing_thread, recv_thread
+        global tflag_handling, tflag_driving, tflag_gate_sensing, tflag_recv_data
         global flag_motor_connect
             
         quit_msg = "Do you want to close this window?"
@@ -452,7 +464,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
             if tflag_gate_sensing:
                 tflag_gate_sensing = False
                 gate_sensing_thread.join()
-          
+            
+            if tflag_recv_data:
+                tflag_recv_data = False
+                recv_thread.join()
+                                        
             if flag_motor_connect:
                 GPIO.cleanup()
             
@@ -491,22 +507,22 @@ def print_rgb(color_rgb):
 ############### Thread Function ###############
 
 def driving():
-    global car_gear, car_speed, win
+    global car_gear, car_speed, win, car_speed_limit
     global flag_up, flag_down, flag_shift, tflag_driving
     
     try:
         print('driving start...')
         
         while tflag_driving:
-            
+            print(car_speed_limit)
             if flag_up:
                 car_speed += 5
-                if (car_speed > 100): car_speed = 100
+                if (car_speed > car_speed_limit): car_speed = car_speed_limit
                 flag_up = False
         
             elif flag_down:
                 car_speed -= 5
-                if (car_speed < -100): car_speed = -100
+                if (car_speed < -car_speed_limit): car_speed = -car_speed_limit
                 flag_down = False
         
             elif flag_shift:
@@ -625,6 +641,7 @@ if __name__ == "__main__":
     car_speed = 0
     car_gate = 0
     car_status = 0
+    car_speed_limit = 80
     
     TCP_IP = init_data['IP']
     TCP_PORT = init_data['Port']
@@ -636,6 +653,7 @@ if __name__ == "__main__":
     tflag_gate_sensing = False
     tflag_driving = False
     tflag_handling = False
+    tflag_recv_data = False
     
     flag_motor_connect = False
     
@@ -647,7 +665,7 @@ if __name__ == "__main__":
     flag_ctrl = False
     flag_release = False
     
-    flag_start = False   
+    flag_start = False
     
     ############### Global Variable ###############
     
