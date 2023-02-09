@@ -275,7 +275,10 @@ function PlayPage2() {
 
       ws.onopen = () => {
         // setTimeout(() => {
-        viewer(1);
+        console.log(
+          "ws open!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        );
+        viewer(2);
         // }, 1000);
       };
     }
