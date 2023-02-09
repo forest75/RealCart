@@ -35,4 +35,9 @@ public class PlayDAO implements IPlayDAO {
 		return playRepository.findByGAME_FK(id);
 	}
 
+	@Override
+	public List<Play> getAllPlay(int userId) {
+		return playRepository.findByUSER_FK(userId);
+	}
+
 }
