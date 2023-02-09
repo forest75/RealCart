@@ -27,7 +27,7 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 
-function PlayPage() {
+function PlayPage2() {
   const [carSpeed, setCarSpeed] = useState(0);
   const [lap, setLap] = useState(1);
   const [totalLap, setTotalLap] = useState(2);
@@ -281,7 +281,7 @@ function PlayPage() {
     }
   }, [ws]);
 
-  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8582");
 
   wss.onopen = function open() {
     wss.send(user.nickname);
@@ -327,18 +327,6 @@ function PlayPage() {
   //     clearInterval(intervalId);
   //   }, 5500);
   // }, []);
-
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      setInterval(() => {
-        for (let i = 0; i < 4; i++) {
-          setInterval(() => {
-            return <Box component="img" src={images[i]} alt="slide" />;
-          }, 1000);
-        }
-      }, 2000);
-    }
-  };
 
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
@@ -1053,5 +1041,4 @@ function PlayPage() {
   );
 }
 
-// export { handleKeyPress };
-export default PlayPage;
+export default PlayPage2;
