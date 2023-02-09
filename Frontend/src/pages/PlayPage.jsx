@@ -886,7 +886,6 @@ function PlayPage() {
                 bottom: "10px",
               }}
             >
-<<<<<<< HEAD
               <Box
                 sx={{
                   position: "relative",
@@ -924,19 +923,6 @@ function PlayPage() {
                   />
                 </div>
               </Box>
-=======
-              <div>
-                <video
-                  ref={video}
-                  id="video"
-                  autoPlay={true}
-                  width="100%"
-                  height="100%"
-                  poster={WebRtcImg}
-                  muted={true}
-                />
-              </div>
->>>>>>> 2ab6448e29ef3a92d3192aa7fb286f6db67dc5bc
             </Box>
           </Box>
         </Paper>

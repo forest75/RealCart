@@ -23,13 +23,7 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
-<<<<<<< HEAD
 import axios from "axios";
-=======
-// import Auth from "./Auth";
-// import car from "../assets/car.jpg";
-// import tmpmain from "../assets/map_keyboard.png";
->>>>>>> 2ab6448e29ef3a92d3192aa7fb286f6db67dc5bc
 
 function SpectPage() {
   const [ParticipantA, setParticipantA] = useState("의권짱짱33");
