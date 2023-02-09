@@ -5,6 +5,7 @@ import socket
 import time
 import base64
 import sys
+import os
 from datetime import datetime
 import threading
 import RPi.GPIO as GPIO
@@ -259,6 +260,23 @@ class MyApp(QMainWindow, Ui_MainWindow):
         handle_thread.start()
                 
 
+    def socketDisconnect(self):
+        global tflag_driving, tflag_handling, gear_thread, handle_thread
+        
+        tflag_driving = False
+        tflag_handling = False
+        
+        gear_thread.join()
+        handle_thread.join()
+        
+        print_log('Gear Thread Kill')
+        print_log('Handle Thread Kill')
+        
+        print_log('Socket Disconnect')
+        self.ui.lb_socket_param.setText('Disconnect')
+        self.ui.lb_socket_param.setStyleSheet("Color : red")
+
+
     def up(self):
         self.ui.tb_log.append('up')
 
@@ -271,24 +289,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def right(self):
         self.ui.tb_log.append('right')
         
-        
-    def socketDisconnect(self):
-        global tflag_driving, tflag_handling, gear_thread, handle_thread
-        
-        tflag_driving = False
-        #tflag_handling = False
-        
-        gear_thread.join()
-        #handle_thread.join()
-        
-        print_log('Gear Thread Kill')
-        print_log('Handle Thread Kill')
-        
-        print_log('Socket Disconnect')
-        self.ui.lb_socket_param.setText('Disconnect')
-        self.ui.lb_socket_param.setStyleSheet("Color : red")
-        
-        
+               
     def colorMatching(self):
         global color_rgb
         
@@ -339,6 +340,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         print_log("gate {0} Color Matching is finished".format(temp_no))
         
+        
+    def camConnect(self):
+        os.system('"./WebRTC/index.html"')
         
     def closeEvent(self, event):
         global gear_thread, handle_thread, gate_sensing_thread
