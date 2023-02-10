@@ -8,7 +8,8 @@ import com.ssafy.realcart.data.dto.PlayDto;
 public interface IGameService {
 
 	int participateGame(String nickname);
-	void createGame();
+	void startGame();
 	String checkQueue();
 	boolean endGame(PlayDto playDto);
+	boolean createGame();
 }

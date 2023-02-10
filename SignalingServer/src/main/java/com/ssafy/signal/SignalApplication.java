@@ -10,6 +10,7 @@ public class SignalApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(SignalApplication.class, args);
+	
 	}
 	
 	@Bean
