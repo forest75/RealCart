@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
+import axios from "axios";
 import Stomp from "stompjs";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
@@ -18,6 +19,8 @@ function MainPage() {
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const text = useRef(null);
+  // const [loading, setLoading] = useState(true);
+  const [articleList, setArticleList] = useState([]);
   var webRtcPeer;
   var mediaId;
 
@@ -75,7 +78,6 @@ function MainPage() {
     };
     sendMessage(message);
   }
-
   function viewer(num) {
     if (!webRtcPeer) {
       showSpinner(video.current);
@@ -235,28 +237,94 @@ function MainPage() {
     laptime: "01:23:59",
   });
 
-  const boardcolumns = [
+  // 공지사항 게시글 백으로부터 가져오기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
+      .then((res) => {
+        const articles = res.data;
+        console.log(articles);
+        console.log(articles[0].title);
+        console.log(articles.length);
+
+        if (articles.length === 0) {
+          setArticleList([
+            {
+              id: "-",
+              title: "게시글이 없습니다.",
+              date: "-",
+            },
+          ]);
+        } else {
+          const List = [];
+          for (let i = 0; i < articles.length; i += 1) {
+            List.push({
+              id: articles[i].id,
+              title: articles[i].title,
+              date: articles[i].createdTime,
+            });
+          }
+          setArticleList(List);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  const noticecolumns = [
+    { field: "id", headerName: "번호", width: 150, editable: false },
+    {
+      field: "title",
+      headerName: "제목",
+      width: 300,
+      editable: false,
+    },
+    {
+      field: "date",
+      headerName: "등록일",
+      width: 150,
+      editable: false,
+    },
+  ];
+
+  // 게시판 백엔드 연결
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
+      .then((res) => {
+        const articles = res.data;
+        console.log(articles);
+        console.log(articles[0].title);
+        console.log(articles.length);
+
+        if (articles.length === 0) {
+          setArticleList([
+            {
+              id: "-",
+              title: "게시글이 없습니다.",
+              date: "-",
+            },
+          ]);
+        } else {
+          const List = [];
+          for (let i = 0; i < articles.length; i += 1) {
+            List.push({
+              id: articles[i].id,
+              title: articles[i].title,
+              date: articles[i].createdTime,
+            });
+          }
+          setArticleList(List);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  const freecolumns = [
     { field: "id", headerName: "번호", width: 150 },
     { field: "title", headerName: "제목", width: 300, editable: true },
     { field: "date", headerName: "등록일", width: 150, editable: true },
+    { field: "date", headerName: "등록일", width: 150, editable: true },
   ];
-
-  const notice = [];
-  notice.push({
-    id: 1,
-    title: "여기는 공지사항 게시판입니다.",
-    date: "2023.01.27",
-  });
-  notice.push({
-    id: 2,
-    title: "리얼카트 곧 출시 예정!",
-    date: "2023.01.27",
-  });
-  notice.push({
-    id: 3,
-    title: "많은 사랑 부탁드립니다.",
-    date: "2023.01.27",
-  });
 
   return (
     <Box
@@ -327,6 +395,7 @@ function MainPage() {
               sx={{
                 width: "90%",
                 height: "90%",
+                editable: "false",
               }}
             >
               <Box
@@ -347,11 +416,10 @@ function MainPage() {
                 sx={{
                   height: "42.5%",
                 }}
-                rows={notice}
-                columns={boardcolumns}
+                rows={articleList}
+                columns={noticecolumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
               />
               <Box
                 sx={{
@@ -377,10 +445,11 @@ function MainPage() {
                   height: "42.5%",
                 }}
                 rows={ranking}
-                columns={columns}
+                columns={freecolumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
+                editable="false"
+                experimentalFeatures={{ newEditingApi: false }}
               />
             </Box>
           </Box>
