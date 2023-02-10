@@ -105,7 +105,7 @@ public class CallHandler extends TextWebSocketHandler {
 				}
 				for (UserSession viewer : viewers.get(mediaId).values()) {
 					JsonObject response = new JsonObject();
-					response.addProperty("id", "stopCommunication");
+					response.addProperty("id", "stopCommunication" + mediaId);
 					if(viewer.getSession().isOpen()) {
 						viewer.sendMessage(response);
 					}
@@ -126,7 +126,7 @@ public class CallHandler extends TextWebSocketHandler {
 			int mediaId = jsonMessage.get("mediaId").getAsInt(); 
 			if (presenters.isEmpty() || sessions[mediaId] == null || presenters.get(sessions[mediaId]) == null) {
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "viewerResponse");
+				response.addProperty("id", "viewerResponse" + mediaId);
 				response.addProperty("response", "rejected");
 				response.addProperty("message", "No active sender now.");
 				session.sendMessage(new TextMessage(response.toString()));
@@ -144,7 +144,7 @@ public class CallHandler extends TextWebSocketHandler {
 					@Override
 					public void onEvent(IceCandidateFoundEvent event) {
 						JsonObject response = new JsonObject();
-						response.addProperty("id", "iceCandidate");
+						response.addProperty("id", "iceCandidate" + mediaId);
 						response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
 						try {
 							synchronized (session) {
@@ -161,7 +161,7 @@ public class CallHandler extends TextWebSocketHandler {
 				String sdpAnswer = nextWebRtc.processOffer(sdpOffer);
 				
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "viewerResponse");
+				response.addProperty("id", "viewerResponse" + mediaId);
 				response.addProperty("response", "accepted");
 				response.addProperty("sdpAnswer", sdpAnswer);
 				
@@ -180,8 +180,8 @@ public class CallHandler extends TextWebSocketHandler {
 	public void presenter(WebSocketSession session, JsonObject jsonMessage) throws IOException{
 		try {
 			String sessionId = session.getId();
+			int mediaId = jsonMessage.get("mediaId").getAsInt();
 			if(!presenters.containsKey(sessionId)) {
-				int mediaId = jsonMessage.get("mediaId").getAsInt();
 				UserSession presenterUserSession = new UserSession(session);
 				MediaPipeline pipeline = kurento.createMediaPipeline();
 				presenterUserSession.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
@@ -191,7 +191,7 @@ public class CallHandler extends TextWebSocketHandler {
 					@Override
 					public void onEvent(IceCandidateFoundEvent event) {
 						JsonObject response = new JsonObject();
-						response.addProperty("id", "iceCandidate");
+						response.addProperty("id", "iceCandidate" + mediaId);
 						response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
 						try {
 							synchronized(session) {
@@ -208,7 +208,7 @@ public class CallHandler extends TextWebSocketHandler {
 				String sdpAnswer = presenterWebRtc.processOffer(sdpOffer);
 				
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "presenterResponse");
+				response.addProperty("id", "presenterResponse" + mediaId);
 				response.addProperty("response", "accepted");
 				response.addProperty("sdpAnswer", sdpAnswer);
 				
@@ -222,7 +222,7 @@ public class CallHandler extends TextWebSocketHandler {
 				
 			} else {
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "presenterResponse");
+				response.addProperty("id", "presenterResponse" + mediaId);
 				response.addProperty("response", "rejected");
 				response.addProperty("message", "Another user is currently acting as sender. Try again later ...");
 				session.sendMessage(new TextMessage(response.toString()));
