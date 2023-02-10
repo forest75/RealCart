@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
+import axios from "axios";
 import NewContent from "./NewContent";
 
 function InitialContent({
@@ -12,10 +13,40 @@ function InitialContent({
   setIsReady,
   setSelectedIndex,
   options,
-  setOptions,
   nickname,
 }) {
   const [isInitial, setIsInitial] = useState(true);
+
+  const handleWait = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${nickname}`
+      )
+      .then((res) => {
+        console.log(res);
+        switch (res.data) {
+          case "-1":
+            console.log("1번유저");
+            setIsReady(true);
+            break;
+          case "-2":
+            console.log("2번유저");
+            setIsInitial(false);
+            setIsReady(true);
+            break;
+          case "-100":
+            console.log("에러");
+            break;
+          default:
+            setIsInitial(false);
+            console.log("대기");
+            break;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Box>
       {isInitial ? (
@@ -66,13 +97,14 @@ function InitialContent({
                   color: "black",
                 }}
                 onClick={() => {
-                  setWait(wait + 1);
-                  setIsInitial(false);
-                  setOptions([
-                    ...options,
-                    `${options.length + 1}. ${nickname}`,
-                  ]);
+                  // setWait(wait + 1);
+                  // setIsInitial(false);
+                  // setOptions([
+                  //   ...options,
+                  //   `${options.length + 1}. ${nickname}`,
+                  // ]);
                   setSelectedIndex(options.length);
+                  handleWait();
                 }}
               >
                 대기하기
@@ -123,7 +155,6 @@ InitialContent.propTypes = {
   setSelectedIndex: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.array.isRequired,
-  setOptions: PropTypes.func.isRequired,
   nickname: PropTypes.string.isRequired,
 };
 

@@ -27,7 +27,7 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 
-function PlayPage() {
+function PlayPage2() {
   const [carSpeed, setCarSpeed] = useState(0);
   const [lap, setLap] = useState(1);
   const [totalLap, setTotalLap] = useState(2);
@@ -42,12 +42,9 @@ function PlayPage() {
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
-  const videoOutlook = useRef(null);
   const text = useRef(null);
   var webRtcPeer;
   var mediaId;
-  var webRtcPeerOutlook;
-  var mediaIdOutlook;
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -126,17 +123,10 @@ function PlayPage() {
     }
     mediaId = num;
     console.log(num);
-    if (num === 1) {
-      var options = {
-        remoteVideo: video.current,
-        onicecandidate: onIceCandidate,
-      };
-    } else {
-      var options = {
-        remoteVideo: videoOutlook.current,
-        onicecandidate: onIceCandidate,
-      };
-    }
+    var options = {
+      remoteVideo: video.current,
+      onicecandidate: onIceCandidate,
+    };
     webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
       options,
       function (error) {
@@ -209,161 +199,6 @@ function PlayPage() {
     }
   }
 
-  // webrtc용 함수 복제 부분 시작
-  function presenterResponseOutlook(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      disposeOutlook();
-    } else {
-      webRtcPeerOutlook.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
-
-  function sendChatOutlook(e) {
-    e.preventDefault();
-    if (text.current.value === "") return;
-    if (text.current.value.length > 100)
-      return alert("댓글은 100자 이내로 입력해주세요");
-    stompClient.send(
-      "/publish/messages",
-      {},
-      JSON.stringify({
-        message: `${user.nickname} : ${text.current.value}`,
-        senderId: 7,
-        receiverId: 14,
-      })
-    );
-    text.current.value = "";
-  }
-  function viewerResponseOutlook(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      disposeOutlook();
-    } else {
-      webRtcPeerOutlook.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
-
-  function presenterOutlook(num) {
-    if (!webRtcPeerOutlook) {
-      showSpinner(videoOutlook.current);
-    }
-    var options = {
-      localVideo: videoOutlook.current,
-      onicecandidate: onIceCandidateOutlook,
-    };
-    mediaIdOutlook = num;
-    webRtcPeerOutlook = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        webRtcPeerOutlook.generateOffer(onOfferPresenterOutlook);
-      }
-    );
-  }
-
-  function onOfferPresenterOutlook(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaIdOutlook);
-    var message = {
-      id: "presenter",
-      sdpOffer: offerSdp,
-      mediaId: mediaIdOutlook,
-    };
-    sendMessageOutlook(message);
-  }
-
-  function viewerOutlook(num) {
-    if (!webRtcPeerOutlook) {
-      showSpinner(videoOutlook.current);
-    }
-    mediaIdOutlook = num;
-    console.log(num);
-    var options = {
-      remoteVideo: videoOutlook.current,
-      onicecandidate: onIceCandidateOutlook,
-    };
-    webRtcPeerOutlook = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        this.generateOffer(onOfferViewerOutlook);
-      }
-    );
-  }
-
-  function onOfferViewerOutlook(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaIdOutlook);
-    var message = {
-      id: "viewer",
-      sdpOffer: offerSdp,
-      mediaId: mediaIdOutlook,
-    };
-    sendMessageOutlook(message);
-  }
-
-  function onIceCandidateOutlook(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
-
-    var message = {
-      id: "onIceCandidate",
-      candidate: candidate,
-      mediaId: mediaIdOutlook,
-    };
-    sendMessageOutlook(message);
-  }
-
-  function stopOutlook() {
-    var message = {
-      id: "stop",
-    };
-    sendMessageOutlook(message);
-    disposeOutlook();
-  }
-
-  function disposeOutlook() {
-    if (webRtcPeerOutlook) {
-      webRtcPeerOutlook.disposeOutlook();
-      webRtcPeerOutlook = null;
-    }
-    hideSpinnerOutlook(videoOutlook.current);
-  }
-
-  function sendMessageOutlook(message) {
-    var jsonMessage = JSON.stringify(message);
-    console.log("Sending message: " + jsonMessage);
-    ws.send(jsonMessage);
-  }
-
-  function showSpinnerOutlook() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = TransparentImg;
-      arguments[
-        i
-      ].style.background = `center transparent url(${Spinner}) no-repeat`;
-    }
-  }
-
-  function hideSpinnerOutlook() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].src = "";
-      arguments[i].poster = Advertise;
-      arguments[i].style.background = "";
-    }
-  }
-  // webRtc용 함수 복제 부분 끝
-
   useEffect(() => {
     // RACE TIME 5초 후에 시작
     const endRunInterval = setTimeout(() => {
@@ -429,13 +264,6 @@ function PlayPage() {
                   return console.error("Error adding candidate: " + error);
               }
             );
-            webRtcPeerOutlook.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
             break;
           case "stopCommunication":
             dispose();
@@ -447,16 +275,16 @@ function PlayPage() {
 
       ws.onopen = () => {
         // setTimeout(() => {
-        viewer(1);
-        setTimeout(() => {
-          viewer(2);
-        }, 2000);
+        console.log(
+          "ws open!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        );
+        viewer(2);
         // }, 1000);
       };
     }
   }, [ws]);
 
-  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8582");
 
   wss.onopen = function open() {
     wss.send(user.nickname);
@@ -502,18 +330,6 @@ function PlayPage() {
   //     clearInterval(intervalId);
   //   }, 5500);
   // }, []);
-
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      setInterval(() => {
-        for (let i = 0; i < 4; i++) {
-          setInterval(() => {
-            return <Box component="img" src={images[i]} alt="slide" />;
-          }, 1000);
-        }
-      }, 2000);
-    }
-  };
 
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
@@ -834,79 +650,7 @@ function PlayPage() {
                   justifyContent: "center",
                 }}
               >
-                {/* <h3>배팅현황</h3> */}
-                <div className="col-md-5">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <button
-                        onClick={() => {
-                          presenter(1);
-                        }}
-                        id="presenter1"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter1{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          presenter(2);
-                        }}
-                        id="presenter2"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter2{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          presenter(3);
-                        }}
-                        id="presenter3"
-                        href="#"
-                        className="btn btn-success"
-                      >
-                        <span className="glyphicon glyphicon-play"></span>{" "}
-                        Presenter3{" "}
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(1);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer1
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(2);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer2
-                      </button>
-                      <button
-                        onClick={() => {
-                          viewer(3);
-                        }}
-                        id="viewer"
-                        href="#"
-                        className="btn btn-primary"
-                      >
-                        <span className="glyphicon glyphicon-user"></span>{" "}
-                        Viewer3
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <h3>배팅현황</h3>
               </Box>
               <Box
                 sx={{
@@ -1133,7 +877,7 @@ function PlayPage() {
                 alignItems: "center",
               }}
             >
-              BOOST
+              <h3>BOOST</h3>
             </AppButton>
             <Box
               component="h4"
@@ -1147,26 +891,7 @@ function PlayPage() {
             >
               PLACE
             </Box>
-            <Box
-              sx={{
-                width: "25%",
-                height: "20%",
-                top: "30%",
-                right: "-1%",
-                position: "absolute",
-                // bgcolor: "yellow",
-                zIndex: 1,
-              }}
-            >
-              <video
-                ref={videoOutlook}
-                id="video"
-                autoPlay
-                width="100%"
-                height="100%"
-                poster={WebRtcImg}
-              />
-            </Box>
+
             <Box
               sx={{
                 width: "25%",
@@ -1319,5 +1044,4 @@ function PlayPage() {
   );
 }
 
-// export { handleKeyPress };
-export default PlayPage;
+export default PlayPage2;
