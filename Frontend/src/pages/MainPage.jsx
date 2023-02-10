@@ -219,9 +219,9 @@ function MainPage() {
   }, [ws]);
 
   const columns = [
-    { field: "id", headerName: "순위", width: 150 },
-    { field: "nickname", headerName: "NickName", width: 150, editable: true },
-    { field: "laptime", headerName: "LapTime", width: 150, editable: true },
+    { field: "id", headerName: "순위", width: 150, editable: false },
+    { field: "nickname", headerName: "NickName", width: 150, editable: false },
+    { field: "laptime", headerName: "LapTime", width: 150, editable: false },
   ];
   const ranking = [];
   ranking.push({
@@ -236,9 +236,9 @@ function MainPage() {
   });
 
   const boardcolumns = [
-    { field: "id", headerName: "번호", width: 150 },
-    { field: "title", headerName: "제목", width: 300, editable: true },
-    { field: "date", headerName: "등록일", width: 150, editable: true },
+    { field: "id", headerName: "번호", width: 150, editable: false },
+    { field: "title", headerName: "제목", width: 300, editable: false },
+    { field: "date", headerName: "등록일", width: 150, editable: false },
   ];
 
   const notice = [];

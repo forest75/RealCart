@@ -10,6 +10,7 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import SpectPage from "./pages/SpectPage";
 import PlayPage from "./pages/PlayPage";
+import PlayPage2 from "./pages/PlayPage2";
 import NoticeBoard from "./pages/noticeboard/NoticeBoard";
 import NoticeBoardDetail from "./pages/noticeboard/NoticeBoardDetail";
 import NoticeBoardWrite from "./pages/noticeboard/NoticeBoardWrite";
@@ -28,6 +29,7 @@ import Auth from "./pages/Auth";
 
 const SpectPageWithAuth = Auth(SpectPage);
 const PlayPageWithAuth = Auth(PlayPage);
+const PlayPage2WithAuth = Auth(PlayPage2);
 const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
 const NoticeBoardWriteWithAuth = Auth(NoticeBoardWrite);
 const FreeBoardDetailWithAuth = Auth(FreeBoardDetail);
@@ -48,6 +50,7 @@ function App() {
         <Route path="/myPage" element={<MyPage />} />
         <Route path="/spect" element={<SpectPageWithAuth />} />
         <Route path="/play" element={<PlayPageWithAuth />} />
+        <Route path="/play/2" element={<PlayPage2WithAuth />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />
         <Route path="/freeBoard/write" element={<FreeBoardWriteWithAuth />} />
