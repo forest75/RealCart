@@ -19,4 +19,6 @@ public interface IBoardFreeService {
 	boolean deleteFree(int id);
 	boolean changeComment(int commentId, CommentDto commentDto);
 	boolean deleteComment(int commentId);
+	boolean reportPost(int id);
+	boolean clearPostReport(int id);
 }

@@ -9,7 +9,7 @@ public interface IUserDAO {
     User getUser(String email);
     User checkNickname(String nickname);
     List<User> getAllUsers();
-    boolean updateUser(String email);
+    User updateUser(User user);
     boolean deleteUser(String email);
     boolean banUser(String email);
 
