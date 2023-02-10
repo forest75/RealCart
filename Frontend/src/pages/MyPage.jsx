@@ -23,7 +23,7 @@ function MyPage() {
             <Box>
               <h1>랭킹 & 최고기록</h1>
             </Box>
-            <RecordTable address={`best/record/${user}`} />
+            <RecordTable address={`best/record/${user}`} user={user} />
           </Paper>
         </Grid>
         <br />

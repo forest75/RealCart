@@ -86,102 +86,82 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function CustomPaginationActionsTable({ address }) {
+function CustomPaginationActionsTable({ address, user }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
 
   // 공지사항 게시글 백으로부터 가져오기
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/${address}`).then((res) => {
-      const articles = res.data;
-      const List = [];
-      if (articles.length === 0) {
-        if (address === "board/notice") {
-          List.push([
-            {
-              id: "번호",
-              title: "제목",
-              nickname: "글쓴이",
-            },
-            {
-              id: "-",
-              title: "게시글이 없습니다.",
-              nickname: "운영자",
-            },
-          ]);
-        } else if (address === "board/free") {
-          List.push([
-            {
-              id: "번호",
-              title: "제목",
-              nickname: "글쓴이",
-            },
-            {
-              id: "-",
-              title: "게시글이 없습니다.",
-              nickname: "-",
-            },
-          ]);
-        } else if (address === "record") {
-          List.push([
-            {
-              nickname: "닉네임",
-              lapTime: "주행시간",
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/${address}${user}`)
+      .then((res) => {
+        const articles = res.data;
+        const List = [];
+        if (articles.length === 0) {
+          if (address === "best/record/") {
+            List.push([
+              {
+                lapTime: "최고기록",
+                rank: "랭킹",
+              },
+              {
+                lapTime: "경기 기록이 없습니다.",
+                rank: "-",
+              },
+            ]);
+          } else if (address === "record/") {
+            List.push([
+              {
+                gameTime: "날짜",
+                isWin: "결과",
+                lapTime: "주행시간",
+                oppo: "상대",
+                oppoLapTime: "상대 주행시간",
+              },
+              {
+                gameTime: "경기 기록이 없습니다.",
+                isWin: "-",
+                lapTime: "-",
+                oppo: "-",
+                oppoLapTime: "-",
+              },
+            ]);
+          }
+        } else {
+          if (address === "best/record/") {
+            List.push({
+              lapTime: "최고기록",
               rank: "랭킹",
-            },
-            {
-              nickname: "-",
-              lapTime: "게시글이 없습니다.",
-              rank: "-",
-            },
-          ]);
+            });
+            for (let i = 0; i < articles.length; i += 1) {
+              List.push({
+                lapTime: articles[i].lapTime,
+                rank: articles[i].rank,
+              });
+            }
+          } else if (address === "record/") {
+            List.push({
+              gameTime: "날짜",
+              isWin: "결과",
+              lapTime: "주행시간",
+              oppo: "상대",
+              oppoLapTime: "상대 주행시간",
+            });
+            for (let i = 0; i < articles.length; i += 1) {
+              List.push({
+                gameTime: articles[i].gameTime,
+                isWin: articles[i].isWin,
+                lapTime: articles[i].lapTime,
+                oppo: articles[i].oppo,
+                oppoLapTime: articles[i].oppoLapTime,
+              });
+            }
+          }
+          console.log("error");
         }
-      } else {
-        if (address === "board/notice") {
-          List.push({
-            id: "번호",
-            title: "제목",
-            nickname: "글쓴이",
-          });
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              id: articles[i].id,
-              title: articles[i].title,
-              nickname: "운영자",
-            });
-          }
-        } else if (address === "board/free") {
-          List.push({
-            id: "번호",
-            title: "제목",
-            nickname: "글쓴이",
-          });
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              id: articles[i].id,
-              title: articles[i].title,
-              nickname: articles[i].nickname,
-            });
-          }
-        } else if (address === "record") {
-          List.push({
-            rank: "랭킹",
-            nickname: "닉네임",
-            lapTime: "주행시간",
-          });
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              rank: articles[i].rank,
-              nickname: articles[i].nickname,
-              lapTime: articles[i].lapTime,
-            });
-          }
-        }
-        console.log("error");
-      }
-      setRows(List);
-    });
+        setRows(List);
+      });
   }, []);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -198,7 +178,7 @@ function CustomPaginationActionsTable({ address }) {
   };
 
   function tableRow() {
-    if (address === "board/notice" || address === "board/free") {
+    if (address === "best/record/") {
       return (
         rowsPerPage > 0
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -206,32 +186,35 @@ function CustomPaginationActionsTable({ address }) {
       ).map((row) => (
         <TableRow key={row.id}>
           <TableCell style={{ width: 10 }} component="th" scope="row">
-            {row.id}
+            {row.lapTime}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
-            {row.title}
-          </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
-            {row.nickname}
+            {row.rank}
           </TableCell>
         </TableRow>
       ));
       // eslint-disable-next-line no-else-return
-    } else if (address === "record") {
+    } else if (address === "record/") {
       return (
         rowsPerPage > 0
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           : rows
       ).map((row) => (
-        <TableRow key={row.id}>
+        <TableRow key={row.gameTime}>
           <TableCell style={{ width: 10 }} component="th" scope="row">
             {row.rank}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
-            {row.nickname}
+            {row.isWin}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
             {row.lapTime}
+          </TableCell>
+          <TableCell style={{ width: 200 }} align="center">
+            {row.oppo}
+          </TableCell>
+          <TableCell style={{ width: 200 }} align="center">
+            {row.oppoLapTime}
           </TableCell>
         </TableRow>
       ));
@@ -276,9 +259,12 @@ function CustomPaginationActionsTable({ address }) {
 }
 CustomPaginationActionsTable.defaultPros = {
   address: "",
+  user: "",
 };
 CustomPaginationActionsTable.propTypes = {
   // eslint-disable-next-line react/require-default-props
   address: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types, react/require-default-props
+  user: PropTypes.object,
 };
 export default CustomPaginationActionsTable;
