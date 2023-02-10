@@ -101,7 +101,7 @@ class ClientSocket:
             if (recv_data == key_left and flag_left == False): flag_left = True
             if (recv_data == key_right and flag_right == False): flag_right = True
             if (recv_data == key_release and flag_release == False): flag_release = True
-            if (recv_data == key_ctrl): car_speed_limit = 100
+            if (recv_data == key_ctrl): boost_action()
                 
             if (recv_data == start_signal and flag_start == False) : start_action()
         
@@ -290,7 +290,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.ui.btn_finish.setEnabled(False)
         else:
             print_log('Socket Connect Fail')
-            self.ui.lb_socket_param.setText('Not Connect') 
+            self.ui.lb_socket_param.setText('Disconnect') 
             self.ui.lb_socket_param.setStyleSheet("Color : red")
             return
         
@@ -517,6 +517,17 @@ def finish_action():
         win.ui.btn_finish.setEnabled(False)
         
         print_log('Completed sending Finish Signal')
+        
+def boost_action():
+    global car_speed_limit, flag_boost
+    
+    if flag_boost == False:
+        print_log('Boosting...')
+        flag_boost = True
+        boost_thread = threading.Thread(target=boosting)
+        boost_thread.start()
+     
+    
 
 ############### Thread Function ###############
 
@@ -661,6 +672,18 @@ def send_racing_data():
     
     except Exception as e:
         print(e)
+        
+
+def boosting():
+    global car_speed_limit, flag_boost
+    
+    print('boosting thread start...')
+    car_speed_limit = 100
+    time.sleep(5)
+    car_speed_limit = 80
+    flag_boost = False
+    print('boosting thread end')
+    
 
 ############### Thread Function ###############
 
@@ -702,6 +725,7 @@ if __name__ == "__main__":
     flag_release = False
     
     flag_start = False
+    flag_boost = False
     
     ############### Global Variable ###############
     
