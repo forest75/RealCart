@@ -11,6 +11,7 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
+import BoardTable from "../components/BoardTable";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -220,119 +221,13 @@ function MainPage() {
     }
   }, [ws]);
 
-  const columns = [
-    { field: "id", headerName: "순위", width: 150 },
-    { field: "nickname", headerName: "NickName", width: 150, editable: true },
-    { field: "laptime", headerName: "LapTime", width: 150, editable: true },
-  ];
-  const ranking = [];
-  ranking.push({
-    id: 1,
-    nickname: "의권짱짱123",
-    laptime: "01:23:59",
-  });
-  ranking.push({
-    id: 2,
-    nickname: "v스피드왕번개v",
-    laptime: "01:23:59",
-  });
-
-  // 공지사항 게시글 백으로부터 가져오기
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
-      .then((res) => {
-        const articles = res.data;
-        console.log(articles);
-        console.log(articles[0].title);
-        console.log(articles.length);
-
-        if (articles.length === 0) {
-          setArticleList([
-            {
-              id: "-",
-              title: "게시글이 없습니다.",
-              date: "-",
-            },
-          ]);
-        } else {
-          const List = [];
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              id: articles[i].id,
-              title: articles[i].title,
-              date: articles[i].createdTime,
-            });
-          }
-          setArticleList(List);
-        }
-        setLoading(false);
-      });
-  }, []);
-
-  const noticecolumns = [
-    { field: "id", headerName: "번호", width: 150, editable: false },
-    {
-      field: "title",
-      headerName: "제목",
-      width: 300,
-      editable: false,
-    },
-    {
-      field: "date",
-      headerName: "등록일",
-      width: 150,
-      editable: false,
-    },
-  ];
-
-  // 게시판 백엔드 연결
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
-      .then((res) => {
-        const articles = res.data;
-        console.log(articles);
-        console.log(articles[0].title);
-        console.log(articles.length);
-
-        if (articles.length === 0) {
-          setArticleList([
-            {
-              id: "-",
-              title: "게시글이 없습니다.",
-              date: "-",
-            },
-          ]);
-        } else {
-          const List = [];
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              id: articles[i].id,
-              title: articles[i].title,
-              date: articles[i].createdTime,
-            });
-          }
-          setArticleList(List);
-        }
-        setLoading(false);
-      });
-  }, []);
-
-  const freecolumns = [
-    { field: "id", headerName: "번호", width: 150 },
-    { field: "title", headerName: "제목", width: 300, editable: true },
-    { field: "date", headerName: "등록일", width: 150, editable: true },
-    { field: "date", headerName: "등록일", width: 150, editable: true },
-  ];
-
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        height: 1400,
+        height: 1600,
       }}
     >
       <Box
@@ -354,8 +249,8 @@ function MainPage() {
           <Paper
             elevation={2}
             sx={{
-              width: "60%",
-              height: "90%",
+              width: "1000px",
+              height: "700px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -365,8 +260,8 @@ function MainPage() {
               ref={video}
               id="video"
               autoPlay={true}
-              width="640px"
-              height="480px"
+              width="800px"
+              height="600px"
               poster={WebRtcImg}
               onClick={() => {
                 navigate("/spect");
@@ -412,23 +307,12 @@ function MainPage() {
                   공지사항
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "42.5%",
-                }}
-                rows={articleList}
-                columns={noticecolumns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-              />
+              <BoardTable address="board/notice" />
+
               <Box
                 sx={{
                   height: "5%",
-                }}
-              />
-              <Box
-                sx={{
-                  height: "5%",
+                  margin: "20px 0px",
                 }}
               >
                 <Typography
@@ -440,17 +324,7 @@ function MainPage() {
                   게시글
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "42.5%",
-                }}
-                rows={ranking}
-                columns={freecolumns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                editable="false"
-                experimentalFeatures={{ newEditingApi: false }}
-              />
+              <BoardTable address="board/free" />
             </Box>
           </Box>
           <Box
@@ -483,16 +357,8 @@ function MainPage() {
                   Ranking
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "95%",
-                }}
-                rows={ranking}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
+
+              <BoardTable address="record" />
             </Box>
           </Box>
         </Box>
