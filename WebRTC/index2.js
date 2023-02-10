@@ -28,7 +28,7 @@ window.onload = function () {
   video.muted = true;
   connect();
   setTimeout(() => {
-    presenter(1);
+    presenter(2);
   }, 2000);
 };
 
