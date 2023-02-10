@@ -75,6 +75,7 @@ class ClientSocket:
         global recv_data, tflag_recv_data
         global flag_up, flag_down, flag_shift, flag_left, flag_right, flag_release, flag_start
         global car_speed_limit
+        global win
         
         print('recv thread start...')
         
@@ -100,13 +101,10 @@ class ClientSocket:
             if (recv_data == key_left and flag_left == False): flag_left = True
             if (recv_data == key_right and flag_right == False): flag_right = True
             if (recv_data == key_release and flag_release == False): flag_release = True
-            if (recv_data == key_ctrl): 
-                print('ctrl key pressed')
-                car_speed_limit = 100
-            if (recv_data == start_signal and flag_start == False) : 
-                flag_start = True
-                send_racing_data_thread = threading.Thread(target=send_racing_data)
-                send_racing_data_thread.start()
+            if (recv_data == key_ctrl): car_speed_limit = 100
+                
+            if (recv_data == start_signal and flag_start == False) : start_action()
+        
         
         print('recv thread end...')
 
@@ -169,47 +167,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         
     def startSignal(self):
-        global flag_start
-        global send_racing_data_thread
-        
-        if (flag_start == False):
-            flag_start = True
-            send_racing_data_thread = threading.Thread(target=send_racing_data)
-            send_racing_data_thread.start()
-            
-            self.ui.btn_ready.setEnabled(False)
-            self.ui.btn_start.setEnabled(False)
-            self.ui.btn_finish.setEnabled(True)
+        start_action()
         
         
     def finishSignal(self):
-        global client, flag_start
-        global car_no, car_speed, car_gate, car_status
-        global send_racing_data_thread
-        
-        if (self.ui.lb_socket_param.text() != "Connect"):
-            print_log('Please Connect Socket')
-            return
-        
-        car_status = 2
-        self.ui.lb_status_param.setText('Finish')
-        
-        cur_time = round(time.time() * 1000)
-        temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
-        
-        if flag_start:
-            flag_start = False
-            send_racing_data_thread.join()
-        
-        
-        client.sendData(temp_data)
-        print_send_data(temp_data)
-        
-        self.ui.btn_ready.setEnabled(True)
-        self.ui.btn_start.setEnabled(False)
-        self.ui.btn_finish.setEnabled(False)
-        
-        print_log('Completed sending Finish Signal')
+        finish_action()
 
 
     def motorConnect(self):
@@ -504,6 +466,58 @@ def print_rgb(color_rgb):
     win.ui.lb_rgb_param.setText(color_data)
 
 
+def start_action():
+    global flag_start, car_gate, win
+    global send_racing_data_thread
+        
+    print_log('Start Signal sending...')
+    car_gate = 1
+    win.ui.lb_gate_param.setText(str(car_gate))
+        
+    if (flag_start == False):
+        flag_start = True
+        send_racing_data_thread = threading.Thread(target=send_racing_data)
+        send_racing_data_thread.start()
+            
+        win.ui.btn_ready.setEnabled(False)
+        win.ui.btn_start.setEnabled(False)
+        win.ui.btn_finish.setEnabled(True)
+        print_log('Completed sending Start Signal')
+    else:
+        print_log('Already sended Signal')
+        
+        
+def finish_action():
+    global client, flag_start, win
+    global car_no, car_speed, car_gate, car_status
+    global send_racing_data_thread
+        
+    if (win.ui.lb_socket_param.text() != "Connect"):
+        print_log('Please Connect Socket')
+        return
+    
+    print_log('Finish Signal sending...')
+    
+    car_status = 2
+    win.ui.lb_status_param.setText('Finish')
+        
+    cur_time = round(time.time() * 1000)
+    temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
+        
+    if flag_start:
+        flag_start = False
+        send_racing_data_thread.join()
+        
+        
+        client.sendData(temp_data)
+        print_send_data(temp_data)
+        
+        win.ui.btn_ready.setEnabled(True)
+        win.ui.btn_start.setEnabled(False)
+        win.ui.btn_finish.setEnabled(False)
+        
+        print_log('Completed sending Finish Signal')
+
 ############### Thread Function ###############
 
 def driving():
@@ -514,7 +528,6 @@ def driving():
         print('driving start...')
         
         while tflag_driving:
-            print(car_speed_limit)
             if flag_up:
                 car_speed += 5
                 if (car_speed > car_speed_limit): car_speed = car_speed_limit
@@ -574,8 +587,8 @@ def handling():
 
 
 def gate_sensing():
-    global car_color, tflag_gate_sensing
-    global car_gate, color_rgb
+    global car_color, tflag_gate_sensing, flag_start
+    global car_gate, car_cur_gate, color_rgb, win
     
     try:
         print('gate_sensing_thread start...')
@@ -589,15 +602,36 @@ def gate_sensing():
 
             color_rgb = car_color.color_sensing()
             print_rgb(color_rgb)
+            
+            if flag_start == False: continue
 
             if (int(arr_gate1[0]) <= color_rgb[0] <= int(arr_gate1[1]) and int(arr_gate1[2]) <= color_rgb[1] <= int(arr_gate1[3]) and int(arr_gate1[4]) <= color_rgb[2] <= int(arr_gate1[5])):
-                car_gate = 1
+                car_cur_gate = 0
+                
+                if car_gate == 4:
+                    car_gate = 1
+                    win.ui.lb_gate_param.setText(str(car_gate))
+                    finish_action()
+                    
             elif (int(arr_gate2[0]) <= color_rgb[0] <= int(arr_gate2[1]) and int(arr_gate2[2]) <= color_rgb[1] <= int(arr_gate2[3]) and int(arr_gate2[4]) <= color_rgb[2] <= int(arr_gate2[5])):
-                car_gate = 2
+                car_cur_gate = 1
+                if car_gate == 1:
+                    car_gate = 2
+                    win.ui.lb_gate_param.setText(str(car_gate))
+                    
             elif (int(arr_gate3[0]) <= color_rgb[0] <= int(arr_gate3[1]) and int(arr_gate3[2]) <= color_rgb[1] <= int(arr_gate3[3]) and int(arr_gate3[4]) <= color_rgb[2] <= int(arr_gate3[5])):
-                car_gate = 3
+                car_cur_gate = 2
+                
+                if car_gate == 2:
+                    car_gate = 3
+                    win.ui.lb_gate_param.setText(str(car_gate))
+                    
             elif (int(arr_gate4[0]) <= color_rgb[0] <= int(arr_gate4[1]) and int(arr_gate4[2]) <= color_rgb[1] <= int(arr_gate4[3]) and int(arr_gate4[4]) <= color_rgb[2] <= int(arr_gate4[5])):
-                car_gate = 4
+                car_cur_gate = 3
+                
+                if car_gate == 3:
+                    car_gate = 4
+                    win.ui.lb_gate_param.setText(str(car_gate))
 
             time.sleep(0.01)
 
@@ -609,7 +643,7 @@ def gate_sensing():
         
 def send_racing_data():
     global client, flag_start, win
-    global car_no, car_speed, car_gate, car_status
+    global car_no, car_speed, car_cur_gate, car_status
     
     try:
         print('send_racing_data thread start')
@@ -619,7 +653,7 @@ def send_racing_data():
         
         while flag_start:
             cur_time = round(time.time() * 1000)
-            temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
+            temp_data = make_json(car_no, cur_time, car_speed, car_cur_gate, car_status)
             client.sendData(temp_data)
             time.sleep(0.1)
         
@@ -642,6 +676,8 @@ if __name__ == "__main__":
     car_gate = 0
     car_status = 0
     car_speed_limit = 80
+    car_cur_gate = 0
+    
     
     TCP_IP = init_data['IP']
     TCP_PORT = init_data['Port']
