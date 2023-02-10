@@ -219,6 +219,18 @@ function SpectPage() {
         });
     }, 2000);
 
+    const endOrderInterval = setInterval(() => {
+      axios
+        .get(
+          `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${user.nickname}`
+        )
+        .then((res) => {
+          const participate = res.data;
+          console.log(participate);
+          // setWait(participate.wait);
+        });
+    }, 2000);
+
     const endIndexInterval = setInterval(() => {
       setSelectedIndex((selectedIndex + 1) % options.length);
     }, 5000);
@@ -253,7 +265,8 @@ function SpectPage() {
     return () => {
       clearInterval(endOptionInterval);
       clearInterval(endIndexInterval);
-      clearInterval(endParticipantInterval);
+      clearInterval(endOrderInterval);
+      clearInterval(endWaitInterval);
       wsConst.close();
       socketConst.close();
     };
@@ -1077,7 +1090,6 @@ function SpectPage() {
                   options={options}
                   setOptions={setOptions}
                   nickname={user.nickname}
-                  setIsReady={setIsReady}
                 />
               )}
             </Box>

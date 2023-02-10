@@ -459,11 +459,13 @@ function PlayPage() {
   const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
   wss.onopen = function open() {
-    wss.send(user.nickname);
+    // wss.send(user.nickname);
   };
 
   wss.onmessage = function incoming(data) {
+    console.log(data);
     if (data === "1") {
+      wss.send(user.nickname);
       // setInterval(() => {
       //   for (let i = 0; i < 4; i++) {
       //     setInterval(() => {
@@ -518,6 +520,7 @@ function PlayPage() {
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
     16: false,
+    17: false,
     37: false,
     38: false,
     39: false,
@@ -569,14 +572,31 @@ function PlayPage() {
         16: true,
       }));
       const interval = setInterval(() => {
-        console.log(16);
-        wss.send("stop");
+        console.log("stop");
+        wss.send(16);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           16: false,
+        }));
+      }, 100);
+    }
+    if (keyState[17] && inputSwitch[17] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        17: true,
+      }));
+      const interval = setInterval(() => {
+        console.log("ctrl");
+        wss.send(17);
+      }, 10);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          17: false,
         }));
       }, 100);
     }
