@@ -91,77 +91,74 @@ function CustomPaginationActionsTable({ address, user }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
 
-  // 공지사항 게시글 백으로부터 가져오기
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/${address}${user}`)
-      .then((res) => {
-        const articles = res.data;
-        const List = [];
-        if (articles.length === 0) {
-          if (address === "best/record/") {
-            List.push([
-              {
-                lapTime: "최고기록",
-                rank: "랭킹",
-              },
-              {
-                lapTime: "경기 기록이 없습니다.",
-                rank: "-",
-              },
-            ]);
-          } else if (address === "record/") {
-            List.push([
-              {
-                gameTime: "날짜",
-                isWin: "결과",
-                lapTime: "주행시간",
-                oppo: "상대",
-                oppoLapTime: "상대 주행시간",
-              },
-              {
-                gameTime: "경기 기록이 없습니다.",
-                isWin: "-",
-                lapTime: "-",
-                oppo: "-",
-                oppoLapTime: "-",
-              },
-            ]);
-          }
-        } else {
-          if (address === "best/record/") {
-            List.push({
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/${address}`).then((res) => {
+      const articles = res.data;
+      const List = [];
+      if (articles.length === 0) {
+        if (address === `record/best/${user}`) {
+          List.push([
+            {
               lapTime: "최고기록",
               rank: "랭킹",
-            });
-            for (let i = 0; i < articles.length; i += 1) {
-              List.push({
-                lapTime: articles[i].lapTime,
-                rank: articles[i].rank,
-              });
-            }
-          } else if (address === "record/") {
-            List.push({
+            },
+            {
+              lapTime: "경기 기록이 없습니다.",
+              rank: "-",
+            },
+          ]);
+        } else if (address === `record/${user}`) {
+          List.push([
+            {
               gameTime: "날짜",
               isWin: "결과",
               lapTime: "주행시간",
               oppo: "상대",
               oppoLapTime: "상대 주행시간",
-            });
-            for (let i = 0; i < articles.length; i += 1) {
-              List.push({
-                gameTime: articles[i].gameTime,
-                isWin: articles[i].isWin,
-                lapTime: articles[i].lapTime,
-                oppo: articles[i].oppo,
-                oppoLapTime: articles[i].oppoLapTime,
-              });
-            }
-          }
-          console.log("error");
+            },
+            {
+              gameTime: "경기 기록이 없습니다.",
+              isWin: "-",
+              lapTime: "-",
+              oppo: "-",
+              oppoLapTime: "-",
+            },
+          ]);
         }
-        setRows(List);
-      });
+      } else {
+        if (address === `record/best/${user}`) {
+          List.push({
+            lapTime: "최고기록",
+            rank: "랭킹",
+          });
+          for (let i = 0; i < articles.length; i += 1) {
+            List.push({
+              lapTime: articles[i].lapTime,
+              rank: articles[i].rank,
+            });
+          }
+        } else if (address === `record/${user}`) {
+          List.push({
+            gameTime: "날짜",
+            isWin: "결과",
+            lapTime: "주행시간",
+            oppo: "상대",
+            oppoLapTime: "상대 주행시간",
+          });
+          for (let i = 0; i < articles.length; i += 1) {
+            List.push({
+              gameTime: articles[i].gameTime,
+              isWin: articles[i].isWin,
+              lapTime: articles[i].lapTime,
+              oppo: articles[i].oppo,
+              oppoLapTime: articles[i].oppoLapTime,
+            });
+          }
+        }
+        console.log("error");
+      }
+      setRows(List);
+    });
   }, []);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -178,7 +175,7 @@ function CustomPaginationActionsTable({ address, user }) {
   };
 
   function tableRow() {
-    if (address === "best/record/") {
+    if (address === `record/best/${user}`) {
       return (
         rowsPerPage > 0
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -194,14 +191,14 @@ function CustomPaginationActionsTable({ address, user }) {
         </TableRow>
       ));
       // eslint-disable-next-line no-else-return
-    } else if (address === "record/") {
+    } else if (address === `record/${user}`) {
       return (
         rowsPerPage > 0
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           : rows
       ).map((row) => (
         <TableRow key={row.gameTime}>
-          <TableCell style={{ width: 10 }} component="th" scope="row">
+          <TableCell style={{ width: 200 }} component="th" scope="row">
             {row.rank}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
@@ -219,11 +216,11 @@ function CustomPaginationActionsTable({ address, user }) {
         </TableRow>
       ));
     }
-    return console.log("error");
+    return console.log("tablerow");
   }
 
   return (
-    <TableContainer sx={{ width: 700 }} component={Paper}>
+    <TableContainer sx={{ width: 770 }} component={Paper}>
       <Table sx={{ minWidth: 200 }} aria-label="custom pagination table">
         <TableBody>
           {tableRow()}
@@ -258,13 +255,13 @@ function CustomPaginationActionsTable({ address, user }) {
   );
 }
 CustomPaginationActionsTable.defaultPros = {
-  address: "",
-  user: "",
+  address: {},
+  user: {},
 };
 CustomPaginationActionsTable.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  address: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types, react/require-default-props
-  user: PropTypes.object,
+  // eslint-disable-next-line react/forbid-prop-types
+  address: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  user: PropTypes.object.isRequired,
 };
 export default CustomPaginationActionsTable;

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Box, Divider, Paper, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import RecordTable from "../components/RecordTable";
 
 function MyPage() {
@@ -11,29 +11,35 @@ function MyPage() {
       display="flex"
       sx={{
         justifyContent: "center",
+        flexDirection: "column",
+        height: "65vh",
+        marginBottom: "40px",
       }}
     >
-      <Grid>
-        <Grid item xs={12}>
-          <Box>
-            <h1>My Page</h1>
-          </Box>
-          <Divider />
-          <Paper>
-            <Box>
-              <h1>랭킹 & 최고기록</h1>
-            </Box>
-            <RecordTable address={`best/record/${user}`} user={user} />
-          </Paper>
-        </Grid>
-        <br />
-        <Grid item xs={12}>
-          <Divider />
-          <Box>
-            <h1>히스토리</h1>
-          </Box>
-        </Grid>
-      </Grid>
+      <Box component="h1" sx={{ marginLeft: "40px" }}>
+        My Page
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <Box>
+          <Box component="h3">랭킹&최고기록</Box>
+          <RecordTable
+            address={`record/best/${user.nickname}`}
+            user={user.nickname}
+          />
+        </Box>
+        <Box>
+          <Box component="h3">히스토리</Box>
+          <RecordTable
+            address={`record/${user.nickname}`}
+            user={user.nickname}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 }

@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import axios from "axios";
-import tutorial from "../assets/toturial.png";
+import tutorial from "../assets/toturial1.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
