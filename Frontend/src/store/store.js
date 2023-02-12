@@ -22,6 +22,8 @@ const initialState = {
   queue: {
     player1: null,
     player2: null,
+    rank1: null,
+    rank2: null,
     currentQueue: null,
     splitQueue: null,
     queueLength: 0,

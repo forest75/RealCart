@@ -9,7 +9,8 @@ import AppFooter from "./components/AppFooter";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import SpectPage from "./pages/SpectPage";
-import PlayPage from "./pages/PlayPage";
+// import PlayPage from "./pages/PlayPage";
+import NewPlayPage from "./pages/NewPlayPage";
 import PlayPage2 from "./pages/PlayPage2";
 import NoticeBoard from "./pages/noticeboard/NoticeBoard";
 import NoticeBoardDetail from "./pages/noticeboard/NoticeBoardDetail";
@@ -28,7 +29,8 @@ import PlayRoom2 from "./test/PlayRoom2";
 import Auth from "./pages/Auth";
 
 const SpectPageWithAuth = Auth(SpectPage);
-const PlayPageWithAuth = Auth(PlayPage);
+// const PlayPageWithAuth = Auth(PlayPage);
+const NewPlayPageWithAuth = Auth(NewPlayPage);
 const PlayPage2WithAuth = Auth(PlayPage2);
 const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
 const NoticeBoardWriteWithAuth = Auth(NoticeBoardWrite);
@@ -49,7 +51,8 @@ function App() {
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
         <Route path="/spect" element={<SpectPageWithAuth />} />
-        <Route path="/play/1" element={<PlayPageWithAuth />} />
+        {/* <Route path="/play/1" element={<PlayPageWithAuth />} /> */}
+        <Route path="/play/1" element={<NewPlayPageWithAuth />} />
         <Route path="/play/2" element={<PlayPage2WithAuth />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />

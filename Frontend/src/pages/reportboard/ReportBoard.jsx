@@ -161,7 +161,7 @@ function ReportBoard() {
               category={article.category}
               title={article.title}
               author={article.nickname}
-              date={article.createdTime}
+              date={new Date(article.createdTime).toLocaleDateString()}
               view={article.hit}
             />
           ))}
