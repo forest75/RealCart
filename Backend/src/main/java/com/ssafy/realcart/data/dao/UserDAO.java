@@ -65,8 +65,8 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public boolean updateUser(String email) {
-        return false;
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override

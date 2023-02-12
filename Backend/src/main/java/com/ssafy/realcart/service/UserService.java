@@ -1,29 +1,30 @@
 package com.ssafy.realcart.service;
 
-import com.ssafy.realcart.data.dao.inter.IUserDAO;
-import com.ssafy.realcart.data.dto.UserDto;
-import com.ssafy.realcart.data.entity.User;
-import com.ssafy.realcart.exception.NickNameShortException;
-import com.ssafy.realcart.service.inter.IUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Service;
-
-import javax.mail.internet.MimeMessage;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.internet.MimeMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.realcart.data.dao.inter.IUserDAO;
+import com.ssafy.realcart.data.dto.UserDto;
+import com.ssafy.realcart.data.entity.User;
+import com.ssafy.realcart.data.entity.auth.ProviderType;
+import com.ssafy.realcart.exception.NickNameShortException;
+import com.ssafy.realcart.service.inter.IUserService;
 
 @Service
 public class UserService implements IUserService {
@@ -45,6 +46,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public boolean createUser(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("createUser 메서드가 userService에서 호출되었습니다.");
         User user = new User();
@@ -59,19 +61,11 @@ public class UserService implements IUserService {
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
         user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
+        user.setProviderType(userDto.getProviderType() == null ? ProviderType.LOCAL : userDto.getProviderType());
         byte[] emailSalt = getSalt();
         user.setEmailSalt(bytesToHex(emailSalt));
-        if(userDAO.createUser(user)){
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
-                            .append("\n").append("http://3.34.23.91/:8080/user/verifyemail/").append(user.getEmail()).append("/").append(bytesToHex(emailSalt));
-            sendMail(user.getEmail(), "RealCart Email Verification", sb.toString());
-            return true;
-        }
-        else{
-            return false;
-        }
+        return userDAO.createUser(user);
+        
     }
 
     private void sendMail(String email, String title, String content) {
@@ -131,11 +125,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto getUser(String email) {
-        return null;
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
         LOGGER.info("getAllUsers 메서드가 userService에서 호출되었습니다.");
         List<UserDto> userDtoList = new ArrayList<UserDto>();
@@ -164,11 +154,18 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean banUser(String email) {
-        return false;
+    public boolean banUser(String nickname, int days) {
+    	User user = userDAO.checkNickname(nickname);
+    	if(user != null) {
+    		user.setIsBan((byte)1);
+    		userDAO.updateUser(user);
+    		return true;
+    	}
+    	return false;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto login(UserDto userDto) throws NoSuchAlgorithmException {
         LOGGER.info("로그인 메서드가 userService에서 호출되었습니다.");
         LOGGER.info(userDto.toString());
@@ -193,6 +190,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkEmail(String email) {
         LOGGER.info("checkEmail 메서드가 userService에서 호출되었습니다.");
         if(userDAO.getUser(email) != null){
@@ -205,6 +203,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkNickname(String nickname) {
         LOGGER.info("checkNickname 메서드가 userService에서 호출되었습니다.");
         if(userDAO.checkNickname(nickname) != null){
@@ -217,8 +216,31 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean verifyEmail(String email, String salt) {
         return userDAO.verifyEmail(email, salt);
 
     }
+
+	@Override
+	public void preprocessMail(UserDto userDto) {
+		User user = userDAO.getUser(userDto.getEmail());
+		StringBuilder sb = new StringBuilder();
+
+        sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
+                        .append("\n").append("https://i8a403.p.ssafy.io/user/verifyemail/").append(userDto.getEmail()).append("/").append(user.getEmailSalt());
+        sendMail(userDto.getEmail(), "RealCart Email Verification", sb.toString());
+		
+	}
+
+	@Override
+	public boolean clearUserBan(String nickname) {
+		User user = userDAO.checkNickname(nickname);
+    	if(user != null) {
+    		user.setIsBan((byte)0);
+    		userDAO.updateUser(user);
+    		return true;
+    	}
+    	return false;
+	}
 }

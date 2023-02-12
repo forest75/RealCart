@@ -10,9 +10,32 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import SpectPage from "./pages/SpectPage";
 import PlayPage from "./pages/PlayPage";
-import NoticeBoard from "./pages/NoticeBoard";
-import FreeBoard from "./pages/FreeBoard";
-import ReportBoard from "./test2/ReportBoard";
+import PlayPage2 from "./pages/PlayPage2";
+import NoticeBoard from "./pages/noticeboard/NoticeBoard";
+import NoticeBoardDetail from "./pages/noticeboard/NoticeBoardDetail";
+import NoticeBoardWrite from "./pages/noticeboard/NoticeBoardWrite";
+import NoticeBoardModify from "./pages/noticeboard/NoticeBoardModify";
+import FreeBoard from "./pages/freeboard/FreeBoard";
+import FreeBoardDetail from "./pages/freeboard/FreeBoardDetail";
+import FreeBoardWrite from "./pages/freeboard/FreeBoardWrite";
+import FreeBoardModify from "./pages/freeboard/FreeBoardModify";
+import ReportBoard from "./pages/reportboard/ReportBoard";
+import ReportBoardWrite from "./pages/reportboard/ReportBoardWrite";
+import ReportBoardModify from "./pages/reportboard/ReportBoardModify";
+import ReportBoardDetail from "./pages/reportboard/ReportBoardDetail";
+import AuthPage from "./pages/AuthPage";
+import PlayRoom2 from "./test/PlayRoom2";
+import Auth from "./pages/Auth";
+
+const SpectPageWithAuth = Auth(SpectPage);
+const PlayPageWithAuth = Auth(PlayPage);
+const PlayPage2WithAuth = Auth(PlayPage2);
+const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
+const NoticeBoardWriteWithAuth = Auth(NoticeBoardWrite);
+const FreeBoardDetailWithAuth = Auth(FreeBoardDetail);
+const FreeBoardWriteWithAuth = Auth(FreeBoardWrite);
+const ReportBoardDetailWithAuth = Auth(ReportBoardDetail);
+const ReportBoardWriteWithAuth = Auth(ReportBoardWrite);
 
 function App() {
   return (
@@ -21,14 +44,38 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/about" element={<PlayRoom2 />} />
         <Route path="/regist" element={<RegistForm />} />
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
-        <Route path="/spect" element={<SpectPage />} />
-        <Route path="/play" element={<PlayPage />} />
-        <Route path="/noticeBoard" element={<NoticeBoard />} />
+        <Route path="/spect" element={<SpectPageWithAuth />} />
+        <Route path="/play" element={<PlayPageWithAuth />} />
+        <Route path="/play/2" element={<PlayPage2WithAuth />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
+        <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />
+        <Route path="/freeBoard/write" element={<FreeBoardWriteWithAuth />} />
+        <Route path="/freeBoard/modify" element={<FreeBoardModify />} />
         <Route path="/reportBoard" element={<ReportBoard />} />
+        <Route
+          path="/reportBoard/write"
+          element={<ReportBoardWriteWithAuth />}
+        />
+        <Route path="/reportBoard/modify" element={<ReportBoardModify />} />
+        <Route
+          path="/reportBoard/detail"
+          element={<ReportBoardDetailWithAuth />}
+        />
+        <Route path="/noticeBoard" element={<NoticeBoard />} />
+        <Route
+          path="/noticeBoard/detail"
+          element={<NoticeBoardDetailWithAuth />}
+        />
+        <Route
+          path="/noticeBoard/write"
+          element={<NoticeBoardWriteWithAuth />}
+        />
+        <Route path="/noticeBoard/modify" element={<NoticeBoardModify />} />
+        <Route path="/oauth/redirect" element={<AuthPage />} />
       </Routes>
       <AppFooter />
     </Box>

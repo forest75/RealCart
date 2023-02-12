@@ -74,25 +74,30 @@ public class UserController {
     }
 
     @PostMapping(value="/register")
-    public ResponseEntity createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
         LOGGER.info("createUser 메서드가 userController에서 호출되었습니다.");
+        
         try {
             if(userService.createUser(userDto)){
-                return new ResponseEntity<>(userDto, HttpStatus.OK);
+//            	userService.preprocessMail(userDto);
+            	
+            	String msg = "회원가입 성공";
+                return new ResponseEntity<String>(msg, HttpStatus.OK);
             }
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        String msg = "회원가입 실패";
+        return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping()
-    public ResponseEntity login(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> login(@RequestBody UserDto userDto){
         LOGGER.info("Login 메서드가 userController에서 호출되었습니다.");
         try {
             UserDto loginUser = userService.login(userDto);
             if(loginUser != null){
-                return new ResponseEntity<>(loginUser, HttpStatus.OK);
+                return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -100,4 +105,21 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/ban/{nickname}")
+    public ResponseEntity<String> banUser(@PathVariable String nickname, @RequestBody int days){
+        LOGGER.info("banUser 메서드가 userController에서 호출되었습니다.");
+        if(userService.banUser(nickname, days)) {
+        	return new ResponseEntity<String>("유저 밴 성공", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("유저 밴 실패", HttpStatus.BAD_REQUEST);
+    }
+    
+    @DeleteMapping("/ban/{nickname}")
+    public ResponseEntity<String> clearUserBan(@PathVariable String nickname){
+        LOGGER.info("clearUserBan 메서드가 userController에서 호출되었습니다.");
+        if(userService.clearUserBan(nickname)) {
+        	return new ResponseEntity<String>("유저 밴 해제 성공", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("유저 밴 해제 실패", HttpStatus.BAD_REQUEST);
+    }
 }

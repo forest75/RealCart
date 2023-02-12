@@ -1,20 +1,30 @@
 package com.ssafy.realcart.controller;
 
-import com.ssafy.realcart.data.dao.inter.IBoardFreeDAO;
-import com.ssafy.realcart.data.dto.BoardDto;
-import com.ssafy.realcart.data.dto.CommentDto;
-import com.ssafy.realcart.service.BoardFreeService;
-import com.ssafy.realcart.service.inter.IBoardFreeService;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.ssafy.realcart.data.dto.BoardDto;
+import com.ssafy.realcart.data.dto.BoardFreeDto;
+import com.ssafy.realcart.data.dto.BoardNoticeDto;
+import com.ssafy.realcart.data.dto.BoardReportDto;
+import com.ssafy.realcart.data.dto.BoardReportRequestDto;
+import com.ssafy.realcart.data.dto.CommentDto;
+import com.ssafy.realcart.service.inter.IBoardFreeService;
+import com.ssafy.realcart.service.inter.IBoardNoticeService;
+import com.ssafy.realcart.service.inter.IBoardReportService;
 
 @RestController
 @RequestMapping("/board")
@@ -22,48 +32,44 @@ public class BoardController {
 
 
     IBoardFreeService boardFreeService;
+    IBoardNoticeService boardNoticeService;
+    IBoardReportService boardReportService;
     private final Logger LOGGER = LoggerFactory.getLogger(BoardController.class);
 
     @Autowired
-    public BoardController(IBoardFreeService boardFreeService){
+    public BoardController(IBoardFreeService boardFreeService, IBoardNoticeService boardNoticeService, IBoardReportService boardReportService){
         this.boardFreeService = boardFreeService;
+        this.boardNoticeService = boardNoticeService;
+        this.boardReportService = boardReportService;
     }
 
     @GetMapping(value="/free")
-    public ResponseEntity<List<BoardDto>> getBoardFreeAll(){
-        List<BoardDto> list = boardFreeService.getBoardFreeAll();
+    public ResponseEntity<List<BoardFreeDto>> getBoardFreeAll(){
+    	LOGGER.info("getBoardFreeAll 메서드를  BoardController에서 진입");
+        List<BoardFreeDto> list = boardFreeService.getBoardFreeAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping(value="/notice")
-    public ResponseEntity<List<BoardDto>> getNoticeBoard(){
-        List<BoardDto> list = new ArrayList<BoardDto>();
-        BoardDto boardDto = new BoardDto();
-        boardDto.setId(1);
-        boardDto.setNickname("관리자");
-        boardDto.setContent("랭킹 1위 의권 짱짱과 함께하는 경기 이벤트!");
-
-        boardDto.setTitle("2023년 신년 이벤트");
-        list.add(boardDto);
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<List<BoardNoticeDto>> getBoardNoticeAll(){
+    	LOGGER.info("getBoardNoticeAll 메서드를  BoardController에서 진입");
+    	List<BoardNoticeDto> list = boardNoticeService.getBoardNoticeAll();
+    	
+    	return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping(value="/report")
-    public ResponseEntity<List<BoardDto>> getReportBoard(){
-        List<BoardDto> list = new ArrayList<BoardDto>();
-        BoardDto boardDto = new BoardDto();
-        boardDto.setId(1);
-        boardDto.setNickname("성민zㅣ존");
-        boardDto.setContent("의권 짱짱 핵 의심됩니다. 뻬박");
-
-        boardDto.setTitle("의권짱짱 핵의심");
-        list.add(boardDto);
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<List<BoardReportDto>> getBoardReportAll(){
+    	LOGGER.info("getBoardReportAll 메서드를  BoardController에서 진입");
+    	List<BoardReportDto> list = boardReportService.getBoardReportAll();
+    	
+    	return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @PostMapping(value="/free")
     public ResponseEntity<String> createFree(@RequestBody BoardDto boardDto){
+    	LOGGER.info("createFree 메서드를  BoardController에서 진입");
         if(boardFreeService.createFree(boardDto)){
             return ResponseEntity.status(HttpStatus.OK).body("글 게시 성공");
         }
@@ -74,83 +80,112 @@ public class BoardController {
 
     @PostMapping(value="/notice")
     public ResponseEntity<String>  createNotice(@RequestBody BoardDto boardDto){
-
-        return ResponseEntity.status(HttpStatus.OK).body("글 게시 성공");
+    	LOGGER.info("createNotice 메서드를  BoardController에서 진입");
+    	if(boardNoticeService.createNotice(boardDto)){
+            return ResponseEntity.status(HttpStatus.OK).body("글 게시 성공");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body("글 게시 실패");
+        }
     }
 
     @PostMapping(value="/report")
-    public ResponseEntity<String>  createReport(@RequestBody BoardDto boardDto){
+    public ResponseEntity<String>  createReport(@RequestBody BoardReportRequestDto boardDto){
+    	LOGGER.info("createReport 메서드를  BoardController에서 진입");
 
-        return ResponseEntity.status(HttpStatus.OK).body("글 게시 성공");
+    	if(boardReportService.createReport(boardDto)){
+            return ResponseEntity.status(HttpStatus.OK).body("글 게시 성공");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body("글 게시 실패");
+        }
     }
 
     @PutMapping(value="/free/{id}")
     public ResponseEntity<String> changeFree(@PathVariable int id, @RequestBody BoardDto boardDto){
+    	LOGGER.info("changeFree 메서드를  BoardController에서 진입");
+    	if(boardFreeService.changeFree(id, boardDto)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+    	}
 
-        return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+        return ResponseEntity.status(HttpStatus.OK).body("글 수정 실패");
     }
 
     @PutMapping(value="/notice/{id}")
     public ResponseEntity<String>  changeNotice(@PathVariable int id, @RequestBody BoardDto boardDto){
+    	LOGGER.info("changeNotice 메서드를  BoardController에서 진입");
 
-        return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+    	if(boardNoticeService.changeNotice(id, boardDto)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+    	}
+
+        return ResponseEntity.status(HttpStatus.OK).body("글 수정 실패");
     }
 
     @PutMapping(value="/report/{id}")
-    public ResponseEntity<String>  changeReport(@PathVariable int id, @RequestBody BoardDto boardDto){
+    public ResponseEntity<String>  changeReport(@PathVariable int id, @RequestBody BoardReportRequestDto boardDto){
+    	LOGGER.info("changeReport 메서드를  BoardController에서 진입");
+    	if(boardReportService.changeReport(id, boardDto)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+    	}
 
-        return ResponseEntity.status(HttpStatus.OK).body("글 수정 성공");
+        return ResponseEntity.status(HttpStatus.OK).body("글 수정 실패");
     }
 
     @DeleteMapping(value="/free/{id}")
     public ResponseEntity<String> deleteFree(@PathVariable int id){
-
-        return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	LOGGER.info("deleteFree 메서드를  BoardController에서 진입");
+    	if(boardFreeService.deleteFree(id)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("글 삭제 실패");
     }
 
     @DeleteMapping(value="/notice/{id}")
     public ResponseEntity<String>  deleteNotice(@PathVariable int id){
-
-        return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	LOGGER.info("deleteNotice 메서드를  BoardController에서 진입");
+    	if(boardNoticeService.deleteNotice(id)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("글 삭제 실패");
     }
 
     @DeleteMapping(value="/report/{id}")
     public ResponseEntity<String>  deleteReport(@PathVariable int id){
-
-        return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	LOGGER.info("deleteReport 메서드를  BoardController에서 진입");
+    	if(boardReportService.deleteReport(id)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("글 삭제 성공");
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("글 삭제 실패");
     }
 
     @GetMapping(value="/free/{id}")
-    public ResponseEntity<BoardDto> getFree(@PathVariable("id") int id){
-        BoardDto boardDto = boardFreeService.getBoardFree(id);
+    public ResponseEntity<BoardFreeDto> getFree(@PathVariable("id") int id){
+    	LOGGER.info("getFree 메서드를  BoardController에서 진입");
+        BoardFreeDto boardDto = boardFreeService.getBoardFree(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
     @GetMapping(value="/notice/{id}")
-    public ResponseEntity<BoardDto> getNotice(@PathVariable("id") int id){
-        BoardDto boardDto = new BoardDto();
-        boardDto.setId(1);
-        boardDto.setNickname("관리자");
-        boardDto.setContent("랭킹 1위 의권 짱짱과 함께하는 경기 이벤트!");
+    public ResponseEntity<BoardNoticeDto> getNotice(@PathVariable("id") int id){
+    	LOGGER.info("getNotice 메서드를  BoardController에서 진입");
+    	BoardNoticeDto boardDto = boardNoticeService.getBoardNotice(id);
 
-        boardDto.setTitle("2023년 신년 이벤트");
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
     @GetMapping(value="/report/{id}")
-    public ResponseEntity<BoardDto> getReport(@PathVariable("id") int id){
-        BoardDto boardDto = new BoardDto();
-        boardDto.setId(1);
-        boardDto.setNickname("성민zㅣ존");
-        boardDto.setContent("의권 짱짱 핵 의심됩니다. 뻬박");
+    public ResponseEntity<BoardReportDto> getReport(@PathVariable("id") int id){
+    	LOGGER.info("getReport 메서드를  BoardController에서 진입");
+    	BoardReportDto boardDto = boardReportService.getBoardReport(id);
 
-        boardDto.setTitle("의권짱짱 핵의심");
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
     @PostMapping(value="/free/{id}")
     public ResponseEntity<String> createComment(@PathVariable int id, @RequestBody CommentDto commentDto){
+    	LOGGER.info("createComment 메서드를  BoardController에서 진입");
         if(boardFreeService.createFreeComment(id, commentDto)){
             return ResponseEntity.status(HttpStatus.OK).body("댓글 게시 성공");
         }
@@ -159,13 +194,38 @@ public class BoardController {
 
     @PutMapping(value="/free/{id}/{commentId}")
     public ResponseEntity<String> changeComment(@PathVariable int id, @PathVariable int commentId, @RequestBody CommentDto commentDto){
-
-        return ResponseEntity.status(HttpStatus.OK).body("댓글 수정 성공");
+    	LOGGER.info("changeComment 메서드를  BoardController에서 진입");
+    	if(boardFreeService.changeComment(commentId, commentDto)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("댓글 수정 성공");
+    	}
+        return ResponseEntity.status(HttpStatus.OK).body("댓글 수정 실패");
     }
 
     @DeleteMapping(value="/free/{id}/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable int id, @PathVariable int commentId){
-
-        return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 성공");
+    	LOGGER.info("deleteComment 메서드를  BoardController에서 진입");
+    	if(boardFreeService.deleteComment(commentId)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 성공");
+    		
+    	}
+        return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 실패");
+    }
+    
+    @PostMapping(value="/free/report/{id}")
+    public ResponseEntity<String> reportPost(@PathVariable int id){
+    	LOGGER.info("reportPost 메서드를  BoardController에서 진입");
+        if(boardFreeService.reportPost(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 성공");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 실패");
+    }
+    
+    @PutMapping(value="/free/report/{id}")
+    public ResponseEntity<String> clearPostReport(@PathVariable int id){
+    	LOGGER.info("clearPostReport 메서드를  BoardController에서 진입");
+        if(boardFreeService.clearPostReport(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 해제");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 해제 실패");
     }
 }

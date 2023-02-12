@@ -1,11 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
 // import Button from "@mui/material/Button";
 
-function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
+function ArticleBox({
+  sx,
+  board,
+  no,
+  title,
+  author,
+  date,
+  view,
+  ...otherProps
+}) {
   const mergedSx = {
-    ...{ bgcolor: "white", color: "black", border: 1 },
+    ...{ bgcolor: "white", color: "black", borderBottom: 1 },
     ...sx,
   };
   return (
@@ -30,15 +40,19 @@ function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
         >
           {no}
         </Box>
-        <Box
-          sx={{
+        <Link
+          to={`/${board}/detail?no=${no}`}
+          style={{
+            textDecoration: "none",
             width: "60%",
             display: "flex",
+            alignItems: "center",
             justifyContent: "center",
+            color: "black",
           }}
         >
-          {title}
-        </Box>
+          <Box>{title}</Box>
+        </Link>
         <Box
           sx={{
             width: "10%",
@@ -71,13 +85,14 @@ function ArtcleBox({ sx, no, title, author, date, view, ...otherProps }) {
   );
 }
 
-ArtcleBox.defaultProps = {
+ArticleBox.defaultProps = {
   sx: {},
 };
 
-ArtcleBox.propTypes = {
+ArticleBox.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   sx: PropTypes.object,
+  board: PropTypes.string.isRequired,
   no: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
@@ -85,4 +100,4 @@ ArtcleBox.propTypes = {
   view: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default ArtcleBox;
+export default ArticleBox;
