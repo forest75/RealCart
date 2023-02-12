@@ -30,6 +30,7 @@ const initialState = {
     receptionOpen: false,
     confirmOpen: false,
     entryOpen: false,
+    forbidOpen: false,
     roomId: null,
     isWait: false,
   },

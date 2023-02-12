@@ -6,8 +6,10 @@ const modalSlice = createSlice({
     receptionOpen: false,
     confirmOpen: false,
     entryOpen: false,
+    forbidOpen: false,
     roomId: null,
     isWait: false,
+    isPlay: false,
   },
   reducers: {
     setReceptionOpen: (state) => {
@@ -19,6 +21,9 @@ const modalSlice = createSlice({
     setEntryOpen: (state) => {
       state.entryOpen = true;
     },
+    setForbidOpen: (state) => {
+      state.forbidOpen = true;
+    },
     setReceptionClose: (state) => {
       state.receptionOpen = false;
     },
@@ -28,11 +33,17 @@ const modalSlice = createSlice({
     setEntryClose: (state) => {
       state.entryOpen = false;
     },
+    setForbidClose: (state) => {
+      state.forbidOpen = false;
+    },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
     },
     setIsWait: (state, action) => {
       state.isWait = action.payload;
+    },
+    setIsPlay: (state, action) => {
+      state.isPlay = action.payload;
     },
   },
 });
@@ -41,10 +52,13 @@ export const {
   setReceptionOpen,
   setConfirmOpen,
   setEntryOpen,
+  setForbidOpen,
   setReceptionClose,
   setConfirmClose,
   setEntryClose,
+  setForbidClose,
   setRoomId,
   setIsWait,
+  setIsPlay,
 } = modalSlice.actions;
 export default modalSlice.reducer;

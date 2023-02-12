@@ -3,14 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import axios from "axios";
 import {
   setReceptionClose,
   setConfirmOpen,
   setIsWait,
+  setForbidOpen,
 } from "../../store/modalSlice";
 
 function ReceptionModal() {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.login.user);
   const queue = useSelector((state) => state.queue);
   const modal = useSelector((state) => state.modal);
   return (
@@ -70,9 +73,21 @@ function ReceptionModal() {
                   color: "black",
                 }}
                 onClick={() => {
-                  dispatch(setReceptionClose());
-                  dispatch(setConfirmOpen());
-                  dispatch(setIsWait(true));
+                  axios
+                    .get(
+                      `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${user.nickname}`
+                    )
+                    .then((res) => {
+                      console.log(res.data);
+                      if (res.data === -100) {
+                        dispatch(setReceptionClose());
+                        dispatch(setForbidOpen());
+                      } else {
+                        dispatch(setReceptionClose());
+                        dispatch(setConfirmOpen());
+                        dispatch(setIsWait(true));
+                      }
+                    });
                 }}
               >
                 대기하기

@@ -13,6 +13,7 @@ import Versus from "../components/spect/Versus";
 import ReceptionModal from "../components/spect/ReceptionModal";
 import ConfirmModal from "../components/spect/ConfirmModal";
 import EntryModal from "../components/spect/EntryModal";
+import ForbidModal from "../components/spect/ForbidModal";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import TransparentImg from "../assets/img/transparent-1px.png";
@@ -24,8 +25,10 @@ import {
   setEntryClose,
   setRoomId,
   setIsWait,
+  setIsPlay,
 } from "../store/modalSlice";
 import axios from "axios";
+import { Typography } from "@mui/material";
 
 function SpectPage() {
   const dispatch = useDispatch();
@@ -299,6 +302,7 @@ function SpectPage() {
               dispatch(setIsWait(false));
               dispatch(setRoomId(1));
               dispatch(setEntryOpen());
+              dispatch(setIsPlay(true));
               setTimeout(() => {
                 navigate(`/play/1`);
                 dispatch(setEntryClose());
@@ -310,6 +314,7 @@ function SpectPage() {
               dispatch(setIsWait(false));
               dispatch(setRoomId(2));
               dispatch(setEntryOpen());
+              dispatch(setIsPlay(true));
               setTimeout(() => {
                 navigate(`/play/2`);
                 dispatch(setEntryClose());
@@ -318,6 +323,8 @@ function SpectPage() {
             }
             if (res.data === -100) {
               alert("오류가 발생했습니다. 재접속해주세요.");
+              clearInterval(endParticipate);
+              dispatch(setIsWait(false));
             }
           })
           .catch((err) => {
@@ -422,75 +429,50 @@ function SpectPage() {
             >
               <div>
                 <div className="row">
-                  {/* <div className="col-md-5">
-                <div className="row">
-                  <div className="col-md-12">
-                    <button
-                      onClick={() => {
-                        presenter(1);
-                      }}
-                      id="presenter1"
-                      href="#"
-                      className="btn btn-success"
-                    >
-                      <span className="glyphicon glyphicon-play"></span>{" "}
-                      Presenter1{" "}
-                    </button>
-                    <button
-                      onClick={() => {
-                        presenter(2);
-                      }}
-                      id="presenter2"
-                      href="#"
-                      className="btn btn-success"
-                    >
-                      <span className="glyphicon glyphicon-play"></span>{" "}
-                      Presenter2{" "}
-                    </button>
-                    <button
-                      onClick={() => {
-                        presenter(3);
-                      }}
-                      id="presenter3"
-                      href="#"
-                      className="btn btn-success"
-                    >
-                      <span className="glyphicon glyphicon-play"></span>{" "}
-                      Presenter3{" "}
-                    </button>
-                    <button
-                      onClick={() => {
-                        viewer(1);
-                      }}
-                      id="viewer"
-                      href="#"
-                      className="btn btn-primary"
-                    >
-                      <span className="glyphicon glyphicon-user"></span> Viewer1
-                    </button>
-                    <button
-                      onClick={() => {
-                        viewer(2);
-                      }}
-                      id="viewer"
-                      href="#"
-                      className="btn btn-primary"
-                    >
-                      <span className="glyphicon glyphicon-user"></span> Viewer2
-                    </button>
-                    <button
-                      onClick={() => {
-                        viewer(3);
-                      }}
-                      id="viewer"
-                      href="#"
-                      className="btn btn-primary"
-                    >
-                      <span className="glyphicon glyphicon-user"></span> Viewer3
-                    </button>
+                  <div className="col-md-5">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <Typography variant="h6">Camera</Typography>
+                        <Button
+                          onClick={() => {
+                            viewer(1);
+                          }}
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
+                          }}
+                        >
+                          <span className="glyphicon glyphicon-user"></span> Red
+                        </Button>
+                        &nbsp;
+                        <Button
+                          onClick={() => {
+                            viewer(2);
+                          }}
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
+                          }}
+                        >
+                          <span className="glyphicon glyphicon-user"></span>{" "}
+                          Blue
+                        </Button>
+                        &nbsp;
+                        <Button
+                          onClick={() => {
+                            viewer(3);
+                          }}
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
+                          }}
+                        >
+                          <span className="glyphicon glyphicon-user"></span>{" "}
+                          관전
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div> */}
                   <div className="col-md-7">
                     <div id="videoBig">
                       <video
@@ -639,6 +621,7 @@ function SpectPage() {
           <ReceptionModal />
           <ConfirmModal />
           <EntryModal />
+          <ForbidModal />
         </Box>
       </Box>
     </Box>
