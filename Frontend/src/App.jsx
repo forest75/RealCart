@@ -49,7 +49,7 @@ function App() {
         <Route path="/findPass" element={<FindPassForm />} />
         <Route path="/myPage" element={<MyPage />} />
         <Route path="/spect" element={<SpectPageWithAuth />} />
-        <Route path="/play" element={<PlayPageWithAuth />} />
+        <Route path="/play/1" element={<PlayPageWithAuth />} />
         <Route path="/play/2" element={<PlayPage2WithAuth />} />
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />
