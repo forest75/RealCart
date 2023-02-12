@@ -1,8 +1,5 @@
 package com.ssafy.realcart.data.dto;
 
-import java.util.List;
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +15,9 @@ import lombok.ToString;
 @Builder
 public class GameDto {
     private int id;
-    private List<Map<UserDto, Integer>> players;
-    private String createdTime;
-    private String modifiedTime;
+    private String player1;
+    private String player2;
+    private String lapTime1;
+    private String lapTime2;
 
 }
