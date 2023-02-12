@@ -33,7 +33,7 @@ window.onload = function() {
   video2.muted = true;
 	connect();
 }
-
+// window.onkeydown = (e) => sendChat();
 window.onbeforeunload = function() {
 	ws.close();
 	socket.close();

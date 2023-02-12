@@ -43,24 +43,15 @@ public class GameController {
         this.gameService = gameService;
     }
     
+    @GetMapping()
+    public ResponseEntity<GameDto> getCurrentGame(){
+    	GameDto gameDto = gameService.getGame();
+        return ResponseEntity.status(HttpStatus.OK).body(gameDto);
+    }
+    
     @GetMapping(value="/{id}")
     public ResponseEntity<GameDto> getGame(@PathVariable int id){
-        GameDto gameDto = new GameDto();
-        List<Map<UserDto, Integer>> players = new ArrayList<>();
-        UserDto player1 = new UserDto();
-        UserDto player2 = new UserDto();
-        int betting1 = 10;
-        int betting2 = 20;
-        Map<UserDto, Integer> map1 = new HashMap<UserDto, Integer>();
-        Map<UserDto, Integer> map2 = new HashMap<UserDto, Integer>();
-        map1.put(player1, betting1);
-        map2.put(player1, betting1);
-        players.add(map1);
-        players.add(map2);
-        gameDto.setPlayers(players);
-        gameDto.setId(1);
-        gameDto.setCreatedTime("2023-01-18 15:06:54.288323");
-        gameDto.setModifiedTime("2023-01-18 15:08:54.288323");
+    	GameDto gameDto = gameService.getGame(id);
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
     }
     
