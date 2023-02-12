@@ -61,8 +61,9 @@ public class BoardFreeService implements IBoardFreeService {
     public List<BoardFreeDto> getBoardFreeAll() {
         List<BoardFree> list = boardFreeDAO.getBoardFreeAll();
         List<BoardFreeDto> boardDtos = new ArrayList<BoardFreeDto>();
-        for (BoardFree free:
-             list) {
+        for (int i = list.size()-1; i >= 0; i--
+             ) {
+        	BoardFree free = list.get(i);
             BoardFreeDto boardFreeDto = new BoardFreeDto();
             boardFreeDto.setId(free.getId());
             boardFreeDto.setTitle(free.getTitle());

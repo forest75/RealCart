@@ -42,7 +42,8 @@ public class BoardNoticeService implements IBoardNoticeService {
 	public List<BoardNoticeDto> getBoardNoticeAll() {
 		List<BoardNotice> boardNotices = boardNoticeDAO.getBoardNoticeAll();
 		List<BoardNoticeDto> boardNoticeDtos = new ArrayList<BoardNoticeDto>();
-		for (BoardNotice boardNotice : boardNotices) {
+		for (int i = boardNotices.size() - 1; i >= 0; i--) {
+			BoardNotice boardNotice = boardNotices.get(i);
 			BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
 			boardNoticeDto.setContent(boardNotice.getContent());
 			boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());

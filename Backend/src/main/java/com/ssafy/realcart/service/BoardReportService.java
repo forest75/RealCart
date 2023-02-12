@@ -48,7 +48,8 @@ public class BoardReportService implements IBoardReportService {
 	public List<BoardReportDto> getBoardReportAll() {
 		List<BoardReport> boardReports = boardReportDAO.getBoardReportAll();
 		List<BoardReportDto> boardReportDtos = new ArrayList<BoardReportDto>();
-		for (BoardReport boardReport : boardReports) {
+		for (int i = boardReports.size() - 1; i >= 0; i--) {
+			BoardReport boardReport = boardReports.get(i);
 			BoardReportDto boardReportDto = new BoardReportDto();
 			boardReportDto.setCreatedTime(boardReport.getCreatedDate());
 			boardReportDto.setHit(boardReport.getHit());

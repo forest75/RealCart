@@ -22,10 +22,14 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 	@Autowired
 	CallHandler callHandler;
 	
+	@Autowired
+	GameHandler gameHandler;
+	
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(callHandler, "/call").setAllowedOrigins("*");
+		registry.addHandler(gameHandler, "/gamenet").setAllowedOrigins("*");
 	}
 	
 	@Override

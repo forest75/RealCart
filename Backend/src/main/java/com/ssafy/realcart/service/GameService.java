@@ -344,7 +344,9 @@ public class GameService implements IGameService{
 		int index = 0;
 		while(size-- > 0) {
 			if(index > 1) break;
-			waitingUsers[index++] = queue.poll();
+			if(waitingUsers[index] == null) {
+				waitingUsers[index++] = queue.poll();
+			}
 			timeLimit = System.currentTimeMillis(); // 시간제한이 다시 생김
 		}
 		return true;
