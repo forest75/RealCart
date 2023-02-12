@@ -1,6 +1,9 @@
 package com.ssafy.realcart.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -14,7 +17,9 @@ import com.ssafy.realcart.data.dao.inter.IGameDAO;
 import com.ssafy.realcart.data.dao.inter.IPlayDAO;
 import com.ssafy.realcart.data.dao.inter.IRecordDAO;
 import com.ssafy.realcart.data.dao.inter.IUserDAO;
+import com.ssafy.realcart.data.dto.GameDto;
 import com.ssafy.realcart.data.dto.PlayDto;
+import com.ssafy.realcart.data.dto.PlayResponseDto;
 import com.ssafy.realcart.data.entity.Game;
 import com.ssafy.realcart.data.entity.Play;
 import com.ssafy.realcart.data.entity.Record;
@@ -344,7 +349,47 @@ public class GameService implements IGameService{
 		}
 		return true;
 	}
-	
-	
+
+	@Override
+	public GameDto getGame() {
+		GameDto gameDto = new GameDto();
+		gameDto.setId(recent);
+		gameDto.setPlayer1("admin".equals(currentUsers[0]) || currentUsers[0] == null?"":currentUsers[0]);
+		gameDto.setPlayer2("admin".equals(currentUsers[1]) || currentUsers[1] == null?"":currentUsers[1]);
+		return gameDto;
+	}
+
+	@Override
+	public GameDto getGame(int id) {
+		GameDto gameDto = new GameDto();
+		List<Play> list = playDAO.getPlay(id);
+		if(list == null) {
+			return null;
+		}
+		gameDto.setId(id);
+		int index = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
+		for (Play play : list) {
+			if(index++ == 0) {
+				gameDto.setPlayer1(play.getUser().getNickname());
+				if(play.getLapTime() == Long.MAX_VALUE) {
+					gameDto.setLapTime1("기권");
+				}
+				else {
+					gameDto.setLapTime1(sdf.format(new Date(play.getLapTime())));
+				}
+			}
+			else {
+				gameDto.setPlayer2(play.getUser().getNickname());
+				if(play.getLapTime() == Long.MAX_VALUE) {
+					gameDto.setLapTime2("기권");
+				}
+				else {
+					gameDto.setLapTime2(sdf.format(new Date(play.getLapTime())));
+				}
+			}
+		}
+		return gameDto;
+	}
 
 }
