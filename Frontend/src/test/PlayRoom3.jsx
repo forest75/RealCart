@@ -2,23 +2,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
-import TransparentImg from "../../assets/img/transparent-1px.png";
-import WebRtcImg from "../../assets/img/webrtc.png";
-import Spinner from "../../assets/img/spinner.gif";
-import Advertise from "../../assets/img/advertise.png";
+import TransparentImg from "./img/transparent-1px.png";
+import WebRtcImg from "./img/webrtc.png";
+import Spinner from "./img/spinner.gif";
+import Advertise from "./img/advertise.png";
 
-function VideoScreen() {
+function PlayRoom3() {
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const text = useRef(null);
   const [webRtcPeer, setWebRtcPeer] = useState(null);
-  const [mediaId, setMediaId] = useState(null);
+  const [mediaId, setMediaId] = useState(2);
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
+      var errorMsg = message.message ? message.message : "Unknown error";
       console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
@@ -88,7 +88,7 @@ function VideoScreen() {
     var message = {
       id: "presenter",
       sdpOffer: offerSdp,
-      mediaId: mediaId,
+      mediaId,
     };
     sendMessage(message);
   }
@@ -121,7 +121,7 @@ function VideoScreen() {
     var message = {
       id: "viewer",
       sdpOffer: offerSdp,
-      mediaId: mediaId,
+      mediaId,
     };
     sendMessage(message);
   }
@@ -132,7 +132,7 @@ function VideoScreen() {
     var message = {
       id: "onIceCandidate",
       candidate: candidate,
-      mediaId: mediaId,
+      mediaId,
     };
     sendMessage(message);
   }
@@ -212,13 +212,17 @@ function VideoScreen() {
             viewerResponse(parsedMessage);
             break;
           case "iceCandidate":
-            webRtcPeer.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
+            if (webRtcPeer) {
+              webRtcPeer.addIceCandidate(
+                parsedMessage.candidate,
+                function (error) {
+                  if (error)
+                    return console.error("Error adding candidate: " + error);
+                }
+              );
+            } else {
+              console.log("webRtcPeer object is not initialized.");
+            }
             break;
           case "stopCommunication":
             dispose();
@@ -234,7 +238,7 @@ function VideoScreen() {
         }, 1000);
       };
     }
-  }, [ws]);
+  }, [ws, webRtcPeer]);
 
   return (
     <div className="App">
@@ -329,4 +333,4 @@ function VideoScreen() {
   );
 }
 
-export default VideoScreen;
+export default PlayRoom3;
