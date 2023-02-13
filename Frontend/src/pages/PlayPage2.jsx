@@ -403,7 +403,7 @@ function PlayPage2() {
           setTimeout(() => {
             console.log("stop");
             wss.send(41);
-          }, 100);
+          }, 250);
         }
         setKeyState((prevState) => ({
           ...prevState,
@@ -423,7 +423,7 @@ function PlayPage2() {
       const interval = setInterval(() => {
         console.log(16);
         wss.send("stop");
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -440,7 +440,7 @@ function PlayPage2() {
       const interval = setInterval(() => {
         console.log("left");
         wss.send(37);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -457,7 +457,7 @@ function PlayPage2() {
       const interval = setInterval(() => {
         console.log("up");
         wss.send(38);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -474,7 +474,7 @@ function PlayPage2() {
       const interval = setInterval(() => {
         console.log("right");
         wss.send(39);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -491,7 +491,7 @@ function PlayPage2() {
       const interval = setInterval(() => {
         console.log("down");
         wss.send(40);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
