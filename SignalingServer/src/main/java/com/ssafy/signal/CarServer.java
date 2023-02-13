@@ -45,16 +45,12 @@ public class CarServer extends Thread{
 				out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8")), true);
 				br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				while(true) {
-					String dataLenStr = "";
-	                for (int i = 0; i < 128; i++) {
-	                    dataLenStr += (char) br.read();
-	                }
-	                int dataLen = Integer.parseInt(dataLenStr.trim());
+	                int dataLen = 100;
 	                String jsonData = "";
 	                for (int i = 0; i < dataLen; i++) {
 	                    jsonData += (char) br.read();
 	                }
-	                RcCarStatusDto rcCarStatus = gson.fromJson(jsonData, RcCarStatusDto.class);
+	                RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);
 	                System.out.println(rcCarStatus);
 	                // 0: NULL, 1: Ready, 2: Finish, 3: Running
 	                switch (rcCarStatus.getStatus()) {

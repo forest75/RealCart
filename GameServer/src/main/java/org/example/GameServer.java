@@ -1,6 +1,7 @@
 package org.example;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.java_websocket.WebSocket;
 import org.java_websocket.server.WebSocketServer;
 
@@ -13,10 +14,11 @@ public class GameServer {
 
     public static void main(String[] args) {
         FlagClass flag = FlagClass.getInstance();
-        Thread thread1 = new Thread(new RCcarThread(8081, 8886, flag));
-        thread1.start();
-        Thread thread2 = new Thread(new RCcarThread(8082, 8887, flag));
-        thread2.start();
+//        Thread thread1 = new Thread(new RCcarThread(8081, 8886, flag));
+//        thread1.start();
+//        Thread thread2 = new Thread(new RCcarThread(8082, 8887, flag));
+//        thread2.start();
+        flag.sendResultToBackend("a,0,b,0");
     }
 
 }

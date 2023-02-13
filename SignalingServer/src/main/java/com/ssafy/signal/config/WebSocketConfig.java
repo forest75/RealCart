@@ -12,6 +12,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import com.ssafy.signal.CallHandler;
+import com.ssafy.signal.GameHandler;
 
 @Configuration
 @EnableWebSocket

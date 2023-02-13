@@ -34,7 +34,7 @@ window.onload = function() {
   video2.muted = true;
 	connect();
 }
-window.onkeydown = (e) => gamekey();
+// window.onkeydown = (e) => sendChat();
 window.onbeforeunload = function() {
 	ws.close();
 	socket.close();
@@ -93,18 +93,17 @@ function gameintro(){
   game.send(
     JSON.stringify({
       id: "intro",
-      player: "player1",
-      nickname: "park",
+      player: "player2",
+      nickname: "sojung",
       receiverId: 14,
     })
   )
 }
-
 function gamekey(){
   game.send(
     JSON.stringify({
       id: "key",
-      nickname: "park",
+      nickname: "sojung",
       value: 39,
     })
   )

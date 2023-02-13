@@ -44,24 +44,29 @@ public class GameHandler extends TextWebSocketHandler{
 		JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 		switch (jsonMessage.get("id").getAsString()) {
 		case "intro":
-			if("player1".equals(jsonMessage.get("id").getAsString())){
+			if("player1".equals(jsonMessage.get("player").getAsString())){
 				flag.setPlayer1Nickname(jsonMessage.get("nickname").getAsString());
 				flag.setPlayer1Status(1);
 				sessions[0] = session;
+				LOGGER.info(flag.getPlayer1Nickname());
 				if(sessions[1] != null) gamestart();
 			}
-			else {
+			else if("player2".equals(jsonMessage.get("player").getAsString())){
 				flag.setPlayer2Nickname(jsonMessage.get("nickname").getAsString());
 				flag.setPlayer2Status(2);
 				sessions[1] = session;
+				LOGGER.info(flag.getPlayer2Nickname());
 				if(sessions[0] != null) gamestart();
 			}
+			break;
 		case "key":
 			if(session.equals(sessions[0])) {
 				carServer1.send(jsonMessage.get("value").getAsInt());
+				LOGGER.info(""+jsonMessage.get("value").getAsInt());
 			}
 			else if(session.equals(sessions[1])) {
 				carServer2.send(jsonMessage.get("value").getAsInt());
+				LOGGER.info(""+jsonMessage.get("value").getAsInt());
 			}
 		}
 	}
@@ -125,14 +130,27 @@ public class GameHandler extends TextWebSocketHandler{
 	}
 
 	private void stop(WebSocketSession session) {
+		int index = -1;
 		for (int i = 0; i < sessions.length; i++) {
 			if(sessions[i] == session) {
+				index = i;
 				sessions[i] = null;
 			}
 		}
 		if(sessions[0] == null && sessions[1] == null) {
-			flag.initiateAll();
-			flag.sendNewGameToBackend();
+			if("".equals(flag.getPlayer1Nickname()) || "".equals(flag.getPlayer2Nickname())){
+				flag.initiateAll();
+				flag.sendNewGameToBackend();
+			}
+			else{
+				if(index == 0){
+					flag.setRequestBody(flag.getRequestBody() + "," + flag.getPlayer1Nickname() + "," + -1);
+				}
+				else if(index == 1){
+					flag.setRequestBody(flag.getRequestBody() + "," + flag.getPlayer2Nickname() + "," + -1);
+				}
+				flag.sendResultToBackend(flag.getRequestBody());
+			}
 		}
 		else {
 			if(sessions[0] == null) {
