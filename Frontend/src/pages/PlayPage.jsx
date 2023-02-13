@@ -601,6 +601,22 @@ function PlayPage() {
       },
       true
     );
+    window.addEventListener(
+      "keyup",
+      (e) => {
+        if (e.keyCode === 37 || e.keyCode === 39) {
+          setTimeout(() => {
+            console.log("stop");
+            wss.send(41);
+          }, 250);
+        }
+        setKeyState((prevState) => ({
+          ...prevState,
+          [e.keyCode || e.which]: false,
+        }));
+      },
+      true
+    );
   }, []);
 
   useEffect(() => {
@@ -612,7 +628,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("stop");
         wss.send(16);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -629,7 +645,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("ctrl");
         wss.send(17);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -646,7 +662,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("left");
         wss.send(37);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -663,7 +679,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("up");
         wss.send(38);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -680,7 +696,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("right");
         wss.send(39);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -697,7 +713,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("down");
         wss.send(40);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({

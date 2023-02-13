@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/accounts/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
