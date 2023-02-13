@@ -55,7 +55,7 @@ class RCcarThread implements Runnable{
         try{
             while(br != null) {
                 String dataLenStr = "";
-                for (int i = 0; i < 128; i++) {
+                for (int i = 0; i < 2; i++) {
                     dataLenStr += (char) br.read();
                 }
                 int dataLen = Integer.parseInt(dataLenStr.trim());
