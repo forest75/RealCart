@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,14 +14,9 @@ import ReceptionModal from "../components/spect/ReceptionModal";
 import ConfirmModal from "../components/spect/ConfirmModal";
 import EntryModal from "../components/spect/EntryModal";
 import ForbidModal from "../components/spect/ForbidModal";
-// import VideoScreen from "../components/spect/VideoScreen";
 import Viewer1 from "../components/video/Viewer1";
 import Viewer2 from "../components/video/Viewer2";
 import Viewer3 from "../components/video/Viewer3";
-import WebRtcImg from "../assets/img/webrtc.png";
-import Spinner from "../assets/img/spinner.gif";
-import TransparentImg from "../assets/img/transparent-1px.png";
-import Advertise from "../assets/img/advertise.png";
 import SendIcon from "@mui/icons-material/Send";
 import {
   setReceptionOpen,
@@ -44,7 +38,6 @@ function SpectPage() {
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
 
-  const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
 
   const [flicker, setFlicker] = useState(false);

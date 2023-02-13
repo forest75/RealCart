@@ -22,7 +22,7 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
-import Viewer1 from "../components/video/Viewer1";
+import Viewer1 from "../components/video/Viewer100";
 import SmallViewer3 from "../components/video/SmallViewer3";
 
 function NewPlayPage() {
