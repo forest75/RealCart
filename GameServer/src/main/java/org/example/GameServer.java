@@ -155,12 +155,11 @@ class RCcarThread implements Runnable{
                             }
                             break;
                     }
-                }catch (IllegalStateException e){
+                }catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
-        } catch (IOException | InterruptedException e){
+        } catch (IOException e){
             socket = null;
             System.out.println("Error on running thread");
             e.printStackTrace();
