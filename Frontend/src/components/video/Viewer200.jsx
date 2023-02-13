@@ -219,8 +219,8 @@ function Viewer2() {
                 ref={video}
                 id="video"
                 autoPlay
-                width="640px"
-                height="480px"
+                width="100%"
+                height="100%"
                 poster={WebRtcImg}
                 muted
               />
