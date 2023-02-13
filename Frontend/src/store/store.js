@@ -4,6 +4,7 @@ import betReducer from "./betSlice";
 import chatReducer from "./chatSlice";
 import queueReducer from "./queueSlice";
 import modalReducer from "./modalSlice";
+import videoReducer from "./videoSlice";
 
 const initialState = {
   login: {
@@ -36,6 +37,11 @@ const initialState = {
     roomId: null,
     isWait: false,
   },
+  video: {
+    video1: false,
+    video2: false,
+    video3: false,
+  },
 };
 
 const store = configureStore({
@@ -45,6 +51,7 @@ const store = configureStore({
     chat: chatReducer,
     queue: queueReducer,
     modal: modalReducer,
+    video: videoReducer,
   },
   preloadedState: initialState,
 });
