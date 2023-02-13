@@ -42,13 +42,12 @@ class ClientSocket:
         try:
             cnt = 0
             while True:
-                command = input()
-                stringData = command.encode()
+                string = input()
+                stringData = string.encode()
                 length = str(len(stringData))
                 self.sock.sendall(length.encode('utf-8').ljust(128))
                 self.sock.send(stringData)
-                print(stringData)
-                time.sleep(1)
+                print(u'send images %d' % (cnt))
         except Exception as e:
             print(e)
             self.sock.close()
@@ -63,8 +62,8 @@ class ClientSocket:
 
 
 def main():
-    #TCP_IP = 'i8a403.p.ssafy.io'
-    TCP_IP = 'localhost'
+    TCP_IP = 'i8a403.p.ssafy.io'
+    # TCP_IP = 'localhost'
     TCP_PORT1 = 8081
     client1 = ClientSocket(TCP_IP, TCP_PORT1)
 

@@ -15,13 +15,13 @@ class DC_MOTOR:
             self.enable = enable
             self.input_1 = input_1
             self.input_2 = input_2
+            self.error = 0
             
             self.pwm.start(0)
-            
-            print('DC_motor GPIO pin Setting complete')
-        
-        except:
-            print('DC_motor GPIO pin Setting failed')
+                    
+        except Exception as e:
+            self.error = 1
+            print('DC MOTOR ERROR :', e)
 
     def motor_control(self, speed, stat):
         
@@ -65,11 +65,7 @@ class DC_MOTOR:
         
             elif (-100 <= speed < 0):
                 self.motor_control(-speed, backward)
-            
-            print('car_speed :', speed)
                 
         except:
             print('DC_MOTOR.drive Error')
-    
-    def cleanup(self):
-        GPIO.cleanup()
+        

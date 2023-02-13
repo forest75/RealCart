@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -7,6 +8,10 @@ import axios from "axios";
 import {
   setReceptionClose,
   setConfirmOpen,
+  setEntryOpen,
+  setEntryClose,
+  setRoomId,
+  setIsPlay,
   setIsWait,
   setForbidOpen,
 } from "../../store/modalSlice";
@@ -16,6 +21,8 @@ function ReceptionModal() {
   const user = useSelector((state) => state.login.user);
   const queue = useSelector((state) => state.queue);
   const modal = useSelector((state) => state.modal);
+
+  const navigate = useNavigate();
   return (
     <Modal
       open={modal.receptionOpen}
@@ -82,6 +89,28 @@ function ReceptionModal() {
                       if (res.data === -100) {
                         dispatch(setReceptionClose());
                         dispatch(setForbidOpen());
+                      } else if (res.data === -1) {
+                        dispatch(setReceptionClose());
+                        dispatch(setIsWait(false));
+                        dispatch(setRoomId(1));
+                        dispatch(setEntryOpen());
+                        dispatch(setIsPlay(true));
+                        setTimeout(() => {
+                          navigate(`/play/1`);
+                          dispatch(setEntryClose());
+                          dispatch(setRoomId(null));
+                        }, 10000);
+                      } else if (res.data === -2) {
+                        dispatch(setReceptionClose());
+                        dispatch(setIsWait(false));
+                        dispatch(setRoomId(2));
+                        dispatch(setEntryOpen());
+                        dispatch(setIsPlay(true));
+                        setTimeout(() => {
+                          navigate(`/play/2`);
+                          dispatch(setEntryClose());
+                          dispatch(setRoomId(null));
+                        }, 10000);
                       } else {
                         dispatch(setReceptionClose());
                         dispatch(setConfirmOpen());
