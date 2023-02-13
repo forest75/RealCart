@@ -54,17 +54,18 @@ class RCcarThread implements Runnable{
         System.out.println("thread started to run");
         try{
             while(br != null) {
-                String dataLenStr = "";
-                for (int i = 0; i < 2; i++) {
-                    dataLenStr += (char) br.read();
-                }
-                int dataLen = Integer.parseInt(dataLenStr.trim());
+//                String dataLenStr = "";
+//                for (int i = 0; i < 2; i++) {
+//                    dataLenStr += (char) br.read();
+//                }
+//                dataLenStr = br.readLine();
+                int dataLen = 100;
                 String jsonData = "";
                 for (int i = 0; i < dataLen; i++) {
                     jsonData += (char) br.read();
                 }
-                System.out.println(jsonData);
-                RcCarStatusDto rcCarStatus = gson.fromJson(jsonData, RcCarStatusDto.class);
+                System.out.println(jsonData.trim());
+                RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);
                 // 0: NULL, 1: Ready, 2: Finish, 3: Running
                 switch (rcCarStatus.status) {
                     /*
