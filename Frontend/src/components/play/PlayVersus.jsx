@@ -14,7 +14,7 @@ function PlayVersus() {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
       dispatch(setPlayer(res.data));
     });
-  }, [dispatch]);
+  }, [queue, dispatch]);
 
   useEffect(() => {
     axios
