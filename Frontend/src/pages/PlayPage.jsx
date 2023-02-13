@@ -10,8 +10,8 @@ import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import axios from "axios";
+import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
-import tutorial from "../assets/toturial.png";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
@@ -40,6 +40,7 @@ function PlayPage() {
 
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [wss, setWss] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const videoOutlook = useRef(null);
@@ -395,9 +396,14 @@ function PlayPage() {
       });
     });
 
+    // 중계 websocket 연결
+    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
     setWs(wsConst);
     setSocket(socketConst);
     setStompClient(stompClientConst);
+
+    setWss(wssConst);
 
     // 종료 시
     return () => {
@@ -405,6 +411,7 @@ function PlayPage() {
       clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
+      wssConst.close();
     };
   }, []);
 
@@ -448,41 +455,90 @@ function PlayPage() {
       ws.onopen = () => {
         // setTimeout(() => {
         viewer(1);
-        setTimeout(() => {
-          viewer(2);
-        }, 2000);
+        // setTimeout(() => {
+        //   viewer(2);
+        // }, 2000);
         // }, 1000);
       };
     }
   }, [ws]);
 
-  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+  useEffect(() => {
+    if (wss) {
+      wss.onmessage = function incoming(data) {
+        console.log("get 1", data);
+        if (data === "1") {
+          console.log("중계 서버에서 1 받는 데 성공");
+          wss.send(user.nickname);
+          const intervalId = setInterval(() => {
+            setCurrentImage(
+              (currentImage) => (currentImage + 1) % images.length
+            );
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(intervalId);
+          }, 5500);
+        }
+      };
 
-  wss.onopen = function open() {
-    wss.send(user.nickname);
-  };
+      wss.onclose = function close() {
+        console.log("disconnected");
+      };
 
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      // setInterval(() => {
-      //   for (let i = 0; i < 4; i++) {
-      //     setInterval(() => {
-      //       return <Box component="img" src={images[i]} alt="slide" />;
-      //     }, 1000);
-      //   }
-      // }, 2000);
-      const intervalId = setInterval(() => {
-        setCurrentImage((currentImage) => (currentImage + 1) % images.length);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(intervalId);
-      }, 5500);
+      window.addEventListener(
+        "keyup",
+        (e) => {
+          if (e.keyCode === 37 || e.keyCode === 39) {
+            setTimeout(() => {
+              console.log("stop");
+              wss.send(41);
+            }, 100);
+          }
+          setKeyState((prevState) => ({
+            ...prevState,
+            [e.keyCode || e.which]: false,
+          }));
+        },
+        true
+      );
     }
-  };
 
-  wss.onclose = function close() {
-    console.log("disconnected");
-  };
+    // return () => {
+    //   wss.close();
+    // };
+  }, [wss]);
+
+  // const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
+  // wss.onopen = function open() {
+  //   // wss.send(user.nickname);
+  // };
+
+  // wss.onmessage = function incoming(data) {
+  //   console.log("get 1", data);
+  //   if (data === "1") {
+  //     console.log("중계 서버에서 1 받는 데 성공");
+  //     wss.send(user.nickname);
+  //     // setInterval(() => {
+  //     //   for (let i = 0; i < 4; i++) {
+  //     //     setInterval(() => {
+  //     //       return <Box component="img" src={images[i]} alt="slide" />;
+  //     //     }, 1000);
+  //     //   }
+  //     // }, 2000);
+  //     const intervalId = setInterval(() => {
+  //       setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+  //     }, 1000);
+  //     setTimeout(() => {
+  //       clearInterval(intervalId);
+  //     }, 5500);
+  //   }
+  // };
+
+  // wss.onclose = function close() {
+  //   console.log("disconnected");
+  // };
+
   const images = [
     TransparentImg2,
     CountdownThree,
@@ -503,21 +559,22 @@ function PlayPage() {
   //   }, 5500);
   // }, []);
 
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      setInterval(() => {
-        for (let i = 0; i < 4; i++) {
-          setInterval(() => {
-            return <Box component="img" src={images[i]} alt="slide" />;
-          }, 1000);
-        }
-      }, 2000);
-    }
-  };
+  // wss.onmessage = function incoming(data) {
+  //   if (data === "1") {
+  //     setInterval(() => {
+  //       for (let i = 0; i < 4; i++) {
+  //         setInterval(() => {
+  //           return <Box component="img" src={images[i]} alt="slide" />;
+  //         }, 1000);
+  //       }
+  //     }, 2000);
+  //   }
+  // };
 
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
     16: false,
+    17: false,
     37: false,
     38: false,
     39: false,
@@ -551,7 +608,7 @@ function PlayPage() {
           setTimeout(() => {
             console.log("stop");
             wss.send(41);
-          }, 100);
+          }, 250);
         }
         setKeyState((prevState) => ({
           ...prevState,
@@ -569,14 +626,31 @@ function PlayPage() {
         16: true,
       }));
       const interval = setInterval(() => {
-        console.log(16);
-        wss.send("stop");
-      }, 10);
+        console.log("stop");
+        wss.send(16);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           16: false,
+        }));
+      }, 100);
+    }
+    if (keyState[17] && inputSwitch[17] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        17: true,
+      }));
+      const interval = setInterval(() => {
+        console.log("ctrl");
+        wss.send(17);
+      }, 250);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          17: false,
         }));
       }, 100);
     }
@@ -588,7 +662,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("left");
         wss.send(37);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -605,7 +679,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("up");
         wss.send(38);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -622,7 +696,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("right");
         wss.send(39);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -639,7 +713,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("down");
         wss.send(40);
-      }, 10);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -834,8 +908,8 @@ function PlayPage() {
                   justifyContent: "center",
                 }}
               >
-                {/* <h3>배팅현황</h3> */}
-                <div className="col-md-5">
+                <h3>배팅현황</h3>
+                {/* <div className="col-md-5">
                   <div className="row">
                     <div className="col-md-12">
                       <button
@@ -906,7 +980,7 @@ function PlayPage() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </Box>
               <Box
                 sx={{

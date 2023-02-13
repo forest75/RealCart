@@ -1,54 +1,55 @@
 /* eslint-disable */
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Button,
-  Menu,
-  MenuItem,
-  List,
-  ListItem,
-  ListItemText,
-  Modal,
-  Stack,
-  Typography,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import InitialContent from "../components/InitialContent";
-import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
-import TransparentImg from "../assets/img/transparent-1px.png";
-import WebRtcImg from "../assets/img/webrtc.png";
-import Spinner from "../assets/img/spinner.gif";
-import Advertise from "../assets/img/advertise.png";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import BetWindow from "../components/spect/BetWindow";
+import EntryQueue from "../components/spect/EntryQueue";
+import Versus from "../components/spect/Versus";
+import ReceptionModal from "../components/spect/ReceptionModal";
+import ConfirmModal from "../components/spect/ConfirmModal";
+import EntryModal from "../components/spect/EntryModal";
+import ForbidModal from "../components/spect/ForbidModal";
+import Viewer1 from "../components/video/Viewer1";
+import Viewer2 from "../components/video/Viewer2";
+import Viewer3 from "../components/video/Viewer3";
+import SendIcon from "@mui/icons-material/Send";
+import {
+  setReceptionOpen,
+  setEntryOpen,
+  setEntryClose,
+  setRoomId,
+  setIsWait,
+  setIsPlay,
+} from "../store/modalSlice";
+import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
 import axios from "axios";
 
 function SpectPage() {
-  const [ParticipantA, setParticipantA] = useState("의권짱짱33");
-  const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
-  const user = useSelector((state) => state.login.user);
-  const [ws, setWs] = useState(null);
+  const videoSlice = useSelector((state) => state.video);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
-  const video = useRef(null);
-  const text = useRef(null);
-  var webRtcPeer;
-  var mediaId;
-  1;
-  function presenterResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
 
+  const [chats, setChats] = useState([]);
+
+  const [flicker, setFlicker] = useState(false);
+
+  const text = useRef(null);
+  const chatRef = useRef(null);
+
+  const user = useSelector((state) => state.login.user);
+  const queue = useSelector((state) => state.queue);
+  const modal = useSelector((state) => state.modal);
+
+  // Kurento 관련 함수 시작
   function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function () {
@@ -74,166 +75,12 @@ function SpectPage() {
     );
     text.current.value = "";
   }
-  function viewerResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
-
-  function presenter(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    var options = {
-      localVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    mediaId = num;
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        webRtcPeer.generateOffer(onOfferPresenter);
-      }
-    );
-  }
-
-  function onOfferPresenter(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "presenter",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function viewer(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    mediaId = num;
-    console.log(num);
-    var options = {
-      remoteVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        this.generateOffer(onOfferViewer);
-      }
-    );
-  }
-
-  function onOfferViewer(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "viewer",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function onIceCandidate(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
-
-    var message = {
-      id: "onIceCandidate",
-      candidate: candidate,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function stop() {
-    var message = {
-      id: "stop",
-    };
-    sendMessage(message);
-    dispose();
-  }
-
-  function dispose() {
-    if (webRtcPeer) {
-      webRtcPeer.dispose();
-      webRtcPeer = null;
-    }
-    hideSpinner(video.current);
-  }
-
-  function sendMessage(message) {
-    var jsonMessage = JSON.stringify(message);
-    console.log("Sending message: " + jsonMessage);
-    ws.send(jsonMessage);
-  }
-
-  function showSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = TransparentImg;
-      arguments[
-        i
-      ].style.background = `center transparent url(${Spinner}) no-repeat`;
-    }
-  }
-
-  function hideSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].src = "";
-      arguments[i].poster = Advertise;
-      arguments[i].style.background = "";
-    }
-  }
+  // Kurento 관련 함수 끝
 
   useEffect(() => {
-    const endOptionInterval = setInterval(() => {
-      axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/game/queue`)
-        .then((res) => {
-          const queue = res.data;
-          const waitList = queue.split(",");
-          console.log(waitList);
-          setWait(waitList.length);
-          const waitQueue = [];
-          for (let i = 0; i < waitList.length; i += 2) {
-            waitQueue.push(
-              `${i / 2 + 1}. ${waitList.slice(i, i + 2).join(", ")}`
-            );
-          }
-          console.log(waitQueue);
-          setOptions(waitQueue);
-        });
-    }, 2000);
-
-    const endIndexInterval = setInterval(() => {
-      setSelectedIndex((selectedIndex + 1) % options.length);
-    }, 5000);
-
-    const endParticipantInterval = setInterval(() => {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
-        const users = res.data;
-        const ran1 = Math.floor(Math.random() * users.length);
-        const ran2 = Math.floor(Math.random() * users.length);
-        setParticipantA(users[ran1].nickname);
-        setParticipantB(users[ran2].nickname);
-      });
-    }, 5000);
-
-    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    dispatch(setVideo1(true));
+    dispatch(setVideo2(false));
+    dispatch(setVideo3(false));
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
     );
@@ -241,167 +88,77 @@ function SpectPage() {
     stompClientConst.connect({}, function () {
       stompClientConst.subscribe("/subscribe", function (greeting) {
         console.log(greeting.body);
-        // const newchat = `${user.nickname} : ` + greeting.body;
         setChats((currentArray) => [...currentArray, greeting.body]);
       });
     });
 
-    setWs(wsConst);
     setSocket(socketConst);
     setStompClient(stompClientConst);
 
     return () => {
-      clearInterval(endOptionInterval);
-      clearInterval(endIndexInterval);
-      clearInterval(endParticipantInterval);
-      wsConst.close();
       socketConst.close();
     };
   }, []);
 
   useEffect(() => {
-    if (ws) {
-      ws.onmessage = function (message) {
-        var parsedMessage = JSON.parse(message.data);
-        console.info("Received message: " + message.data);
-
-        switch (parsedMessage.id) {
-          case "presenterResponse":
-            presenterResponse(parsedMessage);
-            break;
-          case "viewerResponse":
-            viewerResponse(parsedMessage);
-            break;
-          case "iceCandidate":
-            webRtcPeer.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
-            break;
-          case "stopCommunication":
-            dispose();
-            break;
-          default:
-            console.error("Unrecognized message", parsedMessage);
-        }
-      };
-
-      ws.onopen = () => {
-        // setTimeout(() => {
-        viewer(1);
-        // }, 1000);
-      };
-    }
-  }, [ws]);
-
-  const navigate = useNavigate();
-  const [options, setOptions] = useState([
-    "1. 상우짱, 성현카트",
-    "2. 의권짱짱33, 지존ㅎHzㅣㄴ",
-    "3. 소정캡짱, 떵미니",
-  ]);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [wait, setWait] = React.useState(1);
-  const open = Boolean(anchorEl);
-
-  const [voteA, setVoteA] = React.useState(2);
-  const [voteB, setVoteB] = React.useState(0);
-
-  const [chat, setChat] = useState("");
-  const [chats, setChats] = useState([]);
-  const chatRef = useRef(null);
-
-  const [modalOpen, setModalOpen] = React.useState(false);
-
-  const totalVotes = voteA + voteB;
-  let proportionA;
-  let proportionB;
-  if (totalVotes === 0) {
-    proportionA = 0.5;
-    proportionB = 0.5;
-  } else {
-    proportionA = voteA / totalVotes;
-    proportionB = voteB / totalVotes;
-  }
-
-  const handleClickListItem = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  // const onChange = (event) => setChat(event.target.value);
-  // const onSubmit = (event) => {
-  //   // preve;
-  //   event.preventDefault();
-  //   // if (chat === "") return;
-  //   // eslint-disable-next-line prefer-template
-  //   console.log("서브밋");
-  //   stompClient.subscribe("/subscribe", function (greeting) {
-  //     console.log("대체몇번실행되는거야");
-  //     const newchat = `${user.nickname} : ` + greeting.body;
-  //     setChats((currentArray) => [...currentArray, newchat]);
-  //     // setChat("");
-  //   });
-  // };
-
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
-
-  useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
 
-  // const [modalContent, setModalContent] = useState(null);
-  // setModalContent(
-  //   <InitialContent
-  //     wait={wait}
-  //     setWait={setWait}
-  //     handleModalClose={handleModalClose}
-  //     setModalContent={setModalContent}
-  //   />
-  // );
-
-  const [isReady, setIsReady] = useState(false);
-  const [flicker, setFlicker] = useState(false);
-  // const [countdown, setCountdown] = useState(10);
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFlicker(!flicker);
-      // interval();
-    }, 1000);
-    return () => clearTimeout(interval);
-  }, [flicker]);
-
-  // useEffect(() => {
-  //   if (modalOpen) {
-  //     const intervalId = setInterval(() => {
-  //       setCountdown(countdown - 1);
-  //       if (countdown === 0) clearInterval(intervalId);
-  //     }, 1000);
-
-  //     // const interval = setInterval(() => {
-  //     //   setCountdown(countdown - 1);
-  //     //   if (countdown === 0) {
-  //     //     clearInterval(interval);
-  //     //     // setModalOpen(false);
-  //     //   }
-  //     // }, 1000);
-  //     // return () => clearInterval(interval);
-  //   }
-  //   return null;
-  // }, [modalOpen, countdown]);
+    let endFlicker;
+    let endParticipate;
+    if (modal.isWait) {
+      endFlicker = setInterval(() => {
+        setFlicker((prev) => !prev);
+      }, 1000);
+      endParticipate = setInterval(() => {
+        axios
+          .get(
+            `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${user.nickname}`
+          )
+          .then((res) => {
+            console.log(res.data);
+            if (res.data === -1) {
+              clearInterval(endParticipate);
+              dispatch(setIsWait(false));
+              dispatch(setRoomId(1));
+              dispatch(setEntryOpen());
+              dispatch(setIsPlay(true));
+              setTimeout(() => {
+                navigate(`/play/1`);
+                dispatch(setEntryClose());
+                dispatch(setRoomId(null));
+              }, 10000);
+            }
+            if (res.data === -2) {
+              clearInterval(endParticipate);
+              dispatch(setIsWait(false));
+              dispatch(setRoomId(2));
+              dispatch(setEntryOpen());
+              dispatch(setIsPlay(true));
+              setTimeout(() => {
+                navigate(`/play/2`);
+                dispatch(setEntryClose());
+                dispatch(setRoomId(null));
+              }, 10000);
+            }
+            if (res.data === -100) {
+              alert("오류가 발생했습니다. 재접속해주세요.");
+              clearInterval(endParticipate);
+              dispatch(setIsWait(false));
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 2000);
+    }
+    return () => {
+      if (endFlicker) {
+        clearInterval(endFlicker);
+      }
+    };
+  }, [modal.isWait]);
 
   return (
     <Box
@@ -441,14 +198,14 @@ function SpectPage() {
               alignItems: "end",
             }}
           >
-            {isReady ? (
+            {modal.isWait ? (
               <Box
                 sx={{
                   opacity: flicker ? 0 : 1,
                   animation: "flicker 0.5s linear infinite",
                 }}
               >
-                대기 중 - 현재 대기 인수 : {wait}명
+                대기 중 - 현재 대기 인수 : {queue.queueLength}명
               </Box>
             ) : null}
           </Box>
@@ -460,130 +217,8 @@ function SpectPage() {
             height: "10%",
           }}
         >
-          <Box
-            display="flex"
-            sx={{
-              width: "65%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              border: "solid 1px #E8E8E8",
-            }}
-          >
-            <Box
-              elevation={0}
-              sx={{
-                display: "flex",
-                height: "60%",
-                width: "95%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{
-                  height: "100%",
-                  width: "45%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <h2>A {ParticipantA}</h2>
-              </Box>
-              <Box
-                display="flex"
-                sx={{
-                  height: "100%",
-                  width: "10%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <h2>vs</h2>
-              </Box>
-              <Box
-                display="flex"
-                sx={{
-                  height: "100%",
-                  width: "45%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <h2>B {ParticipantB}</h2>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            display="flex"
-            sx={{
-              width: "35%",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "solid 1px #E8E8E8",
-            }}
-          >
-            <Box
-              elevation={3}
-              sx={{
-                display: "flex",
-                height: "60%",
-                width: "95%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <List
-                component="nav"
-                // aria-label="Device settings"
-                sx={{
-                  width: "70%",
-                  height: "60%",
-                }}
-              >
-                <ListItem
-                  button
-                  key={options[0].id}
-                  id="lock-button"
-                  // aria-haspopup="listbox"
-                  // aria-controls="lock-menu"
-                  // aria-label="when device is locked"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClickListItem}
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <ListItemText primary={options[selectedIndex]} />
-                </ListItem>
-              </List>
-              <Menu
-                id="lock-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  // "aria-labelledby": "lock-button",
-                  role: "listbox",
-                }}
-              >
-                {options.map((option, index) => (
-                  <MenuItem
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={index}
-                    disabled={index === selectedIndex}
-                    selected={index === selectedIndex}
-                    onClick={(event) => handleMenuItemClick(event, index)}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Box>
+          <Versus queue={queue} />
+          <EntryQueue queue={queue} />
         </Box>
         <Box
           sx={{
@@ -592,16 +227,6 @@ function SpectPage() {
             borderTop: "solid 1px #E8E8E8",
           }}
         >
-          {/* <Box
-            component="img"
-            alt="tmp"
-            src={tmpmain}
-            sx={{
-              width: "100%",
-              height: "100%",
-            }}
-          /> */}
-
           <Box
             sx={{
               width: "100%",
@@ -623,121 +248,66 @@ function SpectPage() {
                 position: "relative",
               }}
             >
-              {/* <Box
-                component="img"
-                alt="car"
-                src="http://192.168.83.21:8080/?action=stream"
-                sx={{
-                  width: "80%",
-                  height: "90%",
-                  transform: "rotate(180deg)",
-                }}
-              /> */}
-              {/* <header>
-                <div className="navbar navbar-inverse navbar-fixed-top"></div>
-                <textarea id="text"></textarea>
-                <button onClick={sendChat}>sendMessage</button>
-              </header> */}
               <div>
                 <div className="row">
-                  {/* <div className="col-md-5">
+                  <div className="col-md-5">
                     <div className="row">
                       <div className="col-md-12">
-                        <button
+                        <Typography variant="h6">Camera</Typography>
+                        <Button
                           onClick={() => {
-                            presenter(1);
+                            dispatch(setVideo1(true));
+                            dispatch(setVideo2(false));
+                            dispatch(setVideo3(false));
                           }}
-                          id="presenter1"
-                          href="#"
-                          className="btn btn-success"
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
+                          }}
                         >
-                          <span className="glyphicon glyphicon-play"></span>{" "}
-                          Presenter1{" "}
-                        </button>
-                        <button
+                          <span className="glyphicon glyphicon-user"></span> Red
+                        </Button>
+                        &nbsp;
+                        <Button
                           onClick={() => {
-                            presenter(2);
+                            dispatch(setVideo1(false));
+                            dispatch(setVideo2(true));
+                            dispatch(setVideo3(false));
                           }}
-                          id="presenter2"
-                          href="#"
-                          className="btn btn-success"
-                        >
-                          <span className="glyphicon glyphicon-play"></span>{" "}
-                          Presenter2{" "}
-                        </button>
-                        <button
-                          onClick={() => {
-                            presenter(3);
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
                           }}
-                          id="presenter3"
-                          href="#"
-                          className="btn btn-success"
-                        >
-                          <span className="glyphicon glyphicon-play"></span>{" "}
-                          Presenter3{" "}
-                        </button>
-                        <button
-                          onClick={() => {
-                            viewer(1);
-                          }}
-                          id="viewer"
-                          href="#"
-                          className="btn btn-primary"
                         >
                           <span className="glyphicon glyphicon-user"></span>{" "}
-                          Viewer1
-                        </button>
-                        <button
+                          Blue
+                        </Button>
+                        &nbsp;
+                        <Button
                           onClick={() => {
-                            viewer(2);
+                            dispatch(setVideo1(false));
+                            dispatch(setVideo2(false));
+                            dispatch(setVideo3(true));
                           }}
-                          id="viewer"
-                          href="#"
-                          className="btn btn-primary"
+                          sx={{
+                            bgcolor: "tomato",
+                            color: "white",
+                          }}
                         >
                           <span className="glyphicon glyphicon-user"></span>{" "}
-                          Viewer2
-                        </button>
-                        <button
-                          onClick={() => {
-                            viewer(3);
-                          }}
-                          id="viewer"
-                          href="#"
-                          className="btn btn-primary"
-                        >
-                          <span className="glyphicon glyphicon-user"></span>{" "}
-                          Viewer3
-                        </button>
+                          관전
+                        </Button>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
                   <div className="col-md-7">
-                    <div id="videoBig">
-                      <video
-                        ref={video}
-                        id="video"
-                        autoPlay={true}
-                        width="640px"
-                        height="480px"
-                        poster={WebRtcImg}
-                        muted={true}
-                      ></video>
-                    </div>
+                    {videoSlice.video1 ? <Viewer1 /> : null}
+                    {videoSlice.video2 ? <Viewer2 /> : null}
+                    {videoSlice.video3 ? <Viewer3 /> : null}
                   </div>
                 </div>
               </div>
             </Paper>
-
-            {/* <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/p7ozHbyOQBY"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            /> */}
           </Box>
         </Box>
       </Box>
@@ -766,125 +336,14 @@ function SpectPage() {
               bgcolor: "#043774",
               color: "white",
             }}
-            onClick={handleModalOpen}
+            onClick={() => {
+              dispatch(setReceptionOpen());
+            }}
           >
             Play
           </Button>
         </Box>
-        <Box
-          display="flex"
-          sx={{
-            width: "100%",
-            height: "25%",
-            justifyContent: "center",
-          }}
-        >
-          <Paper
-            sx={{
-              width: "90%",
-              height: "90%",
-            }}
-          >
-            <Box
-              display="flex"
-              sx={{
-                width: "100%",
-                height: "30%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              배팅상황
-            </Box>
-            <Box
-              display="flex"
-              sx={{
-                width: "100%",
-                height: "40%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{
-                  width: "80%",
-                  height: "100%",
-                }}
-              >
-                <Paper
-                  elevation={3}
-                  sx={{
-                    width: `${Math.max(proportionA * 70 + 30, 30)}%`,
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      setVoteA(voteA + 1);
-                    }}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  >
-                    A
-                  </Button>
-                </Paper>
-                <Paper
-                  elevation={3}
-                  sx={{
-                    width: `${Math.max(proportionB * 70 + 30, 30)}%`,
-                    animation: "widthChange 0.5s ease-in-out",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      setVoteB(voteB + 1);
-                    }}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  >
-                    B
-                  </Button>
-                </Paper>
-              </Box>
-            </Box>
-            <Box
-              display="flex"
-              sx={{
-                width: "100%",
-                height: "30%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{
-                  width: "50%",
-                  height: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {voteA}명
-              </Box>
-              <Box
-                display="flex"
-                sx={{
-                  width: "50%",
-                  height: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {voteB}명
-              </Box>
-            </Box>
-          </Paper>
-        </Box>
+        <BetWindow />
         <Box
           display="flex"
           sx={{
@@ -903,17 +362,17 @@ function SpectPage() {
             <Box
               id="chat"
               sx={{
-                width: "100%",
+                width: "99.2%",
                 height: "90%",
-                // maxHeight: 500,
+                maxHeight: 315,
                 overflow: "auto",
                 border: "solid 1px #E8E8E8",
               }}
               ref={chatRef}
             >
               <ul style={{ listStyleType: "none" }}>
-                {chats.map((item) => (
-                  <li key={item.id}>{item}</li>
+                {chats.map((item, index) => (
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </Box>
@@ -935,8 +394,6 @@ function SpectPage() {
                 }}
               >
                 <input
-                  // onChange={onChange}
-                  // value={chat}
                   ref={text}
                   type="text"
                   style={{
@@ -947,7 +404,6 @@ function SpectPage() {
                   placeholder="채팅을 입력하세요"
                 />
                 <button
-                  // onClick={sendChat}
                   type="submit"
                   style={{
                     width: "40%",
@@ -978,110 +434,13 @@ function SpectPage() {
               color: "black",
               marginTop: "20px",
             }}
-            onClick={handleModalOpen}
           >
             버그 및 문제신고
           </Button>
-          <Modal
-            open={modalOpen}
-            onClose={handleModalClose}
-            // BackdropProps={{
-            //   style: {
-            //     backgroundColor: "transparent",
-            //     boxShadow: "none",
-            //   },
-            // }}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box>
-              {isReady ? (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    bgcolor: "background.paper",
-                    width: "25%",
-                    height: "25%",
-                  }}
-                >
-                  <Box
-                    display="flex"
-                    sx={{
-                      bgcolor: "white",
-                      color: "#333333",
-                      width: "100%",
-                      height: "55%",
-                      justifyContent: "center",
-                      alignItems: "end",
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h5">
-                        당신의 차례가 되었습니다.
-                      </Typography>
-                      <Typography variant="h5">입장해주세요.</Typography>
-                    </Stack>
-                  </Box>
-                  <Box
-                    display="flex"
-                    sx={{
-                      width: "100%",
-                      height: "45%",
-                    }}
-                  >
-                    <Box
-                      display="flex"
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{
-                          width: "50%",
-                          height: "35%",
-                          bgcolor: "white",
-                          color: "black",
-                        }}
-                        onClick={() => {
-                          navigate("/play");
-                          // handleModalClose();
-                          // setIsReady(true);
-                        }}
-                      >
-                        입장
-                      </Button>
-                      {/* 남은 시간 : {countdown} */}
-                    </Box>
-                  </Box>
-                </Box>
-              ) : (
-                <InitialContent
-                  wait={wait}
-                  setWait={setWait}
-                  handleModalOpen={handleModalOpen}
-                  handleModalClose={handleModalClose}
-                  setIsReady={setIsReady}
-                  setSelectedIndex={setSelectedIndex}
-                  options={options}
-                  setOptions={setOptions}
-                  nickname={user.nickname}
-                  setIsReady={setIsReady}
-                />
-              )}
-            </Box>
-          </Modal>
+          <ReceptionModal />
+          <ConfirmModal />
+          <EntryModal />
+          <ForbidModal />
         </Box>
       </Box>
     </Box>

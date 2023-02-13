@@ -5,24 +5,12 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import AppButton from "../../components/AppButton";
 import ReportBox from "../../components/ReportBox";
 import ReportBoxTitle from "../../components/ReportBoxTitle";
 
 function ReportBoard() {
   const [page, setPage] = useState(0);
-  const [age, setAge] = React.useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   const onChangePage = (event, value) => {
     setPage(value);
@@ -90,41 +78,9 @@ function ReportBoard() {
           display: "flex",
         }}
       >
-        <Typography variant="h4" flexGrow={1}>
+        <Typography variant="h5" flexGrow={1}>
           문의게시판
         </Typography>
-        <Box
-          sx={{
-            width: "35%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "end",
-          }}
-        >
-          <FormControl
-            sx={{
-              width: "30%",
-            }}
-          >
-            <InputLabel id="demo-simple-select-label">검색 조건</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={age}
-              label="Age"
-              onChange={handleChange}
-            >
-              <MenuItem value={10}>회원명</MenuItem>
-              <MenuItem value={20}>제목</MenuItem>
-              <MenuItem value={30}>내용</MenuItem>
-            </Select>
-          </FormControl>
-          <InputBase />
-          <IconButton type="button">
-            <SearchIcon />
-          </IconButton>
-        </Box>
       </Box>
       <Box
         sx={{
@@ -161,7 +117,7 @@ function ReportBoard() {
               category={article.category}
               title={article.title}
               author={article.nickname}
-              date={Date(article.createdTime)}
+              date={new Date(article.createdTime).toLocaleDateString()}
               view={article.hit}
             />
           ))}

@@ -64,7 +64,7 @@ function NoticeBoard() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: 1000,
+        height: 700,
       }}
     >
       <Box
@@ -108,7 +108,7 @@ function NoticeBoard() {
               no={article.id}
               title={article.title}
               author="admin"
-              date={article.createdTime}
+              date={new Date(article.createdTime).toLocaleDateString()}
               view={article.hit}
             />
           ))}
