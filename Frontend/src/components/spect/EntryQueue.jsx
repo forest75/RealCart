@@ -22,6 +22,15 @@ function EntryQueue({ queue }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
+    const endIndexInterval = setInterval(() => {
+      setSelectedIndex((selectedIndex + 1) % options.length);
+    }, 5000);
+    return () => {
+      clearInterval(endIndexInterval);
+    };
+  }, [selectedIndex, options.length]);
+
+  useEffect(() => {
     const endUpdateQueue = setInterval(() => {
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/game/queue`)
