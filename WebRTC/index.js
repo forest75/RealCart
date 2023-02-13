@@ -15,66 +15,99 @@
  *
  */
 
-var ws = new WebSocket("wss://i8a403.p.ssafy.io:8070/call");
-var socket = new WebSocket("wss://i8a403.p.ssafy.io:8070/chat");
-var video;
+var ws = new WebSocket('ws://13.125.13.39:8100/call');
+var socket = new WebSocket('ws://13.125.13.39:8100/chat');
+var video1;
+var video2;
 var text;
-var webRtcPeer;
+var webRtcPeer1;
+var webRtcPeer2;
 var mediaId;
-window.onload = function () {
-  video = document.getElementById("video");
-  text = document.getElementById("text");
-  video.autoplay = true;
-  video.muted = true;
-  connect();
+window.onload = function() {
+	
+	video1 = document.getElementById('video1');
+  video2 = document.getElementById('video2');
+	text = document.getElementById('text');
+	// video.autoplay = true;
+	video1.muted = true;
+  video2.muted = true;
+	connect();
+}
+// window.onkeydown = (e) => sendChat();
+window.onbeforeunload = function() {
+	ws.close();
+	socket.close();
+}
+ws.onopen = function(){
+	setTimeout(() => {
+    viewer1();
+  }, 1000);
   setTimeout(() => {
-    presenter(1);
+    viewer2();
   }, 2000);
-};
-
-window.onbeforeunload = function () {
-  ws.close();
-  socket.close();
-};
-ws.onopen = function () {
-  setTimeout(() => {
-    viewer(1);
-  }, 2000);
-};
-// socket.onmessage = function(message){
-// 	console.log(message);
-// }
+  // viewer(2);
+	  
+}
+socket.onmessage = function(message){
+	console.log(message);
+}
 ws.onmessage = function (message) {
   var parsedMessage = JSON.parse(message.data);
   console.info("Received message: " + message.data);
 
   switch (parsedMessage.id) {
-    case "presenterResponse":
-      presenterResponse(parsedMessage);
+    case "presenterResponse1":
+      presenterResponse1(parsedMessage);
       break;
-    case "viewerResponse":
-      viewerResponse(parsedMessage);
+    case "viewerResponse1":
+      viewerResponse1(parsedMessage);
       break;
-    case "iceCandidate":
-      webRtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+    case "iceCandidate1":
+      webRtcPeer1.addIceCandidate(parsedMessage.candidate, function (error) {
         if (error) return console.error("Error adding candidate: " + error);
       });
       break;
-    case "stopCommunication":
-      dispose();
+    case "stopCommunication1":
+      dispose1();
+      break;
+    case "presenterResponse2":
+      presenterResponse2(parsedMessage);
+      break;
+    case "viewerResponse2":
+      viewerResponse2(parsedMessage);
+      break;
+    case "iceCandidate2":
+      webRtcPeer2.addIceCandidate(parsedMessage.candidate, function (error) {
+        if (error) return console.error("Error adding candidate: " + error);
+      });
+      break;
+    case "stopCommunication2":
+      dispose2();
       break;
     default:
       console.error("Unrecognized message", parsedMessage);
   }
 };
 
-function presenterResponse(message) {
+function presenterResponse1(message) {
   if (message.response != "accepted") {
     var errorMsg = message.message ? message.message : "Unknow error";
     console.info("Call not accepted for the following reason: " + errorMsg);
-    dispose();
+    dispose1();
   } else {
-    webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+    webRtcPeer1.processAnswer(message.sdpAnswer, function (error) {
+      if (error) return console.error(error);
+    });
+  }
+}
+
+function presenterResponse2(message) {
+  if (message.response != "accepted") {
+    var errorMsg = message.message ? message.message : "Unknow error";
+    console.info("Call not accepted for the following reason: " + errorMsg);
+    dispose2();
+  } else {
+    webRtcPeer2.processAnswer(message.sdpAnswer, function (error) {
       if (error) return console.error(error);
     });
   }
@@ -100,88 +133,168 @@ function sendChat() {
     })
   );
 }
-function viewerResponse(message) {
+function viewerResponse1(message) {
   if (message.response != "accepted") {
     var errorMsg = message.message ? message.message : "Unknow error";
     console.info("Call not accepted for the following reason: " + errorMsg);
-    dispose();
+    dispose1();
   } else {
-    webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+    webRtcPeer1.processAnswer(message.sdpAnswer, function (error) {
+      if (error) return console.error(error);
+    });
+  }
+}
+function viewerResponse2(message) {
+  if (message.response != "accepted") {
+    var errorMsg = message.message ? message.message : "Unknow error";
+    console.info("Call not accepted for the following reason: " + errorMsg);
+    dispose2();
+  } else {
+    webRtcPeer2.processAnswer(message.sdpAnswer, function (error) {
       if (error) return console.error(error);
     });
   }
 }
 
-function presenter(num) {
-  if (!webRtcPeer) {
-    showSpinner(video);
+function presenter1() {
+  if (!webRtcPeer1) {
+    showSpinner(video1);
   }
   var options = {
-    localVideo: video,
-    onicecandidate: onIceCandidate,
+    localVideo: video1,
+    onicecandidate: onIceCandidate1,
   };
-  mediaId = num;
-  webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
+  webRtcPeer1 = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
     options,
     function (error) {
       if (error) {
         return console.error(error);
       }
-      webRtcPeer.generateOffer(onOfferPresenter);
+      webRtcPeer1.generateOffer(onOfferPresenter1);
     }
   );
 }
 
-function onOfferPresenter(error, offerSdp) {
+function presenter2() {
+  if (!webRtcPeer2) {
+    showSpinner(video1);
+  }
+  var options = {
+    localVideo: video1,
+    onicecandidate: onIceCandidate2,
+  };
+  webRtcPeer2 = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
+    options,
+    function (error) {
+      if (error) {
+        return console.error(error);
+      }
+      webRtcPeer2.generateOffer(onOfferPresenter2);
+    }
+  );
+}
+
+function onOfferPresenter1(error, offerSdp) {
   if (error) return console.error("Error generating the offer");
   console.info("Invoking SDP offer callback function " + mediaId);
   var message = {
     id: "presenter",
     sdpOffer: offerSdp,
-    mediaId: mediaId,
+    mediaId: 1,
+  };
+  sendMessage(message);
+}
+function onOfferPresenter2(error, offerSdp) {
+  if (error) return console.error("Error generating the offer");
+  console.info("Invoking SDP offer callback function " + mediaId);
+  var message = {
+    id: "presenter",
+    sdpOffer: offerSdp,
+    mediaId: 2,
   };
   sendMessage(message);
 }
 
-function viewer(num) {
-  if (!webRtcPeer) {
-    showSpinner(video);
+function viewer1() {
+  if (!webRtcPeer1) {
+    showSpinner(video1);
   }
-  mediaId = num;
-  console.log(num);
   var options = {
-    remoteVideo: video,
-    onicecandidate: onIceCandidate,
+    remoteVideo: video1,
+    onicecandidate: onIceCandidate1,
   };
-  webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+
+  webRtcPeer1 = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
     options,
     function (error) {
       if (error) {
         return console.error(error);
       }
-      this.generateOffer(onOfferViewer);
+      this.generateOffer(onOfferViewer1);
     }
   );
 }
 
-function onOfferViewer(error, offerSdp) {
+function viewer2() {
+  if (!webRtcPeer2) {
+    showSpinner(video2);
+  }
+  var options = {
+    remoteVideo: video2,
+    onicecandidate: onIceCandidate2,
+  };
+
+  webRtcPeer2 = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+    options,
+    function (error) {
+      if (error) {
+        return console.error(error);
+      }
+      this.generateOffer(onOfferViewer2);
+    }
+  );
+}
+
+function onOfferViewer1(error, offerSdp) {
   if (error) return console.error("Error generating the offer");
-  console.info("Invoking SDP offer callback function " + mediaId);
+  console.info("Invoking SDP offer callback function " + 1);
   var message = {
     id: "viewer",
     sdpOffer: offerSdp,
-    mediaId: mediaId,
+    mediaId: 1,
   };
   sendMessage(message);
 }
 
-function onIceCandidate(candidate) {
+function onOfferViewer2(error, offerSdp) {
+  if (error) return console.error("Error generating the offer");
+  console.info("Invoking SDP offer callback function " + 2);
+  var message = {
+    id: "viewer",
+    sdpOffer: offerSdp,
+    mediaId: 2,
+  };
+  sendMessage(message);
+}
+
+function onIceCandidate1(candidate) {
   console.log("Local candidate" + JSON.stringify(candidate));
 
   var message = {
     id: "onIceCandidate",
     candidate: candidate,
-    mediaId: mediaId,
+    mediaId: 1,
+  };
+  sendMessage(message);
+}
+
+function onIceCandidate2(candidate) {
+  console.log("Local candidate" + JSON.stringify(candidate));
+
+  var message = {
+    id: "onIceCandidate",
+    candidate: candidate,
+    mediaId: 2,
   };
   sendMessage(message);
 }
@@ -194,12 +307,20 @@ function stop() {
   dispose();
 }
 
-function dispose() {
-  if (webRtcPeer) {
-    webRtcPeer.dispose();
-    webRtcPeer = null;
+function dispose1() {
+  if (webRtcPeer1) {
+    webRtcPeer1.dispose();
+    webRtcPeer1 = null;
   }
-  hideSpinner(video);
+  hideSpinner(video1);
+}
+
+function dispose2() {
+  if (webRtcPeer2) {
+    webRtcPeer2.dispose();
+    webRtcPeer2 = null;
+  }
+  hideSpinner(video1);
 }
 
 function sendMessage(message) {

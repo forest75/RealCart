@@ -99,8 +99,10 @@ class WsHandler extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         if(flag.getGameStatus() == 1){
-            pw.write(Integer.parseInt(message));
-            pw.flush();
+            if(message.length() <= 2) {
+                pw.write(Integer.parseInt(message));
+                pw.flush();
+            }
         } else {
             if(port == 8886){
                 flag.setPlayer1Nickname(message);

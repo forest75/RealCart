@@ -210,4 +210,22 @@ public class BoardController {
     	}
         return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 실패");
     }
+    
+    @PostMapping(value="/free/report/{id}")
+    public ResponseEntity<String> reportPost(@PathVariable int id){
+    	LOGGER.info("reportPost 메서드를  BoardController에서 진입");
+        if(boardFreeService.reportPost(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 성공");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 실패");
+    }
+    
+    @PutMapping(value="/free/report/{id}")
+    public ResponseEntity<String> clearPostReport(@PathVariable int id){
+    	LOGGER.info("clearPostReport 메서드를  BoardController에서 진입");
+        if(boardFreeService.clearPostReport(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 해제");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 해제 실패");
+    }
 }
