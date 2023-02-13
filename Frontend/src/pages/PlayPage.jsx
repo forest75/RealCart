@@ -40,6 +40,7 @@ function PlayPage() {
 
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [wss, setWss] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const videoOutlook = useRef(null);
@@ -395,9 +396,14 @@ function PlayPage() {
       });
     });
 
+    // 중계 websocket 연결
+    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
     setWs(wsConst);
     setSocket(socketConst);
     setStompClient(stompClientConst);
+
+    setWss(wssConst);
 
     // 종료 시
     return () => {
@@ -405,6 +411,7 @@ function PlayPage() {
       clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
+      wssConst.close();
     };
   }, []);
 
@@ -456,33 +463,65 @@ function PlayPage() {
     }
   }, [ws]);
 
-  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+  useEffect(() => {
+    if (wss) {
+      wss.onmessage = function incoming(data) {
+        console.log("get 1", data);
+        if (data === "1") {
+          console.log("중계 서버에서 1 받는 데 성공");
+          wss.send(user.nickname);
+          const intervalId = setInterval(() => {
+            setCurrentImage(
+              (currentImage) => (currentImage + 1) % images.length
+            );
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(intervalId);
+          }, 5500);
+        }
+      };
 
-  wss.onopen = function open() {
-    wss.send(user.nickname);
-  };
-
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      // setInterval(() => {
-      //   for (let i = 0; i < 4; i++) {
-      //     setInterval(() => {
-      //       return <Box component="img" src={images[i]} alt="slide" />;
-      //     }, 1000);
-      //   }
-      // }, 2000);
-      const intervalId = setInterval(() => {
-        setCurrentImage((currentImage) => (currentImage + 1) % images.length);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(intervalId);
-      }, 5500);
+      wss.onclose = function close() {
+        console.log("disconnected");
+      };
     }
-  };
 
-  wss.onclose = function close() {
-    console.log("disconnected");
-  };
+    // return () => {
+    //   wss.close();
+    // };
+  }, [wss]);
+
+  // const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
+  // wss.onopen = function open() {
+  //   // wss.send(user.nickname);
+  // };
+
+  // wss.onmessage = function incoming(data) {
+  //   console.log("get 1", data);
+  //   if (data === "1") {
+  //     console.log("중계 서버에서 1 받는 데 성공");
+  //     wss.send(user.nickname);
+  //     // setInterval(() => {
+  //     //   for (let i = 0; i < 4; i++) {
+  //     //     setInterval(() => {
+  //     //       return <Box component="img" src={images[i]} alt="slide" />;
+  //     //     }, 1000);
+  //     //   }
+  //     // }, 2000);
+  //     const intervalId = setInterval(() => {
+  //       setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+  //     }, 1000);
+  //     setTimeout(() => {
+  //       clearInterval(intervalId);
+  //     }, 5500);
+  //   }
+  // };
+
+  // wss.onclose = function close() {
+  //   console.log("disconnected");
+  // };
+
   const images = [
     TransparentImg2,
     CountdownThree,
@@ -503,21 +542,22 @@ function PlayPage() {
   //   }, 5500);
   // }, []);
 
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      setInterval(() => {
-        for (let i = 0; i < 4; i++) {
-          setInterval(() => {
-            return <Box component="img" src={images[i]} alt="slide" />;
-          }, 1000);
-        }
-      }, 2000);
-    }
-  };
+  // wss.onmessage = function incoming(data) {
+  //   if (data === "1") {
+  //     setInterval(() => {
+  //       for (let i = 0; i < 4; i++) {
+  //         setInterval(() => {
+  //           return <Box component="img" src={images[i]} alt="slide" />;
+  //         }, 1000);
+  //       }
+  //     }, 2000);
+  //   }
+  // };
 
   const [keyState, setKeyState] = useState({});
   const [inputSwitch, setInputSwitch] = useState({
     16: false,
+    17: false,
     37: false,
     38: false,
     39: false,
@@ -569,14 +609,31 @@ function PlayPage() {
         16: true,
       }));
       const interval = setInterval(() => {
-        console.log(16);
-        wss.send("stop");
+        console.log("stop");
+        wss.send(16);
       }, 10);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
           ...prevState,
           16: false,
+        }));
+      }, 100);
+    }
+    if (keyState[17] && inputSwitch[17] === false) {
+      setInputSwitch((prevState) => ({
+        ...prevState,
+        17: true,
+      }));
+      const interval = setInterval(() => {
+        console.log("ctrl");
+        wss.send(17);
+      }, 10);
+      setTimeout(() => {
+        clearInterval(interval);
+        setInputSwitch((prevState) => ({
+          ...prevState,
+          17: false,
         }));
       }, 100);
     }

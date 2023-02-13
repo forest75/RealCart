@@ -155,7 +155,7 @@ function FreeBoard() {
               no={article.id}
               title={article.title}
               author={article.nickname}
-              date={article.createdTime}
+              date={new Date(article.createdTime).toLocaleDateString()}
               view={article.hit}
             />
           ))}

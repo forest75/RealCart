@@ -108,7 +108,7 @@ function NoticeBoard() {
               no={article.id}
               title={article.title}
               author="admin"
-              date={article.createdTime}
+              date={new Date(article.createdTime).toLocaleDateString()}
               view={article.hit}
             />
           ))}
