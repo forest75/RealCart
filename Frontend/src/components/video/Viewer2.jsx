@@ -1,20 +1,15 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
 import kurentoUtils from "kurento-utils";
-import Stomp from "stompjs";
 import TransparentImg from "../../assets/img/transparent-1px.png";
 import WebRtcImg from "../../assets/img/webrtc.png";
 import Spinner from "../../assets/img/spinner.gif";
 import Advertise from "../../assets/img/advertise.png";
 
-function VideoScreen() {
+function Viewer2() {
   const [ws, setWs] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
-  const text = useRef(null);
   const [webRtcPeer, setWebRtcPeer] = useState(null);
-  const [mediaId, setMediaId] = useState(null);
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -26,27 +21,6 @@ function VideoScreen() {
         if (error) return console.error(error);
       });
     }
-  }
-
-  function connect() {
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function () {
-      stompClient.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
-  }
-
-  function sendChat() {
-    stompClient.send(
-      "/publish/messages",
-      {},
-      JSON.stringify({
-        message: text.current.value,
-        senderId: 7,
-        receiverId: 14,
-      })
-    );
   }
 
   function viewerResponse(message) {
@@ -69,7 +43,6 @@ function VideoScreen() {
       localVideo: video.current,
       onicecandidate: onIceCandidate,
     };
-    setMediaId(num);
     const wrp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
       options,
       function (error) {
@@ -84,11 +57,11 @@ function VideoScreen() {
 
   function onOfferPresenter(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
+    console.info("Invoking SDP offer callback function " + 2);
     var message = {
       id: "presenter",
       sdpOffer: offerSdp,
-      mediaId: mediaId,
+      mediaId: 2,
     };
     sendMessage(message);
   }
@@ -97,8 +70,7 @@ function VideoScreen() {
     if (!webRtcPeer) {
       showSpinner(video.current);
     }
-    setMediaId(num);
-    console.log(num);
+    console.log(2);
     var options = {
       remoteVideo: video.current,
       onicecandidate: onIceCandidate,
@@ -117,11 +89,11 @@ function VideoScreen() {
 
   function onOfferViewer(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
+    console.info("Invoking SDP offer callback function " + 2);
     var message = {
       id: "viewer",
       sdpOffer: offerSdp,
-      mediaId: mediaId,
+      mediaId: 2,
     };
     sendMessage(message);
   }
@@ -132,17 +104,9 @@ function VideoScreen() {
     var message = {
       id: "onIceCandidate",
       candidate: candidate,
-      mediaId: mediaId,
+      mediaId: 2,
     };
     sendMessage(message);
-  }
-
-  function stop() {
-    var message = {
-      id: "stop",
-    };
-    sendMessage(message);
-    dispose();
   }
 
   function dispose() {
@@ -178,23 +142,11 @@ function VideoScreen() {
 
   useEffect(() => {
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
-    const socketConst = new WebSocket(
-      `${process.env.REACT_APP_MEDIA_URL}/chat`
-    );
-    const stompClientConst = Stomp.over(socketConst);
-    stompClientConst.connect({}, function () {
-      stompClientConst.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
 
     setWs(wsConst);
-    setSocket(socketConst);
-    setStompClient(stompClientConst);
 
     return () => {
       wsConst.close();
-      socketConst.close();
     };
   }, []);
 
@@ -212,13 +164,17 @@ function VideoScreen() {
             viewerResponse(parsedMessage);
             break;
           case "iceCandidate":
-            webRtcPeer.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
+            if (webRtcPeer) {
+              webRtcPeer.addIceCandidate(
+                parsedMessage.candidate,
+                function (error) {
+                  if (error)
+                    return console.error("Error adding candidate: " + error);
+                }
+              );
+            } else {
+              console.log("webRtcPeer object is not initialized.");
+            }
             break;
           case "stopCommunication":
             dispose();
@@ -230,19 +186,14 @@ function VideoScreen() {
 
       ws.onopen = () => {
         setTimeout(() => {
-          viewer(1);
+          viewer(2);
         }, 1000);
       };
     }
-  }, [ws]);
+  }, [ws, webRtcPeer]);
 
   return (
     <div className="App">
-      <header>
-        <div className="navbar navbar-inverse navbar-fixed-top"></div>
-        <textarea id="text" ref={text}></textarea>
-        <button onClick={sendChat}>sendMessage</button>
-      </header>
       <div>
         <div className="row">
           <div className="col-md-5">
@@ -250,63 +201,14 @@ function VideoScreen() {
               <div className="col-md-12">
                 <button
                   onClick={() => {
-                    presenter(1);
-                  }}
-                  id="presenter1"
-                  href="#"
-                  className="btn btn-success"
-                >
-                  <span className="glyphicon glyphicon-play"></span> Presenter1{" "}
-                </button>
-                <button
-                  onClick={() => {
-                    presenter(2);
-                  }}
-                  id="presenter2"
-                  href="#"
-                  className="btn btn-success"
-                >
-                  <span className="glyphicon glyphicon-play"></span> Presenter2{" "}
-                </button>
-                <button
-                  onClick={() => {
-                    presenter(3);
-                  }}
-                  id="presenter3"
-                  href="#"
-                  className="btn btn-success"
-                >
-                  <span className="glyphicon glyphicon-play"></span> Presenter3{" "}
-                </button>
-                <button
-                  onClick={() => {
-                    viewer(1);
-                  }}
-                  id="viewer"
-                  href="#"
-                  className="btn btn-primary"
-                >
-                  <span className="glyphicon glyphicon-user"></span> Viewer1
-                </button>
-                <button
-                  onClick={() => {
                     viewer(2);
                   }}
                   id="viewer"
                   href="#"
                   className="btn btn-primary"
+                  style={{ color: "white", backgroundColor: "black" }}
                 >
-                  <span className="glyphicon glyphicon-user"></span> Viewer2
-                </button>
-                <button
-                  onClick={() => {
-                    viewer(3);
-                  }}
-                  id="viewer"
-                  href="#"
-                  className="btn btn-primary"
-                >
-                  <span className="glyphicon glyphicon-user"></span> Viewer3
+                  <span className="glyphicon glyphicon-user"></span> reload
                 </button>
               </div>
             </div>
@@ -320,6 +222,7 @@ function VideoScreen() {
                 width="640px"
                 height="480px"
                 poster={WebRtcImg}
+                muted
               />
             </div>
           </div>
@@ -329,4 +232,4 @@ function VideoScreen() {
   );
 }
 
-export default VideoScreen;
+export default Viewer2;
