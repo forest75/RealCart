@@ -131,12 +131,11 @@ function CustomPaginationActionsTable({ address, user }) {
             lapTime: "최고기록",
             rank: "랭킹",
           });
-          for (let i = 0; i < articles.length; i += 1) {
-            List.push({
-              lapTime: articles[i].lapTime,
-              rank: articles[i].rank,
-            });
-          }
+          console.log(articles.lapTime);
+          List.push({
+            lapTime: articles.lapTime,
+            rank: articles.rank,
+          });
         } else if (address === `record/${user}`) {
           List.push({
             gameTime: "날짜",
@@ -181,8 +180,8 @@ function CustomPaginationActionsTable({ address, user }) {
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           : rows
       ).map((row) => (
-        <TableRow key={row.id}>
-          <TableCell style={{ width: 10 }} component="th" scope="row">
+        <TableRow>
+          <TableCell style={{ width: 10 }} align="center">
             {row.lapTime}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
@@ -198,7 +197,10 @@ function CustomPaginationActionsTable({ address, user }) {
           : rows
       ).map((row) => (
         <TableRow key={row.gameTime}>
-          <TableCell style={{ width: 200 }} component="th" scope="row">
+          <TableCell style={{ width: 200 }} align="center">
+            {row.gameTime}
+          </TableCell>
+          <TableCell style={{ width: 200 }} align="center">
             {row.rank}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
