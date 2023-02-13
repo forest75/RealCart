@@ -463,8 +463,9 @@ function PlayPage() {
   };
 
   wss.onmessage = function incoming(data) {
-    console.log(data);
+    console.log("get 1", data);
     if (data === "1") {
+      console.log("중계 서버에서 1 받는 데 성공");
       wss.send(user.nickname);
       // setInterval(() => {
       //   for (let i = 0; i < 4; i++) {

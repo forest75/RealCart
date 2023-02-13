@@ -8,6 +8,7 @@ import { setPlayer, setRank1, setRank2 } from "../../store/queueSlice";
 function PlayVersus() {
   const dispatch = useDispatch();
   const queue = useSelector((state) => state.queue);
+  const bet = useSelector((state) => state.bet);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
@@ -269,7 +270,7 @@ function PlayVersus() {
                   borderRight: "solid 2px #E8E8E8",
                 }}
               >
-                Red 25명
+                Red {bet.betA}명
               </Box>
               <Box
                 sx={{
@@ -280,7 +281,7 @@ function PlayVersus() {
                   justifyContent: "center",
                 }}
               >
-                Blue 17명
+                Blue {bet.betA}명
               </Box>
             </Box>
           </Box>
