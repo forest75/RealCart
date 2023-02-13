@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import BetWindow from "../components/spect/BetWindow";
 import EntryQueue from "../components/spect/EntryQueue";
 import Versus from "../components/spect/Versus";
@@ -14,10 +14,9 @@ import ReceptionModal from "../components/spect/ReceptionModal";
 import ConfirmModal from "../components/spect/ConfirmModal";
 import EntryModal from "../components/spect/EntryModal";
 import ForbidModal from "../components/spect/ForbidModal";
-import WebRtcImg from "../assets/img/webrtc.png";
-import Spinner from "../assets/img/spinner.gif";
-import TransparentImg from "../assets/img/transparent-1px.png";
-import Advertise from "../assets/img/advertise.png";
+import Viewer1 from "../components/video/Viewer1";
+import Viewer2 from "../components/video/Viewer2";
+import Viewer3 from "../components/video/Viewer3";
 import SendIcon from "@mui/icons-material/Send";
 import {
   setReceptionOpen,
@@ -27,45 +26,30 @@ import {
   setIsWait,
   setIsPlay,
 } from "../store/modalSlice";
+import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
 import axios from "axios";
-import { Typography } from "@mui/material";
 
 function SpectPage() {
+  const videoSlice = useSelector((state) => state.video);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
 
-  const [chat, setChat] = useState("");
   const [chats, setChats] = useState([]);
 
   const [flicker, setFlicker] = useState(false);
 
-  const video = useRef(null);
   const text = useRef(null);
   const chatRef = useRef(null);
-  var webRtcPeer;
-  var mediaId;
 
   const user = useSelector((state) => state.login.user);
   const queue = useSelector((state) => state.queue);
   const modal = useSelector((state) => state.modal);
 
   // Kurento 관련 함수 시작
-  function presenterResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
-
   function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function () {
@@ -91,135 +75,12 @@ function SpectPage() {
     );
     text.current.value = "";
   }
-  function viewerResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
-
-  function presenter(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    var options = {
-      localVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    mediaId = num;
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        webRtcPeer.generateOffer(onOfferPresenter);
-      }
-    );
-  }
-
-  function onOfferPresenter(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "presenter",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function viewer(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    mediaId = num;
-    console.log(num);
-    var options = {
-      remoteVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        this.generateOffer(onOfferViewer);
-      }
-    );
-  }
-
-  function onOfferViewer(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "viewer",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function onIceCandidate(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
-
-    var message = {
-      id: "onIceCandidate",
-      candidate: candidate,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-
-  function stop() {
-    var message = {
-      id: "stop",
-    };
-    sendMessage(message);
-    dispose();
-  }
-
-  function dispose() {
-    if (webRtcPeer) {
-      webRtcPeer.dispose();
-      webRtcPeer = null;
-    }
-    hideSpinner(video.current);
-  }
-
-  function sendMessage(message) {
-    var jsonMessage = JSON.stringify(message);
-    console.log("Sending message: " + jsonMessage);
-    ws.send(jsonMessage);
-  }
-
-  function showSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = TransparentImg;
-      arguments[
-        i
-      ].style.background = `center transparent url(${Spinner}) no-repeat`;
-    }
-  }
-
-  function hideSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].src = "";
-      arguments[i].poster = Advertise;
-      arguments[i].style.background = "";
-    }
-  }
-
   // Kurento 관련 함수 끝
 
   useEffect(() => {
-    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    dispatch(setVideo1(true));
+    dispatch(setVideo2(false));
+    dispatch(setVideo3(false));
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
     );
@@ -231,12 +92,10 @@ function SpectPage() {
       });
     });
 
-    setWs(wsConst);
     setSocket(socketConst);
     setStompClient(stompClientConst);
 
     return () => {
-      wsConst.close();
       socketConst.close();
     };
   }, []);
@@ -244,44 +103,6 @@ function SpectPage() {
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
-
-  useEffect(() => {
-    if (ws) {
-      ws.onmessage = function (message) {
-        var parsedMessage = JSON.parse(message.data);
-        console.info("Received message: " + message.data);
-
-        switch (parsedMessage.id) {
-          case "presenterResponse":
-            presenterResponse(parsedMessage);
-            break;
-          case "viewerResponse":
-            viewerResponse(parsedMessage);
-            break;
-          case "iceCandidate":
-            webRtcPeer.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
-            break;
-          case "stopCommunication":
-            dispose();
-            break;
-          default:
-            console.error("Unrecognized message", parsedMessage);
-        }
-      };
-
-      ws.onopen = () => {
-        setTimeout(() => {
-          viewer(1);
-        }, 1000);
-      };
-    }
-  }, [ws]);
 
   useEffect(() => {
     let endFlicker;
@@ -435,7 +256,9 @@ function SpectPage() {
                         <Typography variant="h6">Camera</Typography>
                         <Button
                           onClick={() => {
-                            viewer(1);
+                            dispatch(setVideo1(true));
+                            dispatch(setVideo2(false));
+                            dispatch(setVideo3(false));
                           }}
                           sx={{
                             bgcolor: "tomato",
@@ -447,7 +270,9 @@ function SpectPage() {
                         &nbsp;
                         <Button
                           onClick={() => {
-                            viewer(2);
+                            dispatch(setVideo1(false));
+                            dispatch(setVideo2(true));
+                            dispatch(setVideo3(false));
                           }}
                           sx={{
                             bgcolor: "tomato",
@@ -460,7 +285,9 @@ function SpectPage() {
                         &nbsp;
                         <Button
                           onClick={() => {
-                            viewer(3);
+                            dispatch(setVideo1(false));
+                            dispatch(setVideo2(false));
+                            dispatch(setVideo3(true));
                           }}
                           sx={{
                             bgcolor: "tomato",
@@ -474,17 +301,9 @@ function SpectPage() {
                     </div>
                   </div>
                   <div className="col-md-7">
-                    <div id="videoBig">
-                      <video
-                        ref={video}
-                        id="video"
-                        autoPlay
-                        width="640px"
-                        height="480px"
-                        poster={WebRtcImg}
-                        muted
-                      />
-                    </div>
+                    {videoSlice.video1 ? <Viewer1 /> : null}
+                    {videoSlice.video2 ? <Viewer2 /> : null}
+                    {videoSlice.video3 ? <Viewer3 /> : null}
                   </div>
                 </div>
               </div>

@@ -22,10 +22,10 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
-import Viewer1 from "../components/video/Viewer100";
+import Viewer2 from "../components/video/Viewer200";
 import SmallViewer3 from "../components/video/SmallViewer3";
 
-function NewPlayPage() {
+function NewPlayPage2() {
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
@@ -81,7 +81,7 @@ function NewPlayPage() {
     });
 
     // 중계 websocket 연결
-    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8582");
 
     setSocket(socketConst);
     setStompClient(stompClientConst);
@@ -660,7 +660,7 @@ function NewPlayPage() {
                     poster={WebRtcImg}
                   />
                 </div> */}
-                <Viewer1 />
+                <Viewer2 />
               </Box>
             </Box>
           </Box>
@@ -680,4 +680,4 @@ function NewPlayPage() {
   );
 }
 
-export default NewPlayPage;
+export default NewPlayPage2;
