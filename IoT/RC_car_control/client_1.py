@@ -57,7 +57,7 @@ class ClientSocket:
 
     def recv(self):
         while True:
-            data = self.sock.recv(2)
+            data = self.sock.recv(1)
             print(data)
 
 

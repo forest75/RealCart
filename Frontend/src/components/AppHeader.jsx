@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,7 +21,8 @@ function AppHeader() {
   const user = useSelector((state) => state.login.user);
 
   const [anchorEl1, setAnchorEl1] = useState(null);
-  // const [anchorEl2, setAnchorEl2] = useState(null);
+  const [anchorEl2, setAnchorEl2] = useState(null);
+  const [displayMenu, setDisplayMenu] = useState("none");
 
   const handleClick1 = (event) => {
     setAnchorEl1(event.currentTarget);
@@ -30,46 +31,90 @@ function AppHeader() {
   const handleClose1 = () => {
     setAnchorEl1(null);
   };
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+    setDisplayMenu("none");
+  };
 
-  // const handleClick2 = (event) => {
-  //   setAnchorEl2(event.currentTarget);
-  // };
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
 
-  // const handleClose2 = () => {
-  //   setAnchorEl2(null);
-  // };
+  // const [loginComp, setLoginComp] = useState(
+  //   <Link to="/login" style={{ textDecoration: "none" }}>
+  //     <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
+  //   </Link>
+  // );
 
-  const [loginComp, setLoginComp] = useState(
-    <Link to="/login" style={{ textDecoration: "none" }}>
-      <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
-    </Link>
-  );
-
-  useEffect(() => {
+  const useb = () => {
     if (user) {
-      setLoginComp(
-        // <AppButton
-        //   sx={{ width: 150, height: 70 }}
-        //   onClick={() => {
-        //     handleLogout();
-        //   }}
-        // >
-        //   {user.nickname}
-        // </AppButton>
-        // <Box>
-        <AppButton sx={{ width: 150, height: 70 }} onClick={handleLogout}>
-          {user.nickname}
-        </AppButton>
+      return (
+        <Box>
+          <AppButton sx={{ width: 150, height: 70 }} onClick={handleClick2}>
+            {user.nickname}
+          </AppButton>
+          <Menu
+            sx={{ display: { displayMenu } }}
+            id="basic-menu"
+            anchorEl={anchorEl2}
+            open={Boolean(anchorEl2)}
+            onClose={handleClose2}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <Link
+              to="/myPage"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <MenuItem
+                display={displayMenu}
+                onClick={handleClose2}
+                sx={{
+                  width: 150,
+                  height: 50,
+                  display: "flex",
+                  justifyContent: "center",
+                  borderTop: "solid 1px #f2f2f2",
+                }}
+              >
+                마이페이지
+              </MenuItem>
+            </Link>
+            <Link
+              to="/mainPage"
+              style={{
+                color: "black",
+                textDecoration: "none",
+              }}
+            >
+              <MenuItem
+                // onClick={handleClose}
+                sx={{
+                  borderBottom: "solid 1px  #f2f2f2",
+                  borderTop: "solid 1px  #f2f2f2",
+                  width: 150,
+                  height: 50,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                onClick={handleLogout}
+              >
+                로그아웃
+              </MenuItem>
+            </Link>
+          </Menu>
+        </Box>
       );
+      // eslint-disable-next-line no-else-return
     } else {
-      setLoginComp(
+      return (
         <Link to="/login" style={{ textDecoration: "none" }}>
           <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
         </Link>
       );
     }
-  }, [user]);
-
+  };
   return (
     <Box
       sx={{
@@ -136,7 +181,7 @@ function AppHeader() {
               }}
             >
               <MenuItem
-                // onClick={handleClose}
+                onClick={handleClose1}
                 sx={{
                   borderBottom: "solid 1px  #f2f2f2",
                   borderTop: "solid 1px  #f2f2f2",
@@ -167,16 +212,7 @@ function AppHeader() {
               </MenuItem>
             </Link>
           </Menu>
-          <Link
-            to="/about"
-            style={{
-              color: "black",
-              textDecoration: "none",
-            }}
-          >
-            <AppButton sx={{ width: 150, height: 70 }}>ABOUT</AppButton>
-          </Link>
-          {loginComp}
+          <Box>{useb()}</Box>
         </Toolbar>
       </AppBar>
     </Box>
