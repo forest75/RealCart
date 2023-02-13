@@ -103,8 +103,8 @@ function NewPlayPage2() {
   useEffect(() => {
     if (wss) {
       wss.onmessage = function incoming(data) {
-        console.log("get 1", data);
-        if (data === "1") {
+        console.log("get 1", data.data);
+        if (data.data === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
