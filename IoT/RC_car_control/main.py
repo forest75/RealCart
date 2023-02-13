@@ -80,7 +80,7 @@ class ClientSocket:
         print('recv thread start...')
         
         while tflag_recv_data:
-            data = self.sock.recv(2)
+            data = self.sock.recv(1)
             recv_data = int.from_bytes(data, byteorder='little')
             
             key_up = 38
