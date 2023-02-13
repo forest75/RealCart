@@ -45,6 +45,7 @@ class ClientSocket:
             recv_thread = threading.Thread(target=self.recv)
             
             recv_thread.start()
+            
 
         except Exception as e:
             print(e)
@@ -80,7 +81,7 @@ class ClientSocket:
         print('recv thread start...')
         
         while tflag_recv_data:
-            data = self.sock.recv(2)
+            data = self.sock.recv(1)
             recv_data = int.from_bytes(data, byteorder='little')
             
             key_up = 38
@@ -102,7 +103,6 @@ class ClientSocket:
             if (recv_data == key_right and flag_right == False): flag_right = True
             if (recv_data == key_release and flag_release == False): flag_release = True
             if (recv_data == key_ctrl): boost_action()
-                
             if (recv_data == start_signal and flag_start == False) : start_action()
         
         
@@ -426,11 +426,12 @@ class MyApp(QMainWindow, Ui_MainWindow):
             if tflag_gate_sensing:
                 tflag_gate_sensing = False
                 gate_sensing_thread.join()
+                
             
             if tflag_recv_data:
                 tflag_recv_data = False
                 recv_thread.join()
-                                        
+                                 
             if flag_motor_connect:
                 GPIO.cleanup()
             
