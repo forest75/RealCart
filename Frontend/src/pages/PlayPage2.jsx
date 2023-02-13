@@ -40,6 +40,7 @@ function PlayPage2() {
 
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [wss, setWss] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const text = useRef(null);
@@ -230,9 +231,14 @@ function PlayPage2() {
       });
     });
 
+    // 중계 websocket 연결
+    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8582");
+
     setWs(wsConst);
     setSocket(socketConst);
     setStompClient(stompClientConst);
+
+    setWss(wssConst);
 
     // 종료 시
     return () => {
@@ -240,6 +246,7 @@ function PlayPage2() {
       clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
+      wssConst.close();
     };
   }, []);
 
@@ -284,33 +291,62 @@ function PlayPage2() {
     }
   }, [ws]);
 
-  const wss = new WebSocket("wss://i8a403.p.ssafy.io:8582");
+  useEffect(() => {
+    if (wss) {
+      wss.onmessage = function incoming(data) {
+        console.log("get 1", data);
+        if (data === "1") {
+          console.log("중계 서버에서 1 받는 데 성공");
+          wss.send(user.nickname);
+          const intervalId = setInterval(() => {
+            setCurrentImage(
+              (currentImage) => (currentImage + 1) % images.length
+            );
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(intervalId);
+          }, 5500);
+        }
+      };
 
-  wss.onopen = function open() {
-    wss.send(user.nickname);
-  };
-
-  wss.onmessage = function incoming(data) {
-    if (data === "1") {
-      // setInterval(() => {
-      //   for (let i = 0; i < 4; i++) {
-      //     setInterval(() => {
-      //       return <Box component="img" src={images[i]} alt="slide" />;
-      //     }, 1000);
-      //   }
-      // }, 2000);
-      const intervalId = setInterval(() => {
-        setCurrentImage((currentImage) => (currentImage + 1) % images.length);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(intervalId);
-      }, 5500);
+      wss.onclose = function close() {
+        console.log("disconnected");
+      };
     }
-  };
 
-  wss.onclose = function close() {
-    console.log("disconnected");
-  };
+    // return () => {
+    //   wss.close();
+    // };
+  }, [wss]);
+
+  // const wss = new WebSocket("wss://i8a403.p.ssafy.io:8582");
+
+  // wss.onopen = function open() {
+  //   wss.send(user.nickname);
+  // };
+
+  // wss.onmessage = function incoming(data) {
+  //   if (data === "1") {
+  //     // setInterval(() => {
+  //     //   for (let i = 0; i < 4; i++) {
+  //     //     setInterval(() => {
+  //     //       return <Box component="img" src={images[i]} alt="slide" />;
+  //     //     }, 1000);
+  //     //   }
+  //     // }, 2000);
+  //     const intervalId = setInterval(() => {
+  //       setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+  //     }, 1000);
+  //     setTimeout(() => {
+  //       clearInterval(intervalId);
+  //     }, 5500);
+  //   }
+  // };
+
+  // wss.onclose = function close() {
+  //   console.log("disconnected");
+  // };
+
   const images = [
     TransparentImg2,
     CountdownThree,

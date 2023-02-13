@@ -23,7 +23,7 @@ function InitialContent({
         `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${nickname}`
       )
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         switch (res.data) {
           case "-1":
             console.log("1번유저");
@@ -31,7 +31,6 @@ function InitialContent({
             break;
           case "-2":
             console.log("2번유저");
-            setIsInitial(false);
             setIsReady(true);
             break;
           case "-100":
