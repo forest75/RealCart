@@ -59,9 +59,10 @@ class RCcarThread implements Runnable{
                 for (int i = 0; i < dataLen; i++) {
                     jsonData += (char) br.read();
                 }
-                System.out.println(jsonData.trim());
+//                System.out.println(jsonData.trim());
                 try{
-                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);
+                    // jsonData가 자꾸 공백으로 넘어오기 때문에 try catch 해줘야 함
+                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);  
                     System.out.println(flag);
                     // 0: NULL, 1: Ready, 2: Finish, 3: Running
                     switch (rcCarStatus.status) {
@@ -101,6 +102,7 @@ class RCcarThread implements Runnable{
                             }
                             // 3
                             Thread.sleep(5000);
+                            ///////////// Game Start ////////////////
                             pw.write((byte) '1');
                             pw.flush();
                             // 4
@@ -116,8 +118,9 @@ class RCcarThread implements Runnable{
                     1-2. 플레이어 상태를 0으로 만든다.
                     1-3. 웹소켓 연결을 끊는다.
                     2. 기록을 위해 timestamp를 받는다.
-                    3. 백엔드로 랩타임을 넘기고 setGameStatus(0)을 실행
-                    4. initiateAll()로 모두 초기화한다.
+                    3. 백엔드로 문자를 넘기기 위해 bodyseq을 만듦
+                    4. setGameStatus(0)을 실행
+                    5. initiateAll()로 모두 초기화한다.
                      */
                         case 2:
                             // 1
@@ -137,11 +140,12 @@ class RCcarThread implements Runnable{
                             String bodySeg = "";
                             if (rcCarStatus.carNum == 1) {
                                 bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
-                                flag.setPlayer1Status(0);
+                                flag.setPlayer1Laptime(labTime);
                             } else if (rcCarStatus.carNum == 2) {
                                 bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
-                                flag.setPlayer2Status(0);
+                                flag.setPlayer2Laptime(labTime);
                             }
+                            // 4
                             if (flag.getRequestBody() == "") {
                                 flag.setRequestBody(flag.getRequestBody() + bodySeg);
                             } else {
@@ -149,7 +153,7 @@ class RCcarThread implements Runnable{
                                 flag.sendResultToBackend(flag.getRequestBody());
                                 flag.setGameStatus(0);
                             }
-                            // 4
+                            // 5
                             if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                                 flag.initiateAll();
                             }
