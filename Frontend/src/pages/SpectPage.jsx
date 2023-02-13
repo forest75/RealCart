@@ -200,11 +200,30 @@ function SpectPage() {
   }
 
   useEffect(() => {
-    setInterval(() => {
+    const endOptionInterval = setInterval(() => {
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/game/queue`)
+        .then((res) => {
+          const queue = res.data;
+          const waitList = queue.split(",");
+          console.log(waitList);
+          setWait(waitList.length);
+          const waitQueue = [];
+          for (let i = 0; i < waitList.length; i += 2) {
+            waitQueue.push(
+              `${i / 2 + 1}. ${waitList.slice(i, i + 2).join(", ")}`
+            );
+          }
+          console.log(waitQueue);
+          setOptions(waitQueue);
+        });
+    }, 2000);
+
+    const endIndexInterval = setInterval(() => {
       setSelectedIndex((selectedIndex + 1) % options.length);
     }, 5000);
 
-    setInterval(() => {
+    const endParticipantInterval = setInterval(() => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
         const users = res.data;
         const ran1 = Math.floor(Math.random() * users.length);
@@ -232,6 +251,9 @@ function SpectPage() {
     setStompClient(stompClientConst);
 
     return () => {
+      clearInterval(endOptionInterval);
+      clearInterval(endIndexInterval);
+      clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
     };
@@ -523,7 +545,7 @@ function SpectPage() {
               >
                 <ListItem
                   button
-                  key={options[selectedIndex].id}
+                  key={options[0].id}
                   id="lock-button"
                   // aria-haspopup="listbox"
                   // aria-controls="lock-menu"
@@ -1055,6 +1077,7 @@ function SpectPage() {
                   options={options}
                   setOptions={setOptions}
                   nickname={user.nickname}
+                  setIsReady={setIsReady}
                 />
               )}
             </Box>

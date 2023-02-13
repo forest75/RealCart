@@ -175,4 +175,28 @@ public class BoardFreeService implements IBoardFreeService {
 	public boolean deleteComment(int commentId) {
 		return boardFreeDAO.deleteComment(commentId);
 	}
+
+
+	@Override
+	public boolean reportPost(int id) {
+		BoardFree board = boardFreeDAO.getBoardFree(id);
+		if(board != null) {
+			board.setIsReport((byte)1);
+			boardFreeDAO.saveFree(board);
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean clearPostReport(int id) {
+		BoardFree board = boardFreeDAO.getBoardFree(id);
+		if(board != null) {
+			board.setIsReport((byte)0);
+			boardFreeDAO.saveFree(board);
+			return true;
+		}
+		return false;
+	}
 }

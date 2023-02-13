@@ -1,12 +1,17 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Box, Paper } from "@mui/material";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import AppButton from "../components/AppButton";
 import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
 import axios from "axios";
 import tutorial from "../assets/toturial1.png";
+import RaceTime from "../components/RaceTime";
 import rhombusLap from "../assets/rhombus_lab.png";
 import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
@@ -20,8 +25,14 @@ import CountdownOne from "../assets/count_1.png";
 import CountdownTwo from "../assets/count_2.png";
 import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
+import CarHandle from "../assets/car_handle.png";
 
 function PlayPage() {
+  const [carSpeed, setCarSpeed] = useState(0);
+  const [lap, setLap] = useState(1);
+  const [totalLap, setTotalLap] = useState(2);
+  const [isBoost, setIsBoost] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
   const [ParticipantA, setParticipantA] = useState("의권짱짱33");
   const [ParticipantB, setParticipantB] = useState("지존ㅎHzㅣㄴ");
@@ -31,9 +42,12 @@ function PlayPage() {
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
+  const videoOutlook = useRef(null);
   const text = useRef(null);
   var webRtcPeer;
   var mediaId;
+  var webRtcPeerOutlook;
+  var mediaIdOutlook;
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -112,10 +126,17 @@ function PlayPage() {
     }
     mediaId = num;
     console.log(num);
-    var options = {
-      remoteVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
+    if (num === 1) {
+      var options = {
+        remoteVideo: video.current,
+        onicecandidate: onIceCandidate,
+      };
+    } else {
+      var options = {
+        remoteVideo: videoOutlook.current,
+        onicecandidate: onIceCandidate,
+      };
+    }
     webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
       options,
       function (error) {
@@ -188,8 +209,169 @@ function PlayPage() {
     }
   }
 
+  // webrtc용 함수 복제 부분 시작
+  function presenterResponseOutlook(message) {
+    if (message.response != "accepted") {
+      var errorMsg = message.message ? message.message : "Unknow error";
+      console.info("Call not accepted for the following reason: " + errorMsg);
+      disposeOutlook();
+    } else {
+      webRtcPeerOutlook.processAnswer(message.sdpAnswer, function (error) {
+        if (error) return console.error(error);
+      });
+    }
+  }
+
+  function sendChatOutlook(e) {
+    e.preventDefault();
+    if (text.current.value === "") return;
+    if (text.current.value.length > 100)
+      return alert("댓글은 100자 이내로 입력해주세요");
+    stompClient.send(
+      "/publish/messages",
+      {},
+      JSON.stringify({
+        message: `${user.nickname} : ${text.current.value}`,
+        senderId: 7,
+        receiverId: 14,
+      })
+    );
+    text.current.value = "";
+  }
+  function viewerResponseOutlook(message) {
+    if (message.response != "accepted") {
+      var errorMsg = message.message ? message.message : "Unknow error";
+      console.info("Call not accepted for the following reason: " + errorMsg);
+      disposeOutlook();
+    } else {
+      webRtcPeerOutlook.processAnswer(message.sdpAnswer, function (error) {
+        if (error) return console.error(error);
+      });
+    }
+  }
+
+  function presenterOutlook(num) {
+    if (!webRtcPeerOutlook) {
+      showSpinner(videoOutlook.current);
+    }
+    var options = {
+      localVideo: videoOutlook.current,
+      onicecandidate: onIceCandidateOutlook,
+    };
+    mediaIdOutlook = num;
+    webRtcPeerOutlook = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
+      options,
+      function (error) {
+        if (error) {
+          return console.error(error);
+        }
+        webRtcPeerOutlook.generateOffer(onOfferPresenterOutlook);
+      }
+    );
+  }
+
+  function onOfferPresenterOutlook(error, offerSdp) {
+    if (error) return console.error("Error generating the offer");
+    console.info("Invoking SDP offer callback function " + mediaIdOutlook);
+    var message = {
+      id: "presenter",
+      sdpOffer: offerSdp,
+      mediaId: mediaIdOutlook,
+    };
+    sendMessageOutlook(message);
+  }
+
+  function viewerOutlook(num) {
+    if (!webRtcPeerOutlook) {
+      showSpinner(videoOutlook.current);
+    }
+    mediaIdOutlook = num;
+    console.log(num);
+    var options = {
+      remoteVideo: videoOutlook.current,
+      onicecandidate: onIceCandidateOutlook,
+    };
+    webRtcPeerOutlook = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+      options,
+      function (error) {
+        if (error) {
+          return console.error(error);
+        }
+        this.generateOffer(onOfferViewerOutlook);
+      }
+    );
+  }
+
+  function onOfferViewerOutlook(error, offerSdp) {
+    if (error) return console.error("Error generating the offer");
+    console.info("Invoking SDP offer callback function " + mediaIdOutlook);
+    var message = {
+      id: "viewer",
+      sdpOffer: offerSdp,
+      mediaId: mediaIdOutlook,
+    };
+    sendMessageOutlook(message);
+  }
+
+  function onIceCandidateOutlook(candidate) {
+    console.log("Local candidate" + JSON.stringify(candidate));
+
+    var message = {
+      id: "onIceCandidate",
+      candidate: candidate,
+      mediaId: mediaIdOutlook,
+    };
+    sendMessageOutlook(message);
+  }
+
+  function stopOutlook() {
+    var message = {
+      id: "stop",
+    };
+    sendMessageOutlook(message);
+    disposeOutlook();
+  }
+
+  function disposeOutlook() {
+    if (webRtcPeerOutlook) {
+      webRtcPeerOutlook.disposeOutlook();
+      webRtcPeerOutlook = null;
+    }
+    hideSpinnerOutlook(videoOutlook.current);
+  }
+
+  function sendMessageOutlook(message) {
+    var jsonMessage = JSON.stringify(message);
+    console.log("Sending message: " + jsonMessage);
+    ws.send(jsonMessage);
+  }
+
+  function showSpinnerOutlook() {
+    for (var i = 0; i < arguments.length; i++) {
+      arguments[i].poster = TransparentImg;
+      arguments[
+        i
+      ].style.background = `center transparent url(${Spinner}) no-repeat`;
+    }
+  }
+
+  function hideSpinnerOutlook() {
+    for (var i = 0; i < arguments.length; i++) {
+      arguments[i].src = "";
+      arguments[i].poster = Advertise;
+      arguments[i].style.background = "";
+    }
+  }
+  // webRtc용 함수 복제 부분 끝
+
   useEffect(() => {
-    setInterval(() => {
+    // RACE TIME 5초 후에 시작
+    const endRunInterval = setTimeout(() => {
+      setIsRunning(true);
+    }, 5000);
+
+    // 참가자 A, B 5초마다 교체
+    const endParticipantInterval = setInterval(() => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/user`).then((res) => {
         const users = res.data;
         const ran1 = Math.floor(Math.random() * users.length);
@@ -199,6 +381,7 @@ function PlayPage() {
       });
     }, 5000);
 
+    // 미디어 websocket 연결
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -216,7 +399,10 @@ function PlayPage() {
     setSocket(socketConst);
     setStompClient(stompClientConst);
 
+    // 종료 시
     return () => {
+      clearTimeout(endRunInterval);
+      clearInterval(endParticipantInterval);
       wsConst.close();
       socketConst.close();
     };
@@ -243,6 +429,13 @@ function PlayPage() {
                   return console.error("Error adding candidate: " + error);
               }
             );
+            webRtcPeerOutlook.addIceCandidate(
+              parsedMessage.candidate,
+              function (error) {
+                if (error)
+                  return console.error("Error adding candidate: " + error);
+              }
+            );
             break;
           case "stopCommunication":
             dispose();
@@ -255,12 +448,37 @@ function PlayPage() {
       ws.onopen = () => {
         // setTimeout(() => {
         viewer(1);
+        setTimeout(() => {
+          viewer(2);
+        }, 2000);
         // }, 1000);
       };
     }
   }, [ws]);
 
   const wss = new WebSocket("wss://i8a403.p.ssafy.io:8581");
+
+  wss.onopen = function open() {
+    wss.send(user.nickname);
+  };
+
+  wss.onmessage = function incoming(data) {
+    if (data === "1") {
+      // setInterval(() => {
+      //   for (let i = 0; i < 4; i++) {
+      //     setInterval(() => {
+      //       return <Box component="img" src={images[i]} alt="slide" />;
+      //     }, 1000);
+      //   }
+      // }, 2000);
+      const intervalId = setInterval(() => {
+        setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(intervalId);
+      }, 5500);
+    }
+  };
 
   wss.onclose = function close() {
     console.log("disconnected");
@@ -276,14 +494,14 @@ function PlayPage() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentImage((currentImage) => (currentImage + 1) % images.length);
-    }, 1000);
-    setTimeout(() => {
-      clearInterval(intervalId);
-    }, 5500);
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setCurrentImage((currentImage) => (currentImage + 1) % images.length);
+  //   }, 1000);
+  //   setTimeout(() => {
+  //     clearInterval(intervalId);
+  //   }, 5500);
+  // }, []);
 
   wss.onmessage = function incoming(data) {
     if (data === "1") {
@@ -319,6 +537,9 @@ function PlayPage() {
         if (e.keyCode === 86) {
           console.log(isTutorial);
           setIsTutorial((prevState) => !prevState);
+        }
+        if (e.keyCode === 66) {
+          setIsBoost((prevState) => !prevState);
         }
       },
       true
@@ -613,7 +834,79 @@ function PlayPage() {
                   justifyContent: "center",
                 }}
               >
-                <h3>배팅현황</h3>
+                {/* <h3>배팅현황</h3> */}
+                <div className="col-md-5">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <button
+                        onClick={() => {
+                          presenter(1);
+                        }}
+                        id="presenter1"
+                        href="#"
+                        className="btn btn-success"
+                      >
+                        <span className="glyphicon glyphicon-play"></span>{" "}
+                        Presenter1{" "}
+                      </button>
+                      <button
+                        onClick={() => {
+                          presenter(2);
+                        }}
+                        id="presenter2"
+                        href="#"
+                        className="btn btn-success"
+                      >
+                        <span className="glyphicon glyphicon-play"></span>{" "}
+                        Presenter2{" "}
+                      </button>
+                      <button
+                        onClick={() => {
+                          presenter(3);
+                        }}
+                        id="presenter3"
+                        href="#"
+                        className="btn btn-success"
+                      >
+                        <span className="glyphicon glyphicon-play"></span>{" "}
+                        Presenter3{" "}
+                      </button>
+                      <button
+                        onClick={() => {
+                          viewer(1);
+                        }}
+                        id="viewer"
+                        href="#"
+                        className="btn btn-primary"
+                      >
+                        <span className="glyphicon glyphicon-user"></span>{" "}
+                        Viewer1
+                      </button>
+                      <button
+                        onClick={() => {
+                          viewer(2);
+                        }}
+                        id="viewer"
+                        href="#"
+                        className="btn btn-primary"
+                      >
+                        <span className="glyphicon glyphicon-user"></span>{" "}
+                        Viewer2
+                      </button>
+                      <button
+                        onClick={() => {
+                          viewer(3);
+                        }}
+                        id="viewer"
+                        href="#"
+                        className="btn btn-primary"
+                      >
+                        <span className="glyphicon glyphicon-user"></span>{" "}
+                        Viewer3
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </Box>
               <Box
                 sx={{
@@ -692,7 +985,6 @@ function PlayPage() {
                 zIndex: 1,
               }}
             />
-
             <Box
               component="h4"
               sx={{
@@ -706,6 +998,7 @@ function PlayPage() {
               }}
             >
               RACE TIME
+              <RaceTime isRunning={isRunning} />
             </Box>
             <Box
               component="img"
@@ -734,6 +1027,20 @@ function PlayPage() {
             >
               <h3>BEST</h3>
             </Box>
+            {isBoost && (
+              <Alert
+                // icon={false}
+                severity="error"
+                sx={{
+                  top: "-1.5%",
+                  right: "40%",
+                  position: "absolute",
+                  zIndex: 1,
+                }}
+              >
+                부스터 사용 중
+              </Alert>
+            )}
             <Box
               component="img"
               alt="rhombusLap"
@@ -759,6 +1066,7 @@ function PlayPage() {
               }}
             >
               LAP
+              <p>{`${lap} / ${totalLap}`}</p>
             </Box>
             <Box
               component="img"
@@ -777,6 +1085,57 @@ function PlayPage() {
               }}
             />
             <Box
+              component="img"
+              alt="rhombusPlace"
+              src={CarHandle}
+              sx={{
+                width: "35%",
+                height: "35%",
+                top: "62%",
+                right: "0%",
+                position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            />
+            <Typography
+              variant="h3"
+              sx={{
+                position: "absolute",
+                top: "73%",
+                right: "16%",
+                zIndex: 1,
+              }}
+            >
+              {carSpeed}
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                position: "absolute",
+                top: "79.5%",
+                right: "14%",
+                zIndex: 1,
+              }}
+            >
+              km/h
+            </Typography>
+            <AppButton
+              sx={{
+                width: "13%",
+                height: "6%",
+                top: "84%",
+                right: "10.5%",
+                position: "absolute",
+                zIndex: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              BOOST
+            </AppButton>
+            <Box
               component="h4"
               sx={{
                 top: "15%",
@@ -788,7 +1147,26 @@ function PlayPage() {
             >
               PLACE
             </Box>
-
+            <Box
+              sx={{
+                width: "25%",
+                height: "20%",
+                top: "30%",
+                right: "-1%",
+                position: "absolute",
+                // bgcolor: "yellow",
+                zIndex: 1,
+              }}
+            >
+              <video
+                ref={videoOutlook}
+                id="video"
+                autoPlay
+                width="100%"
+                height="100%"
+                poster={WebRtcImg}
+              />
+            </Box>
             <Box
               sx={{
                 width: "25%",

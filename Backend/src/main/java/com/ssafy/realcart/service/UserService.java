@@ -154,8 +154,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean banUser(String email) {
-        return false;
+    public boolean banUser(String nickname, int days) {
+    	User user = userDAO.checkNickname(nickname);
+    	if(user != null) {
+    		user.setIsBan((byte)1);
+    		userDAO.updateUser(user);
+    		return true;
+    	}
+    	return false;
     }
 
     @Override
@@ -225,5 +231,16 @@ public class UserService implements IUserService {
                         .append("\n").append("https://i8a403.p.ssafy.io/user/verifyemail/").append(userDto.getEmail()).append("/").append(user.getEmailSalt());
         sendMail(userDto.getEmail(), "RealCart Email Verification", sb.toString());
 		
+	}
+
+	@Override
+	public boolean clearUserBan(String nickname) {
+		User user = userDAO.checkNickname(nickname);
+    	if(user != null) {
+    		user.setIsBan((byte)0);
+    		userDAO.updateUser(user);
+    		return true;
+    	}
+    	return false;
 	}
 }

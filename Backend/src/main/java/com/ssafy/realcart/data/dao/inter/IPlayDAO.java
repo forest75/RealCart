@@ -9,4 +9,6 @@ public interface IPlayDAO {
 	boolean createPlay(Play play);
 
 	List<Play> getPlay(int id);
+
+	List<Play> getAllPlay(int userId);
 }
