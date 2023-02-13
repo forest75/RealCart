@@ -5,11 +5,13 @@ import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
+import axios from "axios";
 import Stomp from "stompjs";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
+import BoardTable from "../components/BoardTable";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ function MainPage() {
   const [stompClient, setStompClient] = useState(null);
   const video = useRef(null);
   const text = useRef(null);
+  // const [loading, setLoading] = useState(true);
+  const [articleList, setArticleList] = useState([]);
   var webRtcPeer;
   var mediaId;
 
@@ -75,7 +79,6 @@ function MainPage() {
     };
     sendMessage(message);
   }
-
   function viewer(num) {
     if (!webRtcPeer) {
       showSpinner(video.current);
@@ -218,45 +221,6 @@ function MainPage() {
     }
   }, [ws]);
 
-  const columns = [
-    { field: "id", headerName: "순위", width: 150, editable: false },
-    { field: "nickname", headerName: "NickName", width: 150, editable: false },
-    { field: "laptime", headerName: "LapTime", width: 150, editable: false },
-  ];
-  const ranking = [];
-  ranking.push({
-    id: 1,
-    nickname: "의권짱짱123",
-    laptime: "01:23:59",
-  });
-  ranking.push({
-    id: 2,
-    nickname: "v스피드왕번개v",
-    laptime: "01:23:59",
-  });
-
-  const boardcolumns = [
-    { field: "id", headerName: "번호", width: 150, editable: false },
-    { field: "title", headerName: "제목", width: 300, editable: false },
-    { field: "date", headerName: "등록일", width: 150, editable: false },
-  ];
-
-  const notice = [];
-  notice.push({
-    id: 1,
-    title: "여기는 공지사항 게시판입니다.",
-    date: "2023.01.27",
-  });
-  notice.push({
-    id: 2,
-    title: "리얼카트 곧 출시 예정!",
-    date: "2023.01.27",
-  });
-  notice.push({
-    id: 3,
-    title: "많은 사랑 부탁드립니다.",
-    date: "2023.01.27",
-  });
 
   return (
     <Box
@@ -264,7 +228,7 @@ function MainPage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        height: 1400,
+        height: 1600,
       }}
     >
       <Box
@@ -286,8 +250,8 @@ function MainPage() {
           <Paper
             elevation={2}
             sx={{
-              width: "60%",
-              height: "90%",
+              width: "1000px",
+              height: "700px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -297,8 +261,8 @@ function MainPage() {
               ref={video}
               id="video"
               autoPlay={true}
-              width="640px"
-              height="480px"
+              width="800px"
+              height="600px"
               poster={WebRtcImg}
               onClick={() => {
                 navigate("/spect");
@@ -327,6 +291,7 @@ function MainPage() {
               sx={{
                 width: "90%",
                 height: "90%",
+                editable: "false",
               }}
             >
               <Box
@@ -343,24 +308,12 @@ function MainPage() {
                   공지사항
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "42.5%",
-                }}
-                rows={notice}
-                columns={boardcolumns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
+              <BoardTable address="board/notice" />
+
               <Box
                 sx={{
                   height: "5%",
-                }}
-              />
-              <Box
-                sx={{
-                  height: "5%",
+                  margin: "20px 0px",
                 }}
               >
                 <Typography
@@ -372,16 +325,7 @@ function MainPage() {
                   게시글
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "42.5%",
-                }}
-                rows={ranking}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
+              <BoardTable address="board/free" />
             </Box>
           </Box>
           <Box
@@ -414,16 +358,8 @@ function MainPage() {
                   Ranking
                 </Typography>
               </Box>
-              <DataGrid
-                sx={{
-                  height: "95%",
-                }}
-                rows={ranking}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
+
+              <BoardTable address="record" />
             </Box>
           </Box>
         </Box>
