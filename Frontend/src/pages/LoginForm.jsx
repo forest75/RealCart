@@ -155,7 +155,7 @@ function LoginForm() {
                   <GoogleIcon />
                 </Box>
               </Box>
-              {/* <a href="http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/oauth/redirect"> */}
+              {/* <a href="https://i8a403.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://i8a403.p.ssafy.io/oauth/redirect"> */}
               <Box
                 sx={{
                   width: "38%",
