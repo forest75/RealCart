@@ -186,7 +186,7 @@ function NewPlayPage2() {
 
   useEffect(() => {
     const totalLength = 200;
-    const eachInterval = 90;
+    const eachInterval = 40;
     if (keyState[16] && inputSwitch[16] === false) {
       setInputSwitch((prevState) => ({
         ...prevState,
