@@ -12,6 +12,8 @@ import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
 import BoardTable from "../components/BoardTable";
+import { Link } from "react-router-dom";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -221,7 +223,6 @@ function MainPage() {
     }
   }, [ws]);
 
-
   return (
     <Box
       sx={{
@@ -308,7 +309,7 @@ function MainPage() {
                   공지사항
                 </Typography>
               </Box>
-              <BoardTable address="board/notice" />
+              <BoardTable address="board/notice" link="/noticeBoard" />
 
               <Box
                 sx={{
@@ -325,7 +326,7 @@ function MainPage() {
                   게시글
                 </Typography>
               </Box>
-              <BoardTable address="board/free" />
+              <BoardTable address="board/free" link="/freeBoard" />
             </Box>
           </Box>
           <Box
@@ -346,6 +347,8 @@ function MainPage() {
               <Box
                 sx={{
                   height: "5%",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 <Typography
@@ -356,6 +359,20 @@ function MainPage() {
                   }}
                 >
                   Ranking
+                </Typography>
+                <Typography
+                  variant="h7"
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Link
+                    style={{ textDecoration: "none", color: "black" }}
+                    to="/myPage"
+                  >
+                    <MilitaryTechIcon />
+                    나의 랭킹 보러가기
+                  </Link>
                 </Typography>
               </Box>
 

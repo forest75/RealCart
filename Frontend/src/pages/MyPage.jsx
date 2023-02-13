@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import RecordTable from "../components/RecordTable";
 
 function MyPage() {
@@ -10,17 +11,27 @@ function MyPage() {
     <Box
       display="flex"
       sx={{
-        justifyContent: "center",
+        display: "flex",
         flexDirection: "column",
-        height: "65vh",
-        marginBottom: "40px",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: 550,
       }}
     >
-      <Box component="h1" sx={{ marginLeft: "40px" }}>
-        My Page
+      <Box
+        sx={{
+          width: "80%",
+          height: "10%",
+        }}
+      >
+        <Typography variant="h5" flexGrow={1}>
+          My Page
+        </Typography>
       </Box>
       <Box
         sx={{
+          width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
         }}

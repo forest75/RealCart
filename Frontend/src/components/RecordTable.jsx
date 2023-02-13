@@ -196,23 +196,23 @@ function CustomPaginationActionsTable({ address, user }) {
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           : rows
       ).map((row) => (
-        <TableRow key={row.gameTime}>
-          <TableCell style={{ width: 200 }} align="center">
+        <TableRow>
+          <TableCell style={{ width: 70 }} align="center">
             {row.gameTime}
           </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
+          <TableCell style={{ width: 20 }} align="center">
             {row.rank}
           </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
+          <TableCell style={{ width: 20 }} align="center">
             {row.isWin}
           </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
+          <TableCell style={{ width: 50 }} align="center">
             {row.lapTime}
           </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
+          <TableCell style={{ width: 20 }} align="center">
             {row.oppo}
           </TableCell>
-          <TableCell style={{ width: 200 }} align="center">
+          <TableCell style={{ width: 30 }} align="center">
             {row.oppoLapTime}
           </TableCell>
         </TableRow>
@@ -222,8 +222,8 @@ function CustomPaginationActionsTable({ address, user }) {
   }
 
   return (
-    <TableContainer sx={{ width: 770 }} component={Paper}>
-      <Table sx={{ minWidth: 200 }} aria-label="custom pagination table">
+    <TableContainer sx={{ width: 650 }} component={Paper}>
+      <Table aria-label="custom pagination table">
         <TableBody>
           {tableRow()}
           {emptyRows > 0 && (
@@ -232,9 +232,10 @@ function CustomPaginationActionsTable({ address, user }) {
             </TableRow>
           )}
         </TableBody>
-        <TableFooter>
-          <TableRow>
+        <TableFooter sx={{ width: 770 }}>
+          <TableRow sx={{ width: "100%" }}>
             <TablePagination
+              sx={{ width: "100%" }}
               rowsPerPageOptions={[3, 5]}
               colSpan={3}
               count={rows.length}

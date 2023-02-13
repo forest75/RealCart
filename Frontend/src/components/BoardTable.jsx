@@ -16,6 +16,8 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import "../index.css";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -36,6 +38,8 @@ function TablePaginationActions(props) {
   const handleLastPageButtonClick = (event) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
+  // const [searchParams] = useSearchParams();
+  // const no = Number(searchParams.get("no"));
 
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
@@ -86,7 +90,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function CustomPaginationActionsTable({ address }) {
+function CustomPaginationActionsTable({ address, link }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
@@ -208,8 +212,17 @@ function CustomPaginationActionsTable({ address }) {
           <TableCell style={{ width: 10 }} component="th" scope="row">
             {row.id}
           </TableCell>
+
           <TableCell style={{ width: 200 }} align="center">
-            {row.title}
+            <Link
+              to={link}
+              style={{
+                textDecoration: "none",
+                color: "black",
+              }}
+            >
+              {row.title}
+            </Link>
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
             {row.nickname}
@@ -224,7 +237,7 @@ function CustomPaginationActionsTable({ address }) {
           : rows
       ).map((row) => (
         <TableRow key={row.id}>
-          <TableCell style={{ width: 10 }} component="th" scope="row">
+          <TableCell component="th" scope="row">
             {row.rank}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">
@@ -276,9 +289,12 @@ function CustomPaginationActionsTable({ address }) {
 }
 CustomPaginationActionsTable.defaultPros = {
   address: "",
+  link: "",
 };
 CustomPaginationActionsTable.propTypes = {
   // eslint-disable-next-line react/require-default-props
   address: PropTypes.string,
+  // eslint-disable-next-line react/require-default-props
+  link: PropTypes.string,
 };
 export default CustomPaginationActionsTable;
