@@ -63,8 +63,8 @@ class RCcarThread implements Runnable{
                 for (int i = 0; i < dataLen; i++) {
                     jsonData += (char) br.read();
                 }
+                System.out.println(jsonData);
                 RcCarStatusDto rcCarStatus = gson.fromJson(jsonData, RcCarStatusDto.class);
-                System.out.println(rcCarStatus);
                 // 0: NULL, 1: Ready, 2: Finish, 3: Running
                 switch (rcCarStatus.status) {
                     /*
