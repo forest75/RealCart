@@ -9,20 +9,15 @@ import { Link } from "react-router-dom";
 import { logout } from "../store/loginSlice";
 import AppButton from "./AppButton";
 import logo from "../assets/logo.png";
+import "../index.css";
 
 function AppHeader() {
   const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    dispatch(logout());
-  };
 
   const user = useSelector((state) => state.login.user);
 
   const [anchorEl1, setAnchorEl1] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
-  const [displayMenu, setDisplayMenu] = useState("none");
 
   const handleClick1 = (event) => {
     setAnchorEl1(event.currentTarget);
@@ -33,10 +28,14 @@ function AppHeader() {
   };
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
-    setDisplayMenu("none");
   };
 
   const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    dispatch(logout());
     setAnchorEl2(null);
   };
 
@@ -54,7 +53,6 @@ function AppHeader() {
             {user.nickname}
           </AppButton>
           <Menu
-            sx={{ display: { displayMenu } }}
             id="basic-menu"
             anchorEl={anchorEl2}
             open={Boolean(anchorEl2)}
@@ -63,26 +61,28 @@ function AppHeader() {
               "aria-labelledby": "basic-button",
             }}
           >
-            <Link
-              to="/myPage"
-              style={{ color: "black", textDecoration: "none" }}
+            <MenuItem
+              onClick={handleClose2}
+              sx={{
+                width: 150,
+                height: 50,
+                display: "flex",
+                justifyContent: "center",
+                borderTop: "solid 1px #f2f2f2",
+              }}
             >
-              <MenuItem
-                display={displayMenu}
-                onClick={handleClose2}
-                sx={{
-                  width: 150,
-                  height: 50,
-                  display: "flex",
-                  justifyContent: "center",
-                  borderTop: "solid 1px #f2f2f2",
+              <Link
+                to="/myPage"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
                 }}
               >
-                마이페이지
-              </MenuItem>
-            </Link>
+                MY PAGE
+              </Link>
+            </MenuItem>
             <Link
-              to="/mainPage"
+              to="/"
               style={{
                 color: "black",
                 textDecoration: "none",
@@ -100,7 +100,7 @@ function AppHeader() {
                 }}
                 onClick={handleLogout}
               >
-                로그아웃
+                LOGOUT
               </MenuItem>
             </Link>
           </Menu>
@@ -118,7 +118,7 @@ function AppHeader() {
   return (
     <Box
       sx={{
-        height: 130,
+        height: 100,
       }}
     >
       <AppBar
@@ -136,7 +136,7 @@ function AppHeader() {
               src={logo}
               sx={{
                 height: 90,
-                margin: 2,
+                margin: "5px 20px",
               }}
             />
           </Link>

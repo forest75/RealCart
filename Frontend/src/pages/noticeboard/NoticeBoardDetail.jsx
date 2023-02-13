@@ -99,10 +99,6 @@ function NoticeBoardDetail() {
               borderLeft: "solid 1px black",
               height: "100%",
               width: "20%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
             }}
           >
             <Box
@@ -110,13 +106,12 @@ function NoticeBoardDetail() {
               alt="logo"
               src={Logo}
               sx={{
-                height: 100,
-                width: 100,
+                height: 120,
+                width: 120,
+                marginLeft: "60px",
+                marginBottom: "5px",
               }}
             />
-            <Box>의권짱짱33</Box>
-
-            <Box>[랭킹 2위] </Box>
           </Box>
         </Box>
         <Box
