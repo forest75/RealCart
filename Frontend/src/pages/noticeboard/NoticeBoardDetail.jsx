@@ -10,6 +10,7 @@ function NoticeBoardDetail() {
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
+  const [date, setDate] = useState("");
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
 
@@ -24,6 +25,7 @@ function NoticeBoardDetail() {
         } finally {
           setTitle(res.data.title);
           setContent(resContent);
+          setDate(new Date(res.data.createdTime).toLocaleDateString());
         }
       })
       .catch((err) => {
@@ -89,7 +91,7 @@ function NoticeBoardDetail() {
             </Box>
 
             <Box component="span" sx={{ marginLeft: "100px" }}>
-              2023.03.11
+              {date}
             </Box>
           </Box>
           <Box

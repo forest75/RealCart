@@ -22,7 +22,6 @@ function MyPage() {
       <Box
         sx={{
           width: "80%",
-          height: "10%",
         }}
       >
         <Typography variant="h5" flexGrow={1}>
@@ -34,6 +33,7 @@ function MyPage() {
           width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
+          marginTop: "50px",
         }}
       >
         <Box>
