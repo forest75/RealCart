@@ -104,6 +104,7 @@ class WsHandler extends WebSocketServer {
                 pw.flush();
             }
         } else {
+            System.out.println("107th line : " + message);
             if(message.length() >= 3){
                 if(port == 8886){
                     flag.setPlayer1Nickname(message);

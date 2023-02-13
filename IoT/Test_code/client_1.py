@@ -41,12 +41,12 @@ class ClientSocket:
     def send_images(self):
         try:
             time.sleep(1)
-            ready_str = "{\"carNum\": 1, \"timestamp\": 1676277527883, \"speed\" : 0, \"gateNo\" : 3, \"status\" : 1 }".encode()
+            ready_str = "{\"carNum\": 1, \"timestamp\": 1676277527883, \"speed\" : 0, \"gateNo\" : 3, \"status\" : 1 }".encode().ljust(100)
             self.sock.send(ready_str)
             print(ready_str)
             while True:
                 string = input()
-                string_data = string.encode()
+                string_data = string.encode().ljust(100)
                 self.sock.send(string_data)
                 print(string_data)
         except Exception as e:
