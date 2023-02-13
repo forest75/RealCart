@@ -105,14 +105,16 @@ class WsHandler extends WebSocketServer {
                 pw.flush();
             }
         } else {
-            if(port == 8886){
-                flag.setPlayer1Nickname(message);
-                System.out.println("flag.setPlayer1Nickname " + message);
-                System.out.println(flag);
-            } else if(port == 8887){
-                flag.setPlayer2Nickname(message);
-                System.out.println("flag.setPlayer2Nickname " + message);
-                System.out.println(flag);
+            if(message.length() >= 3){
+                if(port == 8886){
+                    flag.setPlayer1Nickname(message);
+                    System.out.println("flag.setPlayer1Nickname " + message);
+                    System.out.println(flag);
+                } else if(port == 8887){
+                    flag.setPlayer2Nickname(message);
+                    System.out.println("flag.setPlayer2Nickname " + message);
+                    System.out.println(flag);
+                }
             }
         }
     }
