@@ -156,7 +156,7 @@ class RCcarThread implements Runnable{
                             break;
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
         } catch (IOException e){

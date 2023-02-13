@@ -98,7 +98,7 @@ class WsHandler extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println(message);
+//        System.out.println(message);
         if(flag.getGameStatus() == 1){
             if(message.length() <= 2) {
                 pw.write(Integer.parseInt(message));
