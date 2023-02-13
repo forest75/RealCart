@@ -59,13 +59,28 @@ class ClientSocket:
                 print_log(u'%d times try to connect with server' % (self.connectCount))
                 self.connectServer()
 
-    def sendData(self, data):        
-        try:
-            length = str(len(data.encode()))
-            self.sock.sendall(length.encode('utf-8').ljust(128))
-            self.sock.send(data.encode())
+    def sendData(self, data):
+        global flag_start
+             
+        try:            
+            connect_result = self.sock.connect_ex((self.TCP_SERVER_IP, self.TCP_SERVER_PORT))
+            
+            if not connect_result:
+                print('Socket is broken')
+                print('you can\'t send data')
+                flag_start = False
+                return
+            
+            if not data:
+                print('there is no send data')
+                return
+            
+            #length = str(len(data.encode()))
+            #self.sock.send(length.encode('utf-8'))
+            self.sock.send(data.encode().ljust(100))
 
         except Exception as e:
+            print('send Data Error')
             print(e)
             self.sock.close()
             #time.sleep(1)
@@ -78,35 +93,47 @@ class ClientSocket:
         global car_speed_limit
         global win
         
-        print('recv thread start...')
+        try:
+            print('recv thread start...')
+            
+            while True:
+                data = self.sock.recv(1)
+                
+                if not data:
+                    print('recv thread broken...')
+                    break
+                
+                recv_data = int.from_bytes(data, byteorder='little')
+                
+                key_up = 38
+                key_down = 40
+                key_shift = 32
+                key_left = 37
+                key_right = 39
+                key_release = 41
+                key_ctrl = 17
+                
+                start_signal = 49
+                
+                print_recv_data(recv_data)
+                
+                if (recv_data == key_up and flag_up == False): flag_up = True
+                if (recv_data == key_down and flag_down == False): flag_down = True
+                if (recv_data == key_shift and flag_shift == False): flag_shift = True
+                if (recv_data == key_left and flag_left == False): flag_left = True
+                if (recv_data == key_right and flag_right == False): flag_right = True
+                if (recv_data == key_release and flag_release == False): flag_release = True
+                if (recv_data == key_ctrl): boost_action()
+                if (recv_data == start_signal and flag_start == False) : start_action()
+            
+            
+            
+            print('recv thread end...')
         
-        while tflag_recv_data:
-            data = self.sock.recv(1)
-            recv_data = int.from_bytes(data, byteorder='little')
+        except Exception as e:
+            print('recv thread Error')
+            print(e)
             
-            key_up = 38
-            key_down = 40
-            key_shift = 32
-            key_left = 37
-            key_right = 39
-            key_release = 41
-            key_ctrl = 17
-            
-            start_signal = 49
-            
-            print_recv_data(recv_data)
-            
-            if (recv_data == key_up and flag_up == False): flag_up = True
-            if (recv_data == key_down and flag_down == False): flag_down = True
-            if (recv_data == key_shift and flag_shift == False): flag_shift = True
-            if (recv_data == key_left and flag_left == False): flag_left = True
-            if (recv_data == key_right and flag_right == False): flag_right = True
-            if (recv_data == key_release and flag_release == False): flag_release = True
-            if (recv_data == key_ctrl): boost_action()
-            if (recv_data == start_signal and flag_start == False) : start_action()
-        
-        
-        print('recv thread end...')
 
 ############### Client Socket ###############
 
@@ -470,22 +497,29 @@ def print_rgb(color_rgb):
 def start_action():
     global flag_start, car_gate, win
     global send_racing_data_thread
+    
+    try:
+        print_log('Start Signal sending...')
+        car_gate = 1
+        win.ui.lb_gate_param.setText(str(car_gate))
         
-    print_log('Start Signal sending...')
-    car_gate = 1
-    win.ui.lb_gate_param.setText(str(car_gate))
+        if (flag_start == False):
+            flag_start = True
+            send_racing_data_thread = threading.Thread(target=send_racing_data)
+            send_racing_data_thread.start()
+                
+            win.ui.btn_ready.setEnabled(False)
+            win.ui.btn_start.setEnabled(False)
+            win.ui.btn_finish.setEnabled(True)
+            print_log('Completed sending Start Signal')
+        else:
+            print_log('Already sended Signal')
         
-    if (flag_start == False):
-        flag_start = True
-        send_racing_data_thread = threading.Thread(target=send_racing_data)
-        send_racing_data_thread.start()
-            
-        win.ui.btn_ready.setEnabled(False)
-        win.ui.btn_start.setEnabled(False)
-        win.ui.btn_finish.setEnabled(True)
-        print_log('Completed sending Start Signal')
-    else:
-        print_log('Already sended Signal')
+        print('Start Action Done')
+      
+    except Exception as e:
+        print('start Action Error')
+        print(e)
         
         
 def finish_action():
@@ -539,19 +573,22 @@ def driving():
     try:
         print('driving start...')
         
-        while tflag_driving:
+        while True:
+            
+            if (tflag_driving == False): break;
+            
             if flag_up:
-                car_speed += 5
+                car_speed += 10
                 if (car_speed > car_speed_limit): car_speed = car_speed_limit
                 flag_up = False
         
             elif flag_down:
-                car_speed -= 5
+                car_speed -= 10
                 if (car_speed < -car_speed_limit): car_speed = -car_speed_limit
                 flag_down = False
         
             elif flag_shift:
-                car_speed = 5
+                car_speed = 0
                 flag_shift = False
         
             else:
@@ -560,6 +597,8 @@ def driving():
             car_speed = int(car_speed)
             car_gear.drive(car_speed)
             win.ui.lb_speed_param.setText(str(car_speed))
+            
+            
             time.sleep(0.1)
            
         
@@ -576,8 +615,10 @@ def handling():
     try:
         print('handling start...')
         
-        while tflag_handling:
-        
+        while True:
+            
+            if (tflag_handling == False): break
+            
             if flag_left:
                 car_handle.steering('left')
                 flag_left = False
@@ -589,7 +630,7 @@ def handling():
             if flag_release:
                 car_handle.steering('center')
                 flag_release = False
-                
+            
             time.sleep(0.01)
         
         print('handling end...')
@@ -610,8 +651,10 @@ def gate_sensing():
         arr_gate3 = str_gate3.split(',')
         arr_gate4 = str_gate4.split(',')
 
-        while tflag_gate_sensing:
-
+        while True:
+            
+            if (tflag_gate_sensing == False): break;
+            
             color_rgb = car_color.color_sensing()
             print_rgb(color_rgb)
             
@@ -644,7 +687,7 @@ def gate_sensing():
                 if car_gate == 3:
                     car_gate = 4
                     win.ui.lb_gate_param.setText(str(car_gate))
-
+            
             time.sleep(0.01)
 
         print('gate_sensing_thread end!')
@@ -663,15 +706,20 @@ def send_racing_data():
         car_status = 3
         win.ui.lb_status_param.setText('Running...')
         
-        while flag_start:
+        while True:
+            
+            if (flag_start == False): break;
+            
             cur_time = round(time.time() * 1000)
             temp_data = make_json(car_no, cur_time, car_speed, car_cur_gate, car_status)
             client.sendData(temp_data)
             time.sleep(0.1)
+            
         
         print('send_racing_data thread kill')
     
     except Exception as e:
+        print('send_racing_data thread Error')
         print(e)
         
 
@@ -693,6 +741,8 @@ if __name__ == "__main__":
     ############### Global Variable ###############
     json_file = open('RC_car.json', 'r')
     init_data = json.load(json_file)
+    
+    lock = threading.Lock()
     
     car_model = init_data['Model']
     car_no = init_data['Car_No']
