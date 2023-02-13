@@ -57,14 +57,14 @@ class ClientSocket:
 
     def recv(self):
         while True:
-            data = self.sock.recv(2)
+            data = self.sock.recv(1)
             print(data)
 
 
 def main():
-    #TCP_IP = 'i8a403.p.ssafy.io'
-    TCP_IP = 'localhost'
-    TCP_PORT1 = 8081
+    TCP_IP = 'i8a403.p.ssafy.io'
+    # TCP_IP = 'localhost'
+    TCP_PORT1 = 8082
     client1 = ClientSocket(TCP_IP, TCP_PORT1)
 
 if __name__ == "__main__":
