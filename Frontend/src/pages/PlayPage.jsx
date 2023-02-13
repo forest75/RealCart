@@ -591,7 +591,7 @@ function PlayPage() {
           setTimeout(() => {
             console.log("stop");
             wss.send(41);
-          }, 100);
+          }, 250);
         }
         setKeyState((prevState) => ({
           ...prevState,
@@ -611,7 +611,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("stop");
         wss.send(16);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -628,7 +628,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("ctrl");
         wss.send(17);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -645,7 +645,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("left");
         wss.send(37);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -662,7 +662,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("up");
         wss.send(38);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -679,7 +679,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("right");
         wss.send(39);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
@@ -696,7 +696,7 @@ function PlayPage() {
       const interval = setInterval(() => {
         console.log("down");
         wss.send(40);
-      }, 100);
+      }, 250);
       setTimeout(() => {
         clearInterval(interval);
         setInputSwitch((prevState) => ({
