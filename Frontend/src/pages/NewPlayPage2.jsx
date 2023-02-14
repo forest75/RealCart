@@ -21,7 +21,7 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
-import Viewer1 from "../components/video/Viewer100";
+import Viewer2 from "../components/video/Viewer200";
 import SmallViewer3 from "../components/video/SmallViewer3";
 import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
@@ -245,7 +245,7 @@ function NewPlayPage2() {
     if (wss) {
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
-      interval = setInterval(handleInterval, 100);
+      interval = setInterval(handleInterval, 50);
     }
 
     return () => {
@@ -728,7 +728,7 @@ function NewPlayPage2() {
                     poster={WebRtcImg}
                   />
                 </div> */}
-                <Viewer1 />
+                <Viewer2 />
                 <PlayEndModal />
               </Box>
             </Box>

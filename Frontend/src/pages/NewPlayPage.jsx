@@ -74,11 +74,6 @@ function NewPlayPage() {
   }
 
   useEffect(() => {
-    // RACE TIME 5초 후에 시작
-    setTimeout(() => {
-      setIsRunning(true);
-    }, 5000);
-
     // 미디어 websocket 연결
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -115,6 +110,7 @@ function NewPlayPage() {
         console.log("get message", message.data);
         if (message.data === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
+          setIsRunning(true);
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
@@ -245,7 +241,7 @@ function NewPlayPage() {
     if (wss) {
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
-      interval = setInterval(handleInterval, 100);
+      interval = setInterval(handleInterval, 50);
     }
 
     return () => {
