@@ -386,9 +386,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def handleSave(self):
         global init_data, left, center, right
         
-        left = int(self.ui.le_handle_left.text())
-        center = int(self.ui.le_handle_center.text())
-        right = int(self.ui.le_handle_right.text())
+        left = float(self.ui.le_handle_left.text())
+        center = float(self.ui.le_handle_center.text())
+        right = float(self.ui.le_handle_right.text())
         
         init_data['Handle_left'] = left
         init_data['Handle_center'] = center
