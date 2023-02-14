@@ -1,13 +1,17 @@
-package org.example;
+package com.ssafy.realcart.game;
 
 import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
 import org.java_websocket.server.WebSocketServer;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 
 public class GameServer {
 
@@ -30,6 +34,7 @@ class RCcarThread implements Runnable{
     WebSocketServer webSocketServer = null;
     FlagClass flag = null;
     Gson gson = new Gson();
+    Logger LOGGER = LoggerFactory.getLogger(RCcarThread.class);
 
     RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
@@ -45,7 +50,7 @@ class RCcarThread implements Runnable{
             webSocketServer.start();
             System.out.println("websocket server started on port " + webSocketPort);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Connection error raised. ", e);
         }
     }
 
@@ -59,21 +64,22 @@ class RCcarThread implements Runnable{
                 for (int i = 0; i < dataLen; i++) {
                     jsonData += (char) br.read();
                 }
-//                System.out.println(jsonData.trim());
                 try{
                     // jsonData가 자꾸 공백으로 넘어오기 때문에 try catch 해줘야 함
-                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);  
-                    System.out.println(flag);
+                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);
+                    System.out.println(rcCarStatus);
                     // 0: NULL, 1: Ready, 2: Finish, 3: Running
                     switch (rcCarStatus.status) {
                     /*
                     1일 때...(Ready)
+                    0. RC카의 준비 신호를 받고, 두 대가 준비 완료되었다면 newgame 신호를 백엔드에 보낸다.
                     1. 만일 모두 준비가 완료되었다면 flag.gamestatus를 1로 만든다.
                     2. Frontend 서버에 5초 뒤 게임을 시작한다는 신호(1)를 wss를 통해 보낸다.
                     3. Thread.sleep(5000)으로 5초 쉬고 RC카에 start 신호를 보낸다.
                     4. 스타트 타임을 flag에 기록하고 gameStatus를 1으로 바꾼다.
                      */
                         case 1:
+                            // 0
                             if(rcCarStatus.carNum == 1){
                                 flag.setCar1Status(1);
                                 if(flag.getCar2Status() == 1){
@@ -85,7 +91,7 @@ class RCcarThread implements Runnable{
                                     flag.sendNewGameToBackend();
                                 }
                             }
-                            System.out.println(flag);
+                            System.out.println("RC cars Ready >>> " + flag);
                             // 1
                             while (true) {
                                 if (flag.getCar1Status() == 1 &&

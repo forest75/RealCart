@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -7,6 +6,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
 import BetWindow from "../components/spect/BetWindow";
 import EntryQueue from "../components/spect/EntryQueue";
 import Versus from "../components/spect/Versus";
@@ -17,7 +18,6 @@ import ForbidModal from "../components/spect/ForbidModal";
 import Viewer1 from "../components/video/Viewer1";
 import Viewer2 from "../components/video/Viewer2";
 import Viewer3 from "../components/video/Viewer3";
-import SendIcon from "@mui/icons-material/Send";
 import {
   setReceptionOpen,
   setEntryOpen,
@@ -27,7 +27,6 @@ import {
   setIsPlay,
 } from "../store/modalSlice";
 import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
-import axios from "axios";
 
 function SpectPage() {
   const videoSlice = useSelector((state) => state.video);
@@ -35,7 +34,6 @@ function SpectPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
 
   const [chats, setChats] = useState([]);
@@ -50,20 +48,13 @@ function SpectPage() {
   const modal = useSelector((state) => state.modal);
 
   // Kurento 관련 함수 시작
-  function connect() {
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function () {
-      stompClient.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
-  }
-
   function sendChat(e) {
     e.preventDefault();
     if (text.current.value === "") return;
-    if (text.current.value.length > 100)
-      return alert("댓글은 100자 이내로 입력해주세요");
+    if (text.current.value.length > 100) {
+      alert("댓글은 100자 이내로 입력해주세요");
+      return;
+    }
     stompClient.send(
       "/publish/messages",
       {},
@@ -92,7 +83,6 @@ function SpectPage() {
       });
     });
 
-    setSocket(socketConst);
     setStompClient(stompClientConst);
 
     return () => {
@@ -264,7 +254,7 @@ function SpectPage() {
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span> Red
+                          <span className="glyphicon glyphicon-user" /> Red
                         </Button>
                         &nbsp;
                         <Button
@@ -278,8 +268,7 @@ function SpectPage() {
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span>{" "}
-                          Blue
+                          <span className="glyphicon glyphicon-user" /> Blue
                         </Button>
                         &nbsp;
                         <Button
@@ -293,8 +282,7 @@ function SpectPage() {
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span>{" "}
-                          관전
+                          <span className="glyphicon glyphicon-user" /> 관전
                         </Button>
                       </div>
                     </div>
@@ -411,6 +399,7 @@ function SpectPage() {
                 borderBottomRightRadius: "5px",
                 backgroundColor: "#303038",
               }}
+              ref={chatRef}
             >
               <SendIcon sx={{ color: "white" }} />
             </button>
