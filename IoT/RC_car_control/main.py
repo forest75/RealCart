@@ -10,8 +10,8 @@ import json
 from datetime import datetime
 import threading
 import RPi.GPIO as GPIO
-from PySide6.QtWidgets import *
-from PySide6.QtCore import *
+from PySide2.QtWidgets import *
+from PySide2.QtCore import *
 from RC_car_ui import Ui_MainWindow
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
