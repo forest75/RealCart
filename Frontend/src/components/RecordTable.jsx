@@ -146,8 +146,8 @@ function CustomPaginationActionsTable({ address, user }) {
           });
           for (let i = 0; i < articles.length; i += 1) {
             List.push({
-              gameTime: articles[i].gameTime,
-              isWin: articles[i].isWin,
+              gameTime: new Date(articles[i].gameTime).toLocaleDateString(),
+              isWin: articles[i].isWin === 1 ? "WIN" : "LOSE",
               lapTime: articles[i].lapTime,
               oppo: articles[i].oppo,
               oppoLapTime: articles[i].oppoLapTime,
@@ -196,7 +196,7 @@ function CustomPaginationActionsTable({ address, user }) {
           ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           : rows
       ).map((row) => (
-        <TableRow>
+        <TableRow width="100%">
           <TableCell style={{ width: 70 }} align="center">
             {row.gameTime}
           </TableCell>
@@ -232,10 +232,9 @@ function CustomPaginationActionsTable({ address, user }) {
             </TableRow>
           )}
         </TableBody>
-        <TableFooter sx={{ width: 770 }}>
-          <TableRow sx={{ width: "100%" }}>
+        <TableFooter>
+          <TableRow>
             <TablePagination
-              sx={{ width: "100%" }}
               rowsPerPageOptions={[3, 5]}
               colSpan={3}
               count={rows.length}

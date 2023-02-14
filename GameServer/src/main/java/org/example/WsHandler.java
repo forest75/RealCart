@@ -98,7 +98,6 @@ class WsHandler extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-//        System.out.println(message);
         if(flag.getGameStatus() == 1){
             if(message.length() <= 2) {
                 pw.write(Integer.parseInt(message));
@@ -128,6 +127,5 @@ class WsHandler extends WebSocketServer {
     @Override
     public void onStart() {
         System.out.println("WebSocket server started on port " + this.port);
-        System.out.println(flag);
     }
 }

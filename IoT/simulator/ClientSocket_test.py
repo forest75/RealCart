@@ -12,7 +12,7 @@ client_socket.connect((HOST, PORT))
 
 def recv_data(client_socket):
     while True:
-        data = client_socket.recv(1024)
+        data = client_socket.recv_images(1024)
 
         print("receive :", repr(data.decode()))
 

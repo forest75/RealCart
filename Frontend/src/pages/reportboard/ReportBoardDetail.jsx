@@ -10,6 +10,8 @@ function ReportBoardDetail() {
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
+  const [nickname, setNickname] = useState();
+  const [date, setDate] = useState();
   const [searchParams] = useSearchParams();
   const no = Number(searchParams.get("no"));
 
@@ -24,6 +26,8 @@ function ReportBoardDetail() {
         } finally {
           setTitle(res.data.title);
           setContent(resContent);
+          setNickname(res.data.nickname);
+          setDate(new Date(res.data.createdTime).toLocaleDateString());
         }
       })
       .catch((err) => {
@@ -89,7 +93,7 @@ function ReportBoardDetail() {
             </Box>
 
             <Box component="span" sx={{ marginLeft: "100px" }}>
-              2023.03.11
+              {date}
             </Box>
           </Box>
           <Box
@@ -114,9 +118,7 @@ function ReportBoardDetail() {
                 width: 100,
               }}
             />
-            <Box>의권짱짱33</Box>
-
-            <Box>[랭킹 2위] </Box>
+            <Box component="h2">{nickname}</Box>
           </Box>
         </Box>
         <Box

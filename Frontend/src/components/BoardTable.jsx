@@ -92,7 +92,9 @@ TablePaginationActions.propTypes = {
 
 function CustomPaginationActionsTable({ address, link }) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(
+    address === "record" ? 12 : 5
+  );
   const [rows, setRows] = useState([]);
 
   // 공지사항 게시글 백으로부터 가져오기
@@ -150,7 +152,7 @@ function CustomPaginationActionsTable({ address, link }) {
           });
           for (let i = 0; i < articles.length; i += 1) {
             List.push({
-              id: articles[i].id,
+              id: i + 1,
               title: articles[i].title,
               nickname: "운영자",
             });
@@ -163,7 +165,7 @@ function CustomPaginationActionsTable({ address, link }) {
           });
           for (let i = 0; i < articles.length; i += 1) {
             List.push({
-              id: articles[i].id,
+              id: i + 1,
               title: articles[i].title,
               nickname: articles[i].nickname,
             });
@@ -266,7 +268,7 @@ function CustomPaginationActionsTable({ address, link }) {
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[3, 5]}
+              rowsPerPageOptions={address === "record" ? [3, 5, 11] : [3, 5]}
               colSpan={3}
               count={rows.length}
               rowsPerPage={rowsPerPage}

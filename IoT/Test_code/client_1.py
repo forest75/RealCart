@@ -13,9 +13,9 @@ class ClientSocket:
         self.TCP_SERVER_IP = ip
         self.TCP_SERVER_PORT = port
         self.connectCount = 0
-        self.connectServer()
+        self.connect_server()
 
-    def connectServer(self):
+    def connect_server(self):
         print("initial connecting...")
         try:
             self.sock = socket.socket()
@@ -24,9 +24,9 @@ class ClientSocket:
                 u'Client socket is connected with Server socket [ TCP_SERVER_IP: ' + self.TCP_SERVER_IP + ', TCP_SERVER_PORT: ' + str(
                     self.TCP_SERVER_PORT) + ' ]')
             self.connectCount = 0
-            recv_thread = threading.Thread(target=self.recv)
+            recv_thread = threading.Thread(target=self.recv_images)
             recv_thread.start()
-            send_thread = threading.Thread(target=self.sendImages)
+            send_thread = threading.Thread(target=self.send_images)
             send_thread.start()
 
         except Exception as e:
@@ -36,26 +36,27 @@ class ClientSocket:
                 print(u'Connect fail %d times. exit program' % (self.connectCount))
                 sys.exit()
             print(u'%d times try to connect with server' % (self.connectCount))
-            self.connectServer()
+            self.connect_server()
 
-    def sendImages(self):
+    def send_images(self):
         try:
-            cnt = 0
+            time.sleep(1)
+            ready_str = "{\"carNum\": 1, \"timestamp\": 1676277527883, \"speed\" : 0, \"gateNo\" : 3, \"status\" : 1 }".encode().ljust(100)
+            self.sock.send(ready_str)
+            print(ready_str)
             while True:
                 string = input()
-                stringData = string.encode()
-                length = str(len(stringData))
-                self.sock.sendall(length.encode('utf-8').ljust(128))
-                self.sock.send(stringData)
-                print(u'send images %d' % (cnt))
+                string_data = string.encode().ljust(100)
+                self.sock.send(string_data)
+                print(string_data)
         except Exception as e:
             print(e)
             self.sock.close()
             time.sleep(1)
-            self.connectServer()
-            self.sendImages()
+            self.connect_server()
+            self.send_images()
 
-    def recv(self):
+    def recv_images(self):
         while True:
             data = self.sock.recv(1)
             print(data)

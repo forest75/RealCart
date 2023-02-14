@@ -190,7 +190,6 @@ public class FlagClass {
 
             System.out.println(requestBody);
             try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
-//                dos.writeBytes(requestBody);
                 dos.writeUTF(requestBody);
             }
 

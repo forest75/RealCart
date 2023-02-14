@@ -25,6 +25,9 @@ function FreeBoardDetail() {
   const user = useSelector((state) => state.login.user);
   const [page, setPage] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
+  const [nickname, setNickname] = useState("");
+  const [date, setDate] = useState("");
+
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
@@ -43,6 +46,8 @@ function FreeBoardDetail() {
           setContent(resContent);
         }
         setTitle(article.title);
+        setNickname(article.nickname);
+        setDate(new Date(article.createdTime).toLocaleDateString());
 
         setCommentsCount(article.comments.length);
         if (article.comments.length === 0) {
@@ -182,7 +187,7 @@ function FreeBoardDetail() {
             </Box>
 
             <Box component="span" sx={{ marginLeft: "100px" }}>
-              2023.03.11
+              {date}
             </Box>
           </Box>
           <Box
@@ -207,9 +212,7 @@ function FreeBoardDetail() {
                 width: 100,
               }}
             />
-            <Box>의권짱짱33</Box>
-
-            <Box>[랭킹 2위] </Box>
+            <Box component="h2">{nickname}</Box>
           </Box>
         </Box>
         <Box

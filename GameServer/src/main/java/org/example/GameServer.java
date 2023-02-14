@@ -85,6 +85,7 @@ class RCcarThread implements Runnable{
                                     flag.sendNewGameToBackend();
                                 }
                             }
+                            System.out.println(flag);
                             // 1
                             while (true) {
                                 if (flag.getCar1Status() == 1 &&
@@ -131,6 +132,7 @@ class RCcarThread implements Runnable{
                                 } else if(rcCarStatus.carNum == 2){
                                     flag.setPlayer2Status(0);
                                 }
+                                System.out.println(flag);
                                 client.close();
                             }
                             // 2
