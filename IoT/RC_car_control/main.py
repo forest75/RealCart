@@ -494,6 +494,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def print_log(self, msg):
         temp_msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + msg
+        f = open('../log/log.txt','a')
+        f.write(temp_msg + '\n')
+        f.close()
         print(temp_msg)
         self.ui.tb_log.append(temp_msg)
 
