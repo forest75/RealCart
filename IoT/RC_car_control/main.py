@@ -413,7 +413,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def color_sensing(self):
         global str_gate1, str_gate2, str_gate3, str_gate4
-        global car_gate
+        global car_gate, color_rgb
 
         arr_gate1 = str_gate1.split(',')
         arr_gate2 = str_gate2.split(',')
