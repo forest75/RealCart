@@ -29,6 +29,12 @@ class recv_thread(QThread):
         while True:
             recv_data = win.client.recvData()
             
+            # Socket 연결이 끊겼을 경우,
+            if recv_data == 0:
+                print('socket disconnected')
+                break
+            
+            # 입력 데이터
             key_up = 38
             key_down = 40
             key_shift = 32
@@ -48,13 +54,11 @@ class recv_thread(QThread):
             if (recv_data == key_ctrl): flag_ctrl = True             
             if (recv_data == start_signal) : win.startSignal()
 
-            print_recv_data(recv_data)
+            win.print_recv_data(recv_data)
             self.mutex.unlock()
 
-            time.sleep(0.01)
-
     def stop(self):
-        self.quit()
+        pass
 
 
 class MyApp(QMainWindow, Ui_MainWindow):
@@ -113,7 +117,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         # Motor와 Socket 연결 확인
         if (self.ui.lb_socket_param.text() == "Disconnect" or self.ui.lb_motor_param.text() == "Disconnect"):
-            print_log('Please Connect Motor/Socket')
+            self.print_log('Please Connect Motor/Socket')
             return
         
         # Car 상태 Ready로 세팅
@@ -121,17 +125,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.lb_status_param.setText('Ready')
         
         # Socket을 통해 Ready 신호 보내기
-        cur_time = round(time.time() * 1000)
-        temp_data = data_json()        
+        temp_data = self.data_json()        
         self.client.sendData(temp_data)
-        print_send_data(temp_data)
+        self.print_send_data(temp_data)
         
         # UI Setting
         self.ui.btn_ready.setEnabled(False)
         self.ui.btn_start.setEnabled(True)
         self.ui.btn_finish.setEnabled(False)
         
-        print_log('Completed sending Ready Signal')
+        self.print_log('Completed sending Ready Signal')
         
         
     def startSignal(self):
@@ -148,38 +151,37 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         # Socket을 통해 Car Data 보내기
         self.send_timer.start()
-        print_log('Data Sending...')
+        self.print_log('Data Sending...')
 
         # UI Setting
         win.ui.btn_ready.setEnabled(False)
         win.ui.btn_start.setEnabled(False)
         win.ui.btn_finish.setEnabled(True)
-        print_log('Racing Start...')
+        
+        self.print_log('Racing Start...')
         
         
     def finishSignal(self):
+        global car_status
+        
         # 주행 Timer 종료
         self.race_timer.stop()
         self.handling_timer.stop()
         self.send_timer.stop()
 
+        # Car Status 변경
         car_status = 2
         self.ui.lb_status_param.setText('Finish')
-        temp_data = data_json()
-        win.client.sendData(temp_data)
-            
-        if flag_start:
-            flag_start = False
-            send_racing_data_thread.join()
-            
-            
-            print_send_data(temp_data)
-            
-            win.ui.btn_ready.setEnabled(True)
-            win.ui.btn_start.setEnabled(False)
-            win.ui.btn_finish.setEnabled(False)
-            
-            print_log('Completed sending Finish Signal')
+        temp_data = self.data_json()
+        self.client.sendData(temp_data)
+        self.print_send_data(temp_data)
+        
+        # UI Setting
+        self.ui.btn_ready.setEnabled(True)
+        self.ui.btn_start.setEnabled(False)
+        self.ui.btn_finish.setEnabled(False)
+                
+        self.print_log('Racing is finished')
 
 
     def motorConnect(self):
@@ -190,35 +192,35 @@ class MyApp(QMainWindow, Ui_MainWindow):
         car_gear = DC_MOTOR(dc_enable, dc_input_1, dc_input_2)
         
         if (car_gear.error == 0):
-            print_log('DC motor GPIO Pin Setting Complete')
+            self.print_log('DC motor GPIO Pin Setting Complete')
         else:
-            print_log('DC motor GPIO Pin Setting Fail')
+            self.print_log('DC motor GPIO Pin Setting Fail')
             return
         
         # Servo motor Setting
         car_handle = SERVO_MOTOR(servo_pin)
         
         if (car_handle.error == 0):
-            print_log('SERVO motor GPIO Pin Setting Complete')
+            self.print_log('SERVO motor GPIO Pin Setting Complete')
         else:
-            print_log('SERVO motor GPIO Pin Setting Fail')
+            self.print_log('SERVO motor GPIO Pin Setting Fail')
             return
         
         # Color Sensor Setting
         car_color = COLOR(color_s2, color_s3, color_signal)
         
         if (car_color.error == 0):
-            print_log('Color Sensor GPIO Pin Setting Complete')
+            self.print_log('Color Sensor GPIO Pin Setting Complete')
         else:
-            print_log('Color Sensor GPIO Pin Setting Fail')
+            self.print_log('Color Sensor GPIO Pin Setting Fail')
             return
         
         # Color Sensing
         self.color_timer.start()
-        print_log('Color Sensing...')
+        self.print_log('Color Sensing...')
 
         # UI Setting
-        print_log('Motor Connect Success')
+        self.print_log('Motor Connect Success')
         self.ui.lb_motor_param.setText('Connect')
         self.ui.lb_motor_param.setStyleSheet("Color : green")
         
@@ -231,17 +233,17 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         # Color Sensing Stop
         self.color_timer.stop()
-        print_log('Color Sensing Stop')
+        self.print_log('Color Sensing Stop')
 
         # GPIO Pin Cleanup
         del car_color
         del car_gear
         del car_handle    
         GPIO.cleanup()
-        print_log('GPIO Pin Cleanup Done')
+        self.print_log('GPIO Pin Cleanup Done')
 
         # UI Setting
-        print_log('Motor Disconnect')
+        self.print_log('Motor Disconnect')
         self.ui.lb_motor_param.setText('Disconnect')
         self.ui.lb_motor_param.setStyleSheet("Color : red")
         
@@ -256,8 +258,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         # motor 연결 여부 확인
         if (self.ui.lb_motor_param.text() == "Disconnect"):
-            print_log('Sensor/Motor GPIO Pin Setting is not finished')
-            print_log('please click the Motor Connect')
+            self.print_log('Sensor/Motor GPIO Pin Setting is not finished')
+            self.print_log('please click the Motor Connect')
             return                
         
         # Client Socket 연결
@@ -266,7 +268,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         # Client Socket 실패
         if self.client.error == 1:
-            print_log('client Connect Fail')
+            self.print_log('client Connect Fail')
             return
 
         # 데이터 수신 쓰레드 실행        
@@ -274,7 +276,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.recv_th.start()
 
         # UI Setting
-        print_log('Socket Connect Success')
+        self.print_log('Socket Connect Success')
         self.ui.lb_socket_param.setText('Connect')
         self.ui.lb_socket_param.setStyleSheet("Color : green")
         
@@ -285,10 +287,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.btn_finish.setEnabled(False)     
                 
 
-    def socketDisconnect(self):        
-        # 데이터 수신 쓰레드 종료
-        self.recv_th.stop()
-
+    def socketDisconnect(self):
         # 데이터 송신 타이머 종료
         self.send_timer.stop()
 
@@ -297,10 +296,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         # Socket Disconnect
         self.client.disconnectServer()
-        print_log('Socket disconnected')        
+        self.print_log('Socket disconnected')
+                
+        # 데이터 수신 쓰레드 종료
+        self.recv_th.stop()
         
         # UI Setting
-        print_log('Socket Disconnect')
+        self.print_log('Socket Disconnect')
         self.ui.lb_socket_param.setText('Disconnect')
         self.ui.lb_socket_param.setStyleSheet("Color : red")
         
@@ -314,7 +316,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         global color_rgb, init_data
         
         if (self.ui.lb_motor_param.text() == "Disconnect"):
-            print_log('Please Connect motor')
+            self.print_log('Please Connect motor')
             return
         
         data_count = 100
@@ -366,17 +368,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
         with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
             json.dump(init_data, temp_file, indent="\t")
         
-        print_log("gate {0} Color Matching is finished".format(temp_no))
+        self.print_log("gate {0} Color Matching is finished".format(temp_no))
         
         
     def camConnect(self):
         pass
         
-    def closeEvent(self, event):
-        global driving_thread, handling_thread, gate_sensing_thread, recv_thread
-        global tflag_handling, tflag_driving, tflag_gate_sensing, tflag_recv_data
-        global flag_motor_connect
-            
+    def closeEvent(self, event):            
         quit_msg = "Do you want to close this window?"
         reply = QMessageBox.question(self, 'Message', quit_msg, QMessageBox.Yes, QMessageBox.No)
         
@@ -397,7 +395,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         arr_gate4 = str_gate4.split(',')
 
         color_rgb = car_color.color_sensing()
-        print_rgb(color_rgb)
+        self.print_rgb(color_rgb)
 
         if (int(arr_gate1[0]) <= color_rgb[0] <= int(arr_gate1[1]) and int(arr_gate1[2]) <= color_rgb[1] <= int(arr_gate1[3]) and int(arr_gate1[4]) <= color_rgb[2] <= int(arr_gate1[5])):
             car_cur_gate = 0
@@ -405,7 +403,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             if car_gate == 4:
                 car_gate = 1
                 win.ui.lb_gate_param.setText(str(car_gate))
-                finish_action()
+                self.finishSignal()
                 
         elif (int(arr_gate2[0]) <= color_rgb[0] <= int(arr_gate2[1]) and int(arr_gate2[2]) <= color_rgb[1] <= int(arr_gate2[3]) and int(arr_gate2[4]) <= color_rgb[2] <= int(arr_gate2[5])):
             car_cur_gate = 1
@@ -431,8 +429,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def data_sending(self):
         global client
 
-        temp_data = data_json()
+        temp_data = self.data_json()
         self.client.sendData(temp_data)
+        self.print_send_data(temp_data)
 
 
     def racing(self):
@@ -486,68 +485,33 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         flag_boost = False
         self.boost_timer.stop()
-
-
-############### Qt Class ###############
-
             
-def data_json():
-    global car_no, car_speed, car_cur_gate, car_status
-    timestamp = round(time.time() * 1000)
-    json_data = f"{{\"carNum\": {car_no}, \"timestamp\": {timestamp}, \"speed\" : {car_speed}, \"gateNo\" : {car_cur_gate}, \"status\" : {car_status} }}"
-    return json_data
+    def data_json(self):
+        global car_no, car_speed, car_cur_gate, car_status
+        timestamp = round(time.time() * 1000)
+        json_data = f"{{\"carNum\": {car_no}, \"timestamp\": {timestamp}, \"speed\" : {car_speed}, \"gateNo\" : {car_cur_gate}, \"status\" : {car_status} }}"
+        return json_data
 
-def print_log(msg):
-    global win
-    print(msg)
-    win.ui.tb_log.append(msg)
+    def print_log(self, msg):
+        temp_msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + msg
+        print(temp_msg)
+        self.ui.tb_log.append(temp_msg)
 
 
-def print_recv_data(data):
-    global win
-    win.ui.tb_recv_data.append(str(data))
+    def print_recv_data(self, data):
+        temp_data = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + str(data)
+        self.ui.tb_recv_data.append(temp_data)
+        
+        
+    def print_send_data(self, data):
+        temp_data = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + str(data)
+        self.ui.tb_send_data.append(temp_data)
+
+
+    def print_rgb(self, color_rgb):
+        color_data = "{0}, {1}, {2}".format(color_rgb[0], color_rgb[1], color_rgb[2])
+        self.ui.lb_rgb_param.setText(color_data)
     
-    
-def print_send_data(data):
-    global win
-    win.ui.tb_send_data.append(str(data))
-
-
-def print_rgb(color_rgb):
-    global win
-    color_data = "{0}, {1}, {2}".format(color_rgb[0], color_rgb[1], color_rgb[2])
-    win.ui.lb_rgb_param.setText(color_data)
-        
-def finish_action():
-    global client, flag_start, win
-    global car_no, car_speed, car_gate, car_status
-    global send_racing_data_thread
-        
-    if (win.ui.lb_socket_param.text() != "Connect"):
-        print_log('Please Connect Socket')
-        return
-    
-    print_log('Finish Signal sending...')
-    
-    car_status = 2
-    win.ui.lb_status_param.setText('Finish')
-        
-    cur_time = round(time.time() * 1000)
-    temp_data = make_json(car_no, cur_time, car_speed, car_gate, car_status)
-        
-    if flag_start:
-        flag_start = False
-        send_racing_data_thread.join()
-        
-        
-        client.sendData(temp_data)
-        print_send_data(temp_data)
-        
-        win.ui.btn_ready.setEnabled(True)
-        win.ui.btn_start.setEnabled(False)
-        win.ui.btn_finish.setEnabled(False)
-        
-        print_log('Completed sending Finish Signal')
 
 if __name__ == "__main__":
     
