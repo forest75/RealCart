@@ -12,7 +12,11 @@ function Versus({ queue }) {
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-        border: "solid 1px #E8E8E8",
+        borderTopLeftRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        borderTop: "solid 1px #8D8D97",
+        borderBottom: "solid 1px #8D8D97",
+        borderLeft: "solid 1px #8D8D97",
       }}
     >
       <Box
@@ -46,11 +50,11 @@ function Versus({ queue }) {
             <Typography
               variant="h5"
               sx={{
-                color: "red",
+                color: "#F52A54",
                 fontWeight: "bold",
               }}
             >
-              Red
+              RED
             </Typography>
           </Box>
           <Box
@@ -82,7 +86,13 @@ function Versus({ queue }) {
             justifyContent: "center",
           }}
         >
-          <h2>vs</h2>
+          <h2
+            style={{
+              color: "#2E4B8A",
+            }}
+          >
+            vs
+          </h2>
         </Box>
         <Box
           display="flex"
@@ -105,11 +115,11 @@ function Versus({ queue }) {
             <Typography
               variant="h5"
               sx={{
-                color: "blue",
+                color: "#4236F5",
                 fontWeight: "bold",
               }}
             >
-              Blue
+              BLUE
             </Typography>
           </Box>
           <Box

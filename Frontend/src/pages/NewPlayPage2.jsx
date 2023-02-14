@@ -298,6 +298,7 @@ function NewPlayPage2() {
         flexDirection: "column",
         alignItems: "center",
         height: 950,
+        marginTop: "20px",
       }}
       tabIndex={0}
       ref={imgRef}
@@ -377,7 +378,7 @@ function NewPlayPage2() {
               sx={{
                 width: "20%",
                 height: "9%",
-                top: "14%",
+                top: "19%",
                 left: "7.5%",
                 color: "white",
                 position: "absolute",
@@ -665,16 +666,6 @@ function NewPlayPage2() {
             </Box>
           </Box>
         </Paper>
-
-        <Box
-          sx={{
-            width: "100%",
-            height: "10%",
-            // bgcolor: "orange",
-            borderTop: "solid 1px #E8E8E8",
-            marginTop: "30px",
-          }}
-        />
       </Box>
     </Box>
   );
