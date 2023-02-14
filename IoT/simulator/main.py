@@ -148,6 +148,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def keyShift(self):
         pass
+    
+    def startSignal(self):
+        client_socket.send('1'.encode())
 
 if __name__=="__main__":
     app = QApplication()

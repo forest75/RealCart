@@ -118,6 +118,19 @@
      <string>Socket Connect</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_start_signal">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>60</y>
+      <width>121</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Signal</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -125,7 +138,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
@@ -245,6 +258,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_start_signal</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startSignal()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>655</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>719</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>keyUp()</slot>
@@ -254,5 +283,6 @@
   <slot>keyShift()</slot>
   <slot>keyCtrl()</slot>
   <slot>socketConnect()</slot>
+  <slot>startSignal()</slot>
  </slots>
 </ui>

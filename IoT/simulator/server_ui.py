@@ -49,10 +49,13 @@ class Ui_MainWindow(object):
         self.btn_socket_connect = QPushButton(self.centralwidget)
         self.btn_socket_connect.setObjectName(u"btn_socket_connect")
         self.btn_socket_connect.setGeometry(QRect(360, 60, 161, 61))
+        self.btn_start_signal = QPushButton(self.centralwidget)
+        self.btn_start_signal.setObjectName(u"btn_start_signal")
+        self.btn_start_signal.setGeometry(QRect(540, 60, 121, 61))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 21))
+        self.menubar.setGeometry(QRect(0, 0, 800, 26))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -66,6 +69,7 @@ class Ui_MainWindow(object):
         self.btn_shift.clicked.connect(MainWindow.keyShift)
         self.btn_ctrl.clicked.connect(MainWindow.keyCtrl)
         self.btn_socket_connect.clicked.connect(MainWindow.socketConnect)
+        self.btn_start_signal.clicked.connect(MainWindow.startSignal)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -80,5 +84,6 @@ class Ui_MainWindow(object):
         self.btn_shift.setText(QCoreApplication.translate("MainWindow", u"Shift", None))
         self.btn_ctrl.setText(QCoreApplication.translate("MainWindow", u"Ctrl", None))
         self.btn_socket_connect.setText(QCoreApplication.translate("MainWindow", u"Socket Connect", None))
+        self.btn_start_signal.setText(QCoreApplication.translate("MainWindow", u"Start Signal", None))
     # retranslateUi
 
