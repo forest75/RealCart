@@ -331,8 +331,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.print_log('Please Connect motor')
             return
         
-        data_count = self.ui.sb_color_count.text()
-        offset = self.ui.sb_color_offset.text()
+        data_count = int(self.ui.sb_color_count.text())
+        offset = int(self.ui.sb_color_offset.text())
         
         min_red = 987654321
         max_red = 0
