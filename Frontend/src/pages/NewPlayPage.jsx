@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -24,8 +25,13 @@ import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
 import Viewer1 from "../components/video/Viewer100";
 import SmallViewer3 from "../components/video/SmallViewer3";
+import PlayEndModal from "../components/play/PlayEndModal";
+import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage() {
+  const modal = useSelector((state) => state.modal);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
@@ -62,8 +68,11 @@ function NewPlayPage() {
   }
 
   useEffect(() => {
+    setTimeout(() => {
+      dispatch(setPlayEndOpen());
+    }, 5000);
     // RACE TIME 5초 후에 시작
-    const endRunInterval = setTimeout(() => {
+    setTimeout(() => {
       setIsRunning(true);
     }, 5000);
 
@@ -89,8 +98,6 @@ function NewPlayPage() {
 
     // 종료 시
     return () => {
-      clearTimeout(endRunInterval);
-      clearInterval(endParticipantInterval);
       socketConst.close();
       wssConst.close();
     };
@@ -102,9 +109,9 @@ function NewPlayPage() {
 
   useEffect(() => {
     if (wss) {
-      wss.onmessage = function incoming(data) {
-        console.log("get 1", data.data);
-        if (data.data === "1") {
+      wss.onmessage = (message) => {
+        console.log("get 1", message.data);
+        if (message.data === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
@@ -115,6 +122,16 @@ function NewPlayPage() {
           setTimeout(() => {
             clearInterval(intervalId);
           }, 5500);
+        }
+        if (message.data === "2") {
+          console.log("중계 서버에서 2 받는 데 성공");
+          dispatch(setPlayEndOpen());
+          setTimeout(() => {
+            if (!modal.isPlayEndClicked) {
+              navigate("/spect");
+            }
+            dispatch(setIsPlayEndClicked(false));
+          }, 10000);
         }
       };
 
@@ -661,6 +678,7 @@ function NewPlayPage() {
                   />
                 </div> */}
                 <Viewer1 />
+                <PlayEndModal />
               </Box>
             </Box>
           </Box>
