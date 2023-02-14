@@ -37,6 +37,8 @@ class recv_thread(QThread):
             # 입력 데이터
             key_up = 38
             key_down = 40
+            key_up_release = 42
+            key_down_release = 43
             key_shift = 32
             key_up_release = 42
             key_down_release = 43

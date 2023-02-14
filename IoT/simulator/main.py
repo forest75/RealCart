@@ -31,6 +31,12 @@ def on_release(key):
         
     if (key == keyboard.Key.right):
         client_socket.send(')'.encode())
+
+    if (key == keyboard.Key.up):
+        client_socket.send('*'.encode())
+
+    if (key == keyboard.Key.down):
+        client_socket.send('+'.encode())
         
     # print('Key %s released' %key)
     if key == keyboard.Key.esc:
