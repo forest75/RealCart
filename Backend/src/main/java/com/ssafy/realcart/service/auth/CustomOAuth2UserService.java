@@ -66,7 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = new User(
                 userInfo.getId(),
                 userInfo.getEmail(),
-                userInfo.getName(),
+                "GOOGLE " + userInfo.getName(),
                 (byte) 1,
                 userInfo.getImageUrl(),
                 (byte) 0,
