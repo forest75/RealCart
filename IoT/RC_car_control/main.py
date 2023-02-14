@@ -100,7 +100,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.send_timer_working = False
 
         self.color_timer = QTimer(self)
-        self.color_timer.setInterval(100)
+        self.color_timer.setInterval(50)
         self.color_timer.timeout.connect(self.color_sensing)
 
         self.send_timer = QTimer(self)
@@ -413,7 +413,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def color_sensing(self):
         global str_gate1, str_gate2, str_gate3, str_gate4
-        global car_gate, color_rgb
+        global car_gate, color_rgb, car_cur_gate
         
         arr_gate1 = self.ui.le_gate1.text().split(',')
         arr_gate2 = self.ui.le_gate2.text().split(',')
@@ -481,7 +481,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.boost_timer.start()
 
         else:
-            car_speed *= 0.98
+            car_speed *= 0.9
         
         car_speed = int(car_speed)
         car_gear.drive(car_speed)
