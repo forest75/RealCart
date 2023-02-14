@@ -34,7 +34,7 @@ import AuthPlayer from "./pages/AuthPlayer";
 
 const SpectPageWithAuth = Auth(SpectPage);
 // const PlayPageWithAuth = Auth(PlayPage);
-const NewPlayPageWithAuth = AuthPlayer(NewPlayPage);
+const NewPlayPageWithAuth = Auth(NewPlayPage);
 const NewPlayPage2WithAuth = AuthPlayer(NewPlayPage2);
 // const PlayPage2WithAuth = Auth(PlayPage2);
 const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
