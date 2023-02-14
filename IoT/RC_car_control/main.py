@@ -38,6 +38,8 @@ class recv_thread(QThread):
             key_up = 38
             key_down = 40
             key_shift = 32
+            key_up_release = 42
+            key_down_release = 43
             key_left = 37
             key_right = 39
             key_release = 41
@@ -47,6 +49,8 @@ class recv_thread(QThread):
             self.mutex.lock()   
             if (recv_data == key_up): flag_up = True
             if (recv_data == key_down): flag_down = True
+            if (recv_data == key_up_release): flag_up = False
+            if (recv_data == key_down_release): flag_down = False
             if (recv_data == key_shift): flag_shift = True
             if (recv_data == key_left): flag_left = True
             if (recv_data == key_right): flag_right = True
@@ -63,7 +67,7 @@ class recv_thread(QThread):
 
 class MyApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        global car_model, car_no, car_speed, car_gate
+        global car_model, car_no, car_speed, car_gate, left, right, center
         global TCP_IP, TCP_PORT, str_gate1, str_gate2, str_gate3, str_gate4
 
         super().__init__()
@@ -80,6 +84,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.le_gate2.setText(str_gate2)
         self.ui.le_gate3.setText(str_gate3)
         self.ui.le_gate4.setText(str_gate4)
+        self.ui.le_handle_left.setText(str(left))
+        self.ui.le_handle_center.setText(str(center))
+        self.ui.le_handle_right.setText(str(right))
         self.ui.lb_motor_param.setText("Disconnect")
         self.ui.lb_motor_param.setStyleSheet("Color : red")
         self.ui.lb_socket_param.setText("Disconnect")
@@ -89,7 +96,6 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.btn_ready.setEnabled(False)
         self.ui.btn_start.setEnabled(False)
         self.ui.btn_finish.setEnabled(False)
-        self.ui.btn_cam_connect.setEnabled(False)
         
         self.send_timer_working = False
 
@@ -164,7 +170,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         
     def finishSignal(self):
-        global car_status
+        global car_status, car_gear, car_speed
+        
+        # 속도 멈추기
+        car_speed = 0
+        car_gear.drive(0)
         
         # 주행 Timer 종료
         self.race_timer.stop()
@@ -321,8 +331,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.print_log('Please Connect motor')
             return
         
-        data_count = 100
-        offset = 100
+        data_count = self.ui.sb_color_count.text()
+        offset = self.ui.sb_color_offset.text()
         
         min_red = 987654321
         max_red = 0
@@ -373,8 +383,21 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.print_log("gate {0} Color Matching is finished".format(temp_no))
         
         
-    def camConnect(self):
-        pass
+    def handleSave(self):
+        global init_data, left, center, right
+        
+        left = int(self.ui.le_handle_left.text())
+        center = int(self.ui.le_handle_center.text())
+        right = int(self.ui.le_handle_right.text())
+        
+        init_data['Handle_left'] = left
+        init_data['Handle_center'] = center
+        init_data['Handle_right'] = right
+        
+        with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
+            json.dump(init_data, temp_file, indent="\t")
+        
+        QMessageBox.information(self, "Handle Data Save", "Handle data has been saved")
         
     def closeEvent(self, event):            
         quit_msg = "Do you want to close this window?"
@@ -390,6 +413,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def color_sensing(self):
         global str_gate1, str_gate2, str_gate3, str_gate4
+        global car_gate
 
         arr_gate1 = str_gate1.split(',')
         arr_gate2 = str_gate2.split(',')
@@ -443,12 +467,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if flag_up:
             car_speed += 10
             if (car_speed > car_speed_limit): car_speed = car_speed_limit
-            flag_up = False
     
         elif flag_down:
             car_speed -= 10
             if (car_speed < -car_speed_limit): car_speed = -car_speed_limit
-            flag_down = False
     
         elif flag_shift:
             car_speed = 0
@@ -468,17 +490,18 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def handling(self):
         global flag_left, flag_right, flag_release
+        global left, center, right
 
         if flag_left:
-            car_handle.steering('left')
+            car_handle.steering(left)
             flag_left = False
     
         if flag_right:
-            car_handle.steering('right')
+            car_handle.steering(right)
             flag_right = False
     
         if flag_release:
-            car_handle.steering('center')
+            car_handle.steering(center)
             flag_release = False
 
     
@@ -540,6 +563,10 @@ if __name__ == "__main__":
     str_gate2 = init_data['Gate2']
     str_gate3 = init_data['Gate3']
     str_gate4 = init_data['Gate4']
+    
+    left = init_data['Handle_left']
+    center = init_data['Handle_center']
+    right = init_data['Handle_right']
     
     dc_enable = 27
     dc_input_1 = 15
