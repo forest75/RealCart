@@ -28,7 +28,7 @@ function BetWindow() {
         justifyContent: "center",
       }}
     >
-      <Paper
+      <Box
         sx={{
           width: "90%",
           height: "90%",
@@ -74,8 +74,8 @@ function BetWindow() {
                 sx={{
                   width: "100%",
                   height: "100%",
-                  bgcolor: "red",
-                  color: "black",
+                  bgcolor: "#F52A54",
+                  color: "white",
                 }}
               >
                 Red
@@ -95,8 +95,8 @@ function BetWindow() {
                 sx={{
                   width: "100%",
                   height: "100%",
-                  bgcolor: "blue",
-                  color: "black",
+                  bgcolor: "#4236F5",
+                  color: "white",
                 }}
               >
                 Blue
@@ -136,7 +136,7 @@ function BetWindow() {
             {bet.betB}명
           </Box>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }

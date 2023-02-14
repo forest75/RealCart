@@ -52,12 +52,12 @@ function NoticeBoardDetail() {
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
-          height: "80vh",
+          height: "70vh",
           width: "80%",
           display: "flex",
           flexDirection: "column",
           alignContent: "center",
-          justifyContent: "center",
+          marginTop: "60px",
         }}
       >
         <Box

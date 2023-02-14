@@ -91,7 +91,10 @@ function EntryQueue({ queue }) {
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        border: "solid 1px #E8E8E8",
+        border: "solid 1px #8D8D97",
+
+        borderTopRightRadius: "5px",
+        borderBottomRightRadius: "5px",
       }}
     >
       <Box
