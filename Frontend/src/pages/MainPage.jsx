@@ -245,13 +245,12 @@ function MainPage() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderBottom: "solid 1px #E8E8E8",
           }}
         >
           <Paper
             elevation={2}
             sx={{
-              width: "1000px",
+              width: "1300px",
               height: "700px",
               display: "flex",
               justifyContent: "center",
@@ -304,6 +303,7 @@ function MainPage() {
                   variant="h7"
                   sx={{
                     fontWeight: "bold",
+                    color: " black",
                   }}
                 >
                   공지사항
@@ -321,6 +321,7 @@ function MainPage() {
                   variant="h7"
                   sx={{
                     fontWeight: "bold",
+                    color: " black",
                   }}
                 >
                   게시글
@@ -347,6 +348,7 @@ function MainPage() {
               <Box
                 sx={{
                   height: "5%",
+                  width: "90%",
                   display: "flex",
                   justifyContent: "space-between",
                 }}
@@ -356,6 +358,7 @@ function MainPage() {
                   sx={{
                     fontWeight: "bold",
                     textAlign: "center",
+                    color: " black",
                   }}
                 >
                   Ranking
