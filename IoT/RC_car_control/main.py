@@ -90,6 +90,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.btn_start.setEnabled(False)
         self.ui.btn_finish.setEnabled(False)
         self.ui.btn_cam_connect.setEnabled(False)
+        
+        self.send_timer_working = False
 
         self.color_timer = QTimer(self)
         self.color_timer.setInterval(100)
@@ -128,6 +130,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
         temp_data = self.data_json()        
         self.client.sendData(temp_data)
         self.print_send_data(temp_data)
+                
+        # 주행 Timer 실행
+        self.race_timer.start()
+        self.handling_timer.start()
+        self.send_timer.start()
         
         # UI Setting
         self.ui.btn_ready.setEnabled(False)
@@ -143,20 +150,15 @@ class MyApp(QMainWindow, Ui_MainWindow):
         # Car Gate 세팅
         car_gate = 1
         car_status = 3
-        win.ui.lb_gate_param.setText(str(car_gate))
+        self.ui.lb_gate_param.setText(str(car_gate))
         
-        # 주행 Timer 실행
-        self.race_timer.start()
-        self.handling_timer.start()
-
-        # Socket을 통해 Car Data 보내기
-        self.send_timer.start()
-        self.print_log('Data Sending...')
+        # send_timer 실행
+        self.send_timer_working = True
 
         # UI Setting
-        win.ui.btn_ready.setEnabled(False)
-        win.ui.btn_start.setEnabled(False)
-        win.ui.btn_finish.setEnabled(True)
+        self.ui.btn_ready.setEnabled(False)
+        self.ui.btn_start.setEnabled(False)
+        self.ui.btn_finish.setEnabled(True)
         
         self.print_log('Racing Start...')
         
@@ -236,9 +238,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.print_log('Color Sensing Stop')
 
         # GPIO Pin Cleanup
-        del car_color
-        del car_gear
-        del car_handle    
+        #del car_color
+        #del car_gear
+        #del car_handle    
         GPIO.cleanup()
         self.print_log('GPIO Pin Cleanup Done')
 
@@ -427,8 +429,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def data_sending(self):
-        global client
-
+        if self.send_timer_working == False: return
+        
         temp_data = self.data_json()
         self.client.sendData(temp_data)
         self.print_send_data(temp_data)
@@ -494,9 +496,6 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def print_log(self, msg):
         temp_msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + msg
-        f = open('../log/log.txt','a')
-        f.write(temp_msg + '\n')
-        f.close()
         print(temp_msg)
         self.ui.tb_log.append(temp_msg)
 
