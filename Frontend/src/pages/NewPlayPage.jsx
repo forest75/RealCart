@@ -3,16 +3,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import SendIcon from "@mui/icons-material/Send";
 import Stomp from "stompjs";
-import AppButton from "../components/AppButton";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
+import RectangleResult from "../assets/Rectangle_Result.png";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import TransparentImg2 from "../assets/img/transparent-copy.png";
 import CountdownOne from "../assets/count_1.png";
@@ -27,6 +28,18 @@ import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage() {
+  const rows = [
+    {
+      place: 1,
+      nickname: "김빵",
+      laptime: "1:23:45",
+    },
+    {
+      place: 2,
+      nickname: "김빵",
+      laptime: "1:23:45",
+    },
+  ];
   const modal = useSelector((state) => state.modal);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,6 +66,9 @@ function NewPlayPage() {
   ];
 
   const [currentImage, setCurrentImage] = useState(0);
+
+  const [boostNum, setBoostNum] = useState(2);
+  const [canBoost, setCanBoost] = useState(true);
 
   function sendChat(e) {
     e.preventDefault();
@@ -110,14 +126,16 @@ function NewPlayPage() {
         console.log("get message", message.data);
         if (message.data === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
-          setIsRunning(true);
+          setTimeout(() => {
+            setIsRunning(true);
+          }, 5000);
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
           }, 1000);
           setTimeout(() => {
             clearInterval(intervalId);
-          }, 5500);
+          }, 5800);
         }
         if (message.data === "2") {
           console.log("중계 서버에서 2 받는 데 성공");
@@ -183,8 +201,15 @@ function NewPlayPage() {
       if (e.code === "ShiftLeft") {
         setShiftPressed(true);
       }
-      if (e.code === "ControlLeft") {
+      if (e.code === "ControlLeft" && boostNum > 0 && canBoost) {
         wss.send(17);
+        setBoostNum((prev) => prev - 1);
+        setCanBoost(false);
+        setIsBoost(true);
+        setTimeout(() => {
+          setCanBoost(true);
+          setIsBoost(false);
+        }, 5000);
         console.log("boost");
       }
     }
@@ -249,7 +274,17 @@ function NewPlayPage() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [wss, upPressed, leftPressed, rightPressed, downPressed, shiftPressed]);
+  }, [
+    wss,
+    upPressed,
+    leftPressed,
+    rightPressed,
+    downPressed,
+    shiftPressed,
+    boostNum,
+    canBoost,
+    isBoost,
+  ]);
 
   // 키 입력 끝 (새로운 로직)
 
@@ -480,6 +515,68 @@ function NewPlayPage() {
             </Box>
             <Box
               component="img"
+              alt="RectangleResult"
+              src={RectangleResult}
+              sx={{
+                width: "50%",
+                height: "50%",
+                opacity: "92%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            />
+            <Box
+              sx={{
+                width: "50%",
+                height: "50%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "start",
+                textAlign: "center",
+                marginTop: "10px",
+              }}
+            >
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ padding: "8px" }}>Place</th>
+                    <th style={{ padding: "8px" }}>Nickname</th>
+                    <th style={{ padding: "8px" }}>Lap Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{row.place}</td>
+                      <td>{row.nickname}</td>
+                      <td>{row.laptime}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+            <Box
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "2%",
+                left: "40%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              <Typography variant="h1">WIN</Typography>
+            </Box>
+            <Box
+              component="img"
               alt="RectangleBest"
               src={RectangleBest}
               sx={{
@@ -556,7 +653,7 @@ function NewPlayPage() {
             >
               km/h
             </Typography>
-            <AppButton
+            <Button
               sx={{
                 width: "13%",
                 height: "6%",
@@ -566,10 +663,13 @@ function NewPlayPage() {
                 zIndex: 1,
                 display: "flex",
                 alignItems: "center",
+                color: "black",
+                bgcolor: "white",
               }}
+              disabled
             >
-              BOOST
-            </AppButton>
+              BOOST : {boostNum}
+            </Button>
             <Box
               sx={{
                 width: "25%",
