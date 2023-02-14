@@ -248,9 +248,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.print_log('Color Sensing Stop')
 
         # GPIO Pin Cleanup
-        #del car_color
-        #del car_gear
-        #del car_handle    
+        del car_color
+        del car_gear
+        del car_handle    
         GPIO.cleanup()
         self.print_log('GPIO Pin Cleanup Done')
 
