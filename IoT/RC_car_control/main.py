@@ -10,8 +10,8 @@ import json
 from datetime import datetime
 import threading
 import RPi.GPIO as GPIO
-from PySide2.QtWidgets import *
-from PySide2.QtCore import *
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
 from RC_car_ui import Ui_MainWindow
 from DC_motor import DC_MOTOR
 from servo_motor import SERVO_MOTOR
@@ -414,11 +414,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def color_sensing(self):
         global str_gate1, str_gate2, str_gate3, str_gate4
         global car_gate, color_rgb
-
-        arr_gate1 = str_gate1.split(',')
-        arr_gate2 = str_gate2.split(',')
-        arr_gate3 = str_gate3.split(',')
-        arr_gate4 = str_gate4.split(',')
+        
+        arr_gate1 = self.ui.le_gate1.text().split(',')
+        arr_gate2 = self.ui.le_gate2.text().split(',')
+        arr_gate3 = self.ui.le_gate3.text().split(',')
+        arr_gate4 = self.ui.le_gate4.text().split(',')
 
         color_rgb = car_color.color_sensing()
         self.print_rgb(color_rgb)
