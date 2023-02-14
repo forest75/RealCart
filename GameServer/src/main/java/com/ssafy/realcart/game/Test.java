@@ -1,4 +1,4 @@
-package org.example;
+package com.ssafy.realcart.game;
 
 import com.google.gson.Gson;
 

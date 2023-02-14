@@ -63,8 +63,8 @@ class ClientSocket:
 
 
 def main():
-    TCP_IP = 'i8a403.p.ssafy.io'
-    # TCP_IP = 'localhost'
+    # TCP_IP = 'i8a403.p.ssafy.io'
+    TCP_IP = 'localhost'
     TCP_PORT1 = 8082
     client1 = ClientSocket(TCP_IP, TCP_PORT1)
 
