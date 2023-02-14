@@ -35,7 +35,7 @@ function PlayVersus() {
         width: "100%",
         height: "7%",
         display: "flex",
-        border: "solid 2px #E8E8E8",
+        border: "solid 2px #8D8D97",
         marginBottom: "30px",
       }}
     >
@@ -223,7 +223,8 @@ function PlayVersus() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          borderLeft: "solid 2px #E8E8E8",
+          borderLeft: "solid 2px #303038",
+          bgcolor: "#303038",
         }}
       >
         <Box
@@ -239,9 +240,10 @@ function PlayVersus() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              color: "white",
             }}
           >
-            <h3>배팅현황</h3>
+            배팅현황
           </Box>
           <Box
             sx={{
@@ -268,6 +270,7 @@ function PlayVersus() {
                   alignItems: "center",
                   justifyContent: "center",
                   borderRight: "solid 2px #E8E8E8",
+                  color: "white",
                 }}
               >
                 Red {bet.betA}명
@@ -279,6 +282,7 @@ function PlayVersus() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  color: "white",
                 }}
               >
                 Blue {bet.betA}명

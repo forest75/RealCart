@@ -69,6 +69,7 @@ function ReportBoard() {
         alignItems: "center",
         width: "100%",
         height: 700,
+        marginTop: "20px",
       }}
     >
       <Box
@@ -76,9 +77,10 @@ function ReportBoard() {
           width: "80%",
           height: "10%",
           display: "flex",
+          marginBottom: "20px",
         }}
       >
-        <Typography variant="h5" flexGrow={1}>
+        <Typography variant="h5" flexGrow={1} sx={{ color: "#34343C" }}>
           문의게시판
         </Typography>
       </Box>
@@ -110,6 +112,7 @@ function ReportBoard() {
             <ReportBox
               sx={{
                 width: "80%",
+                color: "black",
               }}
               board="reportboard"
               key={article.id}
@@ -132,8 +135,9 @@ function ReportBoard() {
               <AppButton
                 sx={{
                   border: 1,
-                  bgcolor: "black",
+                  bgcolor: "#34343C",
                   color: "white",
+                  marginTop: "20px",
                 }}
               >
                 글쓰기
