@@ -1,4 +1,4 @@
-package org.example;
+package com.ssafy.realcart.game;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package org.example;
+package com.ssafy.realcart.game;
 
 public class RcCarStatusDto {
     int carNum;
