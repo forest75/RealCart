@@ -34,8 +34,11 @@ const initialState = {
     confirmOpen: false,
     entryOpen: false,
     forbidOpen: false,
+    playEndOpen: false,
+    isPlayEndClicked: false,
     roomId: null,
     isWait: false,
+    isPlay: false,
   },
   video: {
     video1: false,
