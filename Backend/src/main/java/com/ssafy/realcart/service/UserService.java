@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -31,7 +32,7 @@ public class UserService implements IUserService {
 
     private IUserDAO userDAO;
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-
+    private final String CHANGEPWD = "비밀번호 변경";
     private JavaMailSender mailSender;
 
 
@@ -243,4 +244,72 @@ public class UserService implements IUserService {
     	}
     	return false;
 	}
+
+    @Override
+    public boolean findPwd(String email) {
+        User user = userDAO.getUser(email);
+        if(user == null){
+            return false;
+        }
+        else{
+            byte[] salt = getSalt();
+            StringBuilder sb = new StringBuilder();
+            sb.append("https://i8a403.p.ssafy.io/api/user/changepwd/").append(user.getEmail()).append("/").append(user.getSalt()).append("\n");
+            sb.append("위 주소로 접속해주십시오.").append("\n").append("새로운 비밀번호는 ").append(user.getPassword()).append("입니다");
+            Thread thread = new Thread(new Email(user.getEmail(), sendFrom, CHANGEPWD, sb.toString(), mailSender));
+            thread.start();
+            return true;
+        }
+    }
+
+    @Override
+    public boolean changePwd(String email, String salt) throws NoSuchAlgorithmException {
+        User user = userDAO.getUser(email);
+        if(user != null && user.getSalt().equals(salt)){
+            byte[] newSalt = getSalt();
+            user.setSalt(bytesToHex(newSalt));
+            user.setPassword(sha256(user.getPassword(), bytesToHex(newSalt).getBytes()));
+            userDAO.updateUser(user);
+            return true;
+        }
+        return false;
+    }
+}
+
+class Email implements Runnable{
+
+    private String sendTo;
+    private String sendFrom;
+    private String mailTitle;
+    private String mailContent;
+    private JavaMailSender mailSender;
+
+    public Email(String sendTo, String sendFrom, String mailTitle, String mailContent, JavaMailSender mailSender) {
+        this.sendTo = sendTo;
+        this.sendFrom = sendFrom;
+        this.mailTitle = mailTitle;
+        this.mailContent = mailContent;
+        this.mailSender = mailSender;
+    }
+
+    @Override
+    public void run() {
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                final MimeMessageHelper message = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+                message.setTo(sendTo);
+                message.setFrom(sendFrom);
+                message.setSubject(mailTitle);
+                message.setText(mailContent, true);
+
+            }
+        };
+        try{
+            mailSender.send(preparator);
+        }
+        catch(MailException e){
+            e.printStackTrace();
+        }
+    }
 }

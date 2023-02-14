@@ -64,6 +64,7 @@ public class GameController {
     
     @GetMapping(value="/queue")
     public ResponseEntity<String> checkQueue() {
+
         LOGGER.info("checkQueue 메서드가 gameController에서 호출되었습니다.");
         String queue = gameService.checkQueue();
         return new ResponseEntity<>(queue, HttpStatus.OK);
@@ -75,7 +76,10 @@ public class GameController {
         System.out.println(string);
         StringTokenizer st = new StringTokenizer(string, ",");
         PlayDto playDto = new PlayDto();
-        playDto.setNickname1(st.nextToken());
+        String nickname1 = st.nextToken();
+        if(nickname1 != null){
+            playDto.setNickname1(nickname1.substring(2, nickname1.length()));
+        }
         playDto.setLaptime1(Long.parseLong(st.nextToken()));
         playDto.setNickname2(st.nextToken());
         playDto.setLaptime2(Long.parseLong(st.nextToken()));

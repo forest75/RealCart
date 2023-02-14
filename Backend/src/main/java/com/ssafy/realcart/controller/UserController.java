@@ -122,4 +122,26 @@ public class UserController {
         }
         return new ResponseEntity<String>("유저 밴 해제 실패", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/findpwd")
+    public ResponseEntity<String> findPwd(@RequestBody String email){
+        LOGGER.info("findPwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.findPwd(email)) {
+            return new ResponseEntity<String>("이메일 확인하세요.", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("가입하지 않은 유저입니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(value="/changepwd/{email}/{salt}")
+    public ResponseEntity<String> changePwd(@PathVariable("email") String email, @PathVariable("salt") String salt) throws NoSuchAlgorithmException {
+        LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.changePwd(email, salt)){
+            String msg = "비밀번호 변경 성공";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "유효한 코드가 아닙니다.";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+    }
 }

@@ -8,7 +8,10 @@ import com.ssafy.realcart.data.repository.IUserRepository;
 import com.ssafy.realcart.exception.OAuthProviderMissMatchException;
 import com.ssafy.realcart.info.OAuth2UserInfo;
 import com.ssafy.realcart.info.OAuth2UserInfoFactory;
+import com.ssafy.realcart.service.RecordService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -24,6 +27,7 @@ import java.time.LocalDateTime;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final IUserRepository userRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(CustomOAuth2UserService.class);
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -40,6 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
+        LOGGER.debug("process 메서드가 CustomOAuth2UserService에서 실행됨");
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
@@ -62,6 +67,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+        LOGGER.debug("createUser 메서드가 CustomOAuth2UserService에서 실행됨");
         LocalDateTime now = LocalDateTime.now();
         User user = new User(
                 userInfo.getId(),
@@ -76,11 +82,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateUser(User user, OAuth2UserInfo userInfo) {
-        if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
+        LOGGER.debug("updateUser 메서드가 CustomOAuth2UserService에서 실행됨");
+        if (userInfo.getName() != null && !userInfo.getName().equals(user.getUsername())) {
             user.setUsername(userInfo.getName());
         }
 
-        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
+        if (userInfo.getImageUrl() != null && !userInfo.getImageUrl().equals(user.getProfileImageUrl())) {
             user.setProfileImageUrl(userInfo.getImageUrl());
         }
 

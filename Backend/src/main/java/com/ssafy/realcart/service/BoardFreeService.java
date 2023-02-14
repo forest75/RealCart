@@ -90,7 +90,7 @@ public class BoardFreeService implements IBoardFreeService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardFreeDto getBoardFree(int id) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         if(board != null){

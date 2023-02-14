@@ -142,7 +142,6 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[1] = nickname;
-				startGame();
 				return -2;
 			}
 			//WaitingUsers가 1명이라면
@@ -150,7 +149,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -163,7 +161,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -176,13 +173,11 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -196,7 +191,6 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[0] = nickname;
-				startGame();
 				return -2;
 			}
 			//WaitingUsers가 1명이라면
@@ -204,7 +198,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -217,7 +210,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -230,13 +222,11 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -290,6 +280,7 @@ public class GameService implements IGameService{
 		if(currentUsers[0] == null || currentUsers[1] == null) {
 			return false;
 		}
+		startGame();
 		Game game = gameDAO.getGame(recent);
 		List<Play> list = playDAO.getPlay(game.getId());
 		for (Play play : list) {

@@ -192,7 +192,6 @@ public class FlagClass {
             con.setRequestProperty("Content-Type", "text/plain");
 //            con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
             con.setUseCaches(false);
-            con.setDoOutput(true);
 
 
             System.out.println(requestBody);

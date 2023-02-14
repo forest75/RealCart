@@ -20,4 +20,8 @@ public interface IUserService {
     boolean verifyEmail(String email, String salt);
     void preprocessMail(UserDto userDto);
 	boolean clearUserBan(String nickname);
+
+    boolean findPwd(String email);
+
+    boolean changePwd(String email, String salt) throws NoSuchAlgorithmException;
 }
