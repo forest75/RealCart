@@ -40,15 +40,15 @@ class RCcarThread implements Runnable{
         try {
             this.flag = flag;
             serverSocket = new ServerSocket(socketPort);
-            LOGGER.info("server socket started on port " + socketPort);
+            System.out.println("server socket started on port " + socketPort);
             socket = serverSocket.accept();
-            LOGGER.info("server socket accepted " + socket.getLocalSocketAddress());
+            System.out.println("server socket accepted " + socket.getLocalSocketAddress());
             pw = new PrintWriter(socket.getOutputStream());
             br = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII), 64);
-            LOGGER.info("socket I/O streams are created.");
+            System.out.println("socket I/O streams are created.");
             webSocketServer = new WsHandler(webSocketPort, pw);
             webSocketServer.start();
-            LOGGER.info("websocket server started on port " + webSocketPort);
+            System.out.println("websocket server started on port " + webSocketPort);
         } catch (IOException e) {
             LOGGER.error("Connection error raised. ", e);
         }
@@ -56,7 +56,7 @@ class RCcarThread implements Runnable{
 
     @Override
     public void run() {
-        LOGGER.info("thread started to run");
+        System.out.println("thread started to run");
         try{
             while(br != null) {
                 int dataLen = 100;
@@ -66,8 +66,8 @@ class RCcarThread implements Runnable{
                 }
                 try{
                     // jsonData가 자꾸 공백으로 넘어오기 때문에 try catch 해줘야 함
-                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);  
-                    LOGGER.info(flag.toString());
+                    RcCarStatusDto rcCarStatus = gson.fromJson(jsonData.trim(), RcCarStatusDto.class);
+                    System.out.println(rcCarStatus);
                     // 0: NULL, 1: Ready, 2: Finish, 3: Running
                     switch (rcCarStatus.status) {
                     /*
