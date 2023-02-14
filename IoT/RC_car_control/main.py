@@ -37,6 +37,8 @@ class recv_thread(QThread):
             # 입력 데이터
             key_up = 38
             key_down = 40
+            key_up_release = 42
+            key_down_release = 43
             key_shift = 32
             key_left = 37
             key_right = 39
@@ -47,6 +49,8 @@ class recv_thread(QThread):
             self.mutex.lock()   
             if (recv_data == key_up): flag_up = True
             if (recv_data == key_down): flag_down = True
+            if (recv_data == key_up_release): flag_up = False
+            if (recv_data == key_down_release): flag_down = False
             if (recv_data == key_shift): flag_shift = True
             if (recv_data == key_left): flag_left = True
             if (recv_data == key_right): flag_right = True
@@ -444,12 +448,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if flag_up:
             car_speed += 10
             if (car_speed > car_speed_limit): car_speed = car_speed_limit
-            flag_up = False
     
         elif flag_down:
             car_speed -= 10
             if (car_speed < -car_speed_limit): car_speed = -car_speed_limit
-            flag_down = False
     
         elif flag_shift:
             car_speed = 0
