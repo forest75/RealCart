@@ -75,7 +75,7 @@ function NewPlayPage2() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  const [boostNum, setBoostNum] = useState(10);
+  const [boostNum, setBoostNum] = useState(2);
   const [canBoost, setCanBoost] = useState(true);
 
   function sendChat(e) {
