@@ -53,27 +53,27 @@ function AppForm({
   };
 
   const emailHelper = () => {
-    if (emailCheck === "Unique") {
-      return msg.emailCheckSuccess;
-    }
     if (verifier.email()) {
       if (emailCheck === "Duplicate") {
         return msg.emailCheckError;
       }
       return msg.email;
     }
+    if (emailCheck === "Unique" && input.length > 0) {
+      return msg.emailCheckSuccess;
+    }
     return "";
   };
 
   const nicknameHelper = () => {
-    if (nicknameCheck === "Unique") {
-      return msg.nicknameCheckSuccess;
-    }
     if (verifier.nickname()) {
       if (nicknameCheck === "Duplicate") {
         return msg.nicknameCheckError;
       }
       return msg.nickname;
+    }
+    if (nicknameCheck === "Unique" && input.length > 0) {
+      return msg.nicknameCheckSuccess;
     }
     return "";
   };

@@ -236,7 +236,7 @@ function CustomPaginationActionsTable({ address, user }) {
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[3, 5]}
-              colSpan={3}
+              colSpan={5}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
