@@ -52,7 +52,7 @@ function SpectPage() {
     e.preventDefault();
     if (text.current.value === "") return;
     if (text.current.value.length > 100) {
-      alert("댓글은 100자 이내로 입력해주세요");
+      alert("채팅은 100자 이내로 입력해주세요");
       return;
     }
     stompClient.send(
@@ -235,6 +235,7 @@ function SpectPage() {
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
+                border: "solid 1px #bdbdbd",
               }}
             >
               <div>
@@ -302,7 +303,7 @@ function SpectPage() {
         sx={{
           width: "20%",
           height: "700",
-          borderLeft: "solid 1px #8D8D97",
+          borderLeft: "solid 1px #a1a1a1",
           paddingLeft: "30px",
           display: "flex",
           flexDirection: "column",
@@ -310,7 +311,7 @@ function SpectPage() {
         }}
       >
         <Paper
-          elevation={1}
+          elevation={3}
           display="flex"
           sx={{
             height: 80,
@@ -319,16 +320,15 @@ function SpectPage() {
             alignItems: "center",
             marginTop: "40px",
             // bgcolor: "#BAC4D9",
-            border: "solid 1px #303038",
+            border: "solid 1px #bdbdbd",
           }}
         >
           <Button
             sx={{
               height: 80,
               width: 250,
-              bgcolor: "#303038",
-              color: "white",
-              fontWeight: 800,
+              bgcolor: "white",
+              color: "#303038",
             }}
             onClick={() => {
               dispatch(setReceptionOpen());
@@ -354,11 +354,11 @@ function SpectPage() {
               height: "90%",
               maxHeight: 315,
               overflow: "auto",
-              borderTop: "solid 1px #303038",
-              borderLeft: "solid 1px #303038",
-              borderRight: "solid 1px #303038",
-              borderTopRightRadius: "5px",
-              borderTopLeftRadius: "5px",
+              borderTop: "solid 1px #474747",
+              borderLeft: "solid 1px #474747",
+              borderRight: "solid 1px #474747",
+              borderTopRightRadius: "15px",
+              borderTopLeftRadius: "15px",
             }}
             ref={chatRef}
           >
@@ -383,8 +383,8 @@ function SpectPage() {
               style={{
                 width: "70%",
                 height: "50px",
-                border: "solid 1px #303038",
-                borderBottomLeftRadius: "5px",
+                border: "solid 1px #474747",
+                borderBottomLeftRadius: "15px",
               }}
               placeholder="     채팅을 입력하세요"
             />
@@ -393,15 +393,16 @@ function SpectPage() {
               style={{
                 width: "30%",
                 height: "56px",
-                borderTop: "solid 1px #303038",
-                borderBottom: "solid 1px #303038",
-                borderRight: "solid 1px #303038",
+                borderTop: "solid 1px #474747",
+                borderBottom: "solid 1px #474747",
+                borderRight: "solid 1px #474747",
                 borderLeft: "none",
-                borderBottomRightRadius: "5px",
-                backgroundColor: "#303038",
+                borderBottomRightRadius: "15px",
+                backgroundColor: "white",
               }}
+              ref={chatRef}
             >
-              <SendIcon sx={{ color: "white" }} />
+              <SendIcon sx={{ color: "#474747" }} />
             </button>
           </form>
         </Box>

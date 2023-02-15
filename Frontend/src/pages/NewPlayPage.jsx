@@ -527,6 +527,8 @@ function NewPlayPage() {
               width: "90%",
               height: "90%",
               position: "relative",
+              borderTopRightRadius: "15px",
+              borderBottomRightRadius: "15px",
               bgcolor: "black",
             }}
           >

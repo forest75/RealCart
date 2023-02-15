@@ -35,7 +35,10 @@ class RCcarThread implements Runnable{
     FlagClass flag = null;
     Gson gson = new Gson();
     Logger LOGGER = LoggerFactory.getLogger(RCcarThread.class);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
     RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
