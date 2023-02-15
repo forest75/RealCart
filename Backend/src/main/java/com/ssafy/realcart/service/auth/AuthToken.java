@@ -18,7 +18,9 @@ public class AuthToken {
     private final String token;
     private final Key key;
     
-    private static final String AUTHORITIES_KEY = "role";
+
+    private static final String AUTHORITIES_KEY = "role";  // 특별한 권한이 필요한 경우
+
 
     AuthToken(String id, Date expiry, Key key) {
         this.key = key;

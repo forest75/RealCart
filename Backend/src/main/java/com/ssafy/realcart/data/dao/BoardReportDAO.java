@@ -9,17 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.realcart.data.dao.inter.IBoardReportDAO;
+import com.ssafy.realcart.data.entity.Answer;
 import com.ssafy.realcart.data.entity.BoardReport;
+import com.ssafy.realcart.data.repository.IAnswerRepository;
 import com.ssafy.realcart.data.repository.IBoardReportRepository;
 @Component
 public class BoardReportDAO implements IBoardReportDAO {
 
 	IBoardReportRepository boardReportRepository;
+	IAnswerRepository answerRepository;
 	private final Logger LOGGER = LoggerFactory.getLogger(BoardReportDAO.class);
 	
 	@Autowired
-	public BoardReportDAO(IBoardReportRepository boardReportRepository) {
+	public BoardReportDAO(IBoardReportRepository boardReportRepository, IAnswerRepository answerRepository) {
 		this.boardReportRepository = boardReportRepository;
+		this.answerRepository = answerRepository;
 	}
 	
 	@Override
@@ -40,8 +44,7 @@ public class BoardReportDAO implements IBoardReportDAO {
 		Optional<BoardReport> selectedBoardReport = boardReportRepository.findById(id);
 		if(selectedBoardReport.isPresent()) {
 			BoardReport boardReport = selectedBoardReport.get();
-			boardReport.setHit(boardReport.getHit() + 1);
-			boardReportRepository.save(boardReport);
+			
 			return boardReport;
 		}
 		return null;
@@ -56,6 +59,32 @@ public class BoardReportDAO implements IBoardReportDAO {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void saveAnswer(Answer answer) {
+		answerRepository.save(answer);
+	}
+
+	@Override
+	public Answer getAnswer(int answerId) {
+		Optional<Answer> selectedAnswer = answerRepository.findById(answerId);
+		if(selectedAnswer.isPresent()) {
+			Answer answer = selectedAnswer.get();
+			return answer;
+		}
+		return null;
+	}
+
+	@Override
+	public void deleteAnswer(int answerId) {
+		answerRepository.deleteById(answerId);
+		
+	}
+
+	@Override
+	public List<Answer> getAnswerByBoardFK(int id) {
+		return answerRepository.findByBOARD_FK(id);
 	}
 
 }

@@ -61,8 +61,9 @@ public class BoardFreeService implements IBoardFreeService {
     public List<BoardFreeDto> getBoardFreeAll() {
         List<BoardFree> list = boardFreeDAO.getBoardFreeAll();
         List<BoardFreeDto> boardDtos = new ArrayList<BoardFreeDto>();
-        for (BoardFree free:
-             list) {
+        for (int i = list.size()-1; i >= 0; i--
+             ) {
+        	BoardFree free = list.get(i);
             BoardFreeDto boardFreeDto = new BoardFreeDto();
             boardFreeDto.setId(free.getId());
             boardFreeDto.setTitle(free.getTitle());
@@ -77,6 +78,7 @@ public class BoardFreeService implements IBoardFreeService {
             for (Comment comment:
                  comments) {
                 CommentDto commentDto = new CommentDto();
+                commentDto.setId(comment.getId());
                 commentDto.setNickname(comment.getUser().getNickname());
                 commentDto.setContent(comment.getContent());
                 commentDto.setCreatedTime(comment.getCreatedDate());
@@ -89,14 +91,14 @@ public class BoardFreeService implements IBoardFreeService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardFreeDto getBoardFree(int id) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         if(board != null){
-            board.setHit(board.getHit()+1);
-            boardFreeDAO.saveFree(board);
+        	board.setHit(board.getHit() + 1);
+        	boardFreeDAO.saveFree(board);
             BoardFreeDto boardFreeDto = new BoardFreeDto();
-            boardFreeDto.setHit(board.getHit());
+            boardFreeDto.setHit(board.getHit() + 1);
             boardFreeDto.setNickname(board.getUser().getNickname());
             boardFreeDto.setTitle(board.getTitle());
             boardFreeDto.setContent(board.getContent());
@@ -109,6 +111,7 @@ public class BoardFreeService implements IBoardFreeService {
             for (Comment comment:
                     comments) {
                 CommentDto commentDto = new CommentDto();
+                commentDto.setId(comment.getId());
                 commentDto.setNickname(comment.getUser().getNickname());
                 commentDto.setContent(comment.getContent());
                 commentDto.setCreatedTime(comment.getCreatedDate());
