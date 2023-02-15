@@ -41,7 +41,7 @@ public class UserController {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UserDto user = userService.getUser(principal.getUsername());
-
+        
         return ApiResponse.success("user", user);
     }
 
@@ -117,11 +117,11 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     
-    @PutMapping(value = "/{email}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody UserDto userDto){
+    @PutMapping()
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto){
         LOGGER.info("updateUser 메서드가 userController에서 호출되었습니다.");
         try {
-            UserDto loginUser = userService.updateUser(email, userDto);
+            UserDto loginUser = userService.updateUser(userDto);
             if(loginUser != null){
                 return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
             }
@@ -162,6 +162,19 @@ public class UserController {
     public ResponseEntity<String> changePwd(@PathVariable("email") String email, @PathVariable("salt") String salt) throws NoSuchAlgorithmException {
         LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
         if(userService.changePwd(email, salt)){
+            String msg = "비밀번호 변경 성공";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "유효한 코드가 아닙니다.";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+    }
+    
+    @GetMapping(value="/bcrypt/{email}")
+    public ResponseEntity<String> changePwd(@PathVariable("email") String email) throws NoSuchAlgorithmException {
+        LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.changePwd(email)){
             String msg = "비밀번호 변경 성공";
             return new ResponseEntity<>(msg, HttpStatus.OK);
         }

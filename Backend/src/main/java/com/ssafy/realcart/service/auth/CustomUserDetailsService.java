@@ -21,6 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Can not find username.");
         }
+        else if("관리자".equals(user.getNickname())) {
+        	return UserPrincipal.createAdmin(user);
+        }
         return UserPrincipal.create(user);
     }
 }

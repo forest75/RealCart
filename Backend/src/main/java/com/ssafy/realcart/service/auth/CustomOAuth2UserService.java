@@ -70,9 +70,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         LOGGER.debug("createUser 메서드가 CustomOAuth2UserService에서 실행됨");
         LocalDateTime now = LocalDateTime.now();
         User user = new User(
-                userInfo.getId(),
-                userInfo.getEmail(),
                 userInfo.getName(),
+                userInfo.getEmail(),
+                providerType + "-" + userInfo.getId(),
                 (byte) 1,
                 userInfo.getImageUrl(),
                 (byte) 0,

@@ -11,7 +11,7 @@ public interface IUserService {
 
     boolean createUser(UserDto userDto) throws NoSuchAlgorithmException;
     List<UserDto> getAllUsers();
-    UserDto updateUser(String email, UserDto userDto) throws NoSuchAlgorithmException;
+    UserDto updateUser(UserDto userDto) throws NoSuchAlgorithmException;
     boolean deleteUser(String email);
     boolean banUser(String nickname);
     UserDto login(UserDto userDto) throws NoSuchAlgorithmException;
@@ -26,4 +26,5 @@ public interface IUserService {
     boolean changePwd(String email, String salt) throws NoSuchAlgorithmException;
 
     UserDto getUser(String username);
+	boolean changePwd(String email);
 }

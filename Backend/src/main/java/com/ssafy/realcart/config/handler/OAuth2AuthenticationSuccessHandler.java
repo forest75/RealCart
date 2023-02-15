@@ -77,7 +77,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
-                userInfo.getId(),
+                userInfo.getEmail(),
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
@@ -90,18 +90,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        // DB 저장
-        String userRefreshToken = userRepository.findByEmail(userInfo.getEmail()).getRefreshToken();
-        if (userRefreshToken == null) {
-            // 없는 경우 새로 등록
-            userRefreshToken = refreshToken.getToken();
-            User refreshUser = userRepository.findByEmail(userInfo.getEmail());
-            refreshUser.setRefreshToken(userRefreshToken);
-            userRepository.saveAndFlush(refreshUser);
-        } else {
-            // DB에 refresh 토큰 업데이트
-            userRefreshToken = refreshToken.getToken();
-        }
+        // DB에 refresh 토큰 업데이트
+        String userRefreshToken = refreshToken.getToken();
+        User refreshUser = userRepository.findByEmail(userInfo.getEmail());
+        refreshUser.setRefreshToken(userRefreshToken);
+        userRepository.saveAndFlush(refreshUser);
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
