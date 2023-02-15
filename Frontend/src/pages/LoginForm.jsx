@@ -23,6 +23,7 @@ function LoginForm() {
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
       .then((response) => {
+        console.log(response.data);
         cookie.set("refreshToken", response.data.refreshToken, {
           secure: true,
         });
