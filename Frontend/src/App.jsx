@@ -30,12 +30,12 @@ import PlayRoom2 from "./test/PlayRoom2";
 import PlayRoom3 from "./test/PlayRoom3";
 import Auth from "./pages/Auth";
 import AuthAdmin from "./pages/AuthAdmin";
-import AuthPlayer from "./pages/AuthPlayer";
+// import AuthPlayer from "./pages/AuthPlayer";
 
 const SpectPageWithAuth = Auth(SpectPage);
 // const PlayPageWithAuth = Auth(PlayPage);
-const NewPlayPageWithAuth = AuthPlayer(NewPlayPage);
-const NewPlayPage2WithAuth = AuthPlayer(NewPlayPage2);
+const NewPlayPageWithAuth = Auth(NewPlayPage);
+const NewPlayPage2WithAuth = Auth(NewPlayPage2);
 // const PlayPage2WithAuth = Auth(PlayPage2);
 const NoticeBoardDetailWithAuth = Auth(NoticeBoardDetail);
 const NoticeBoardWriteWithAuth = AuthAdmin(NoticeBoardWrite);

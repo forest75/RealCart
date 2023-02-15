@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import PersonIcon from "@mui/icons-material/Person";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import AppButton from "./AppButton";
 
 function ArticleBox({ sx, no, id, content, author, date, ...otherProps }) {
