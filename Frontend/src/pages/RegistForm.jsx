@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import AppForm from "../components/AppForm";
+import ArrowButton from "../components/ArrowButton";
 
 export default function RegistForm() {
   const navigate = useNavigate();
@@ -16,11 +14,6 @@ export default function RegistForm() {
   const [nickname, setNickname] = useState("");
   const [emailCheck, setEmailCheck] = useState("");
   const [nicknameCheck, setNicknameCheck] = useState("");
-
-  const headers = {
-    "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-    Accept: "*/*",
-  };
 
   const handleRegist = async (e) => {
     e.preventDefault();
@@ -42,10 +35,13 @@ export default function RegistForm() {
       });
   };
 
-  const handleEmailDuplicate = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
     const params = { email };
-    await axios
+    const headers = {
+      "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      Accept: "*/*",
+    };
+    axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/user/checkemail`,
         { params },
@@ -57,12 +53,15 @@ export default function RegistForm() {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }, [email]);
 
-  const handleNicknameDuplicate = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
     const params = { nickname };
-    await axios
+    const headers = {
+      "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      Accept: "*/*",
+    };
+    axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/user/checknickname`,
         { params },
@@ -74,7 +73,7 @@ export default function RegistForm() {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }, [nickname]);
 
   const theme = createTheme({
     palette: {
@@ -93,9 +92,10 @@ export default function RegistForm() {
         "& > :not(style)": {
           m: 1,
         },
+        marginTop: "60px",
       }}
     >
-      <Paper elevation={3}>
+      <Box sx={{ border: "solid 1px black" }}>
         <ThemeProvider theme={theme}>
           <Grid
             sx={{
@@ -128,20 +128,9 @@ export default function RegistForm() {
                 }}
                 onInput={(e) => {
                   setEmail(e.target.value);
-                  setEmailCheck("");
+                  // setEmailCheck("");
                 }}
               />
-              <Button
-                variant="contained"
-                color="white"
-                sx={{
-                  m: 2.3,
-                  height: 50,
-                }}
-                onClick={handleEmailDuplicate}
-              >
-                중복확인
-              </Button>
             </div>
             <AppForm
               content="password"
@@ -177,62 +166,29 @@ export default function RegistForm() {
                   setNicknameCheck("");
                 }}
               />
-              <Button
-                variant="contained"
-                color="white"
-                sx={{
-                  m: 2.3,
-                  height: 50,
-                }}
-                onClick={handleNicknameDuplicate}
-              >
-                중복확인
-              </Button>
             </div>
             <br />
             <Box
               sx={{
-                "& .MuiTextField-root": { t: 10, m: 1, width: "25ch" },
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              noValidate
-              autoComplete="off"
-              alignSelf="center"
-              alignItems="center"
-              justifyContent="center"
             >
-              <div>
-                <div>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="white"
-                    type="submit"
-                    sx={{
-                      width: 300,
-                      margin: 1,
-                    }}
-                  >
-                    <div style={{ width: "33%" }}> </div>
-
-                    <span style={{ width: "33%", textAlign: "center" }}>
-                      회원가입
-                    </span>
-                    <div
-                      style={{
-                        width: "33%",
-                        textAlign: "right",
-                        color: "gray",
-                      }}
-                    >
-                      <ArrowForwardIcon />
-                    </div>
-                  </Button>
-                </div>
-              </div>
+              <ArrowButton
+                type="submit"
+                sx={{
+                  width: 300,
+                  height: 50,
+                }}
+              >
+                회원가입
+              </ArrowButton>
             </Box>
           </Grid>
         </ThemeProvider>
-      </Paper>
+      </Box>
     </Box>
   );
 }

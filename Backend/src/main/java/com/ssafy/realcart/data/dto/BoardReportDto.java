@@ -1,6 +1,7 @@
 package com.ssafy.realcart.data.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +27,5 @@ public class BoardReportDto {
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
     private String nickname;
-    
+    private List<AnswerDto> answers;
 }

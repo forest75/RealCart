@@ -1,19 +1,20 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
-import AppButton from "../components/AppButton";
 import SendIcon from "@mui/icons-material/Send";
 import Stomp from "stompjs";
+import axios from "axios";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
-import rhombusLap from "../assets/rhombus_lab.png";
-import rhombusPlace from "../assets/rhombus_place.png";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
+import RectangleResult from "../assets/Rectangle_Result.png";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import TransparentImg2 from "../assets/img/transparent-copy.png";
 import CountdownOne from "../assets/count_1.png";
@@ -24,31 +25,66 @@ import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
 import Viewer2 from "../components/video/Viewer200";
 import SmallViewer3 from "../components/video/SmallViewer3";
+import PlayEndModal from "../components/play/PlayEndModal";
+import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage2() {
+  const [bestTime, setBestTime] = useState("00:00:00");
+  const queue = useSelector((state) => state.queue);
+  const [winPlayer, setWinPlayer] = useState("");
+  const [losePlayer, setLosePlayer] = useState("");
+  const [winPlayerTime, setWinPlayerTime] = useState("");
+  const [losePlayerTime, setLosePlayerTime] = useState("");
+
+  const rows = [
+    {
+      place: 1,
+      nickname: winPlayer,
+      laptime: winPlayerTime,
+    },
+    {
+      place: 2,
+      nickname: losePlayer,
+      laptime: losePlayerTime,
+    },
+  ];
+  const modal = useSelector((state) => state.modal);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
-  const imgRef = useRef(null);
-
-  const [carSpeed, setCarSpeed] = useState(0);
-  const [lap, setLap] = useState(1);
-  const [totalLap, setTotalLap] = useState(2);
+  // const [carSpeed, setCarSpeed] = useState(0);
   const [isBoost, setIsBoost] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
   const user = useSelector((state) => state.login.user);
 
-  const [socket, setSocket] = useState(null);
   const [wss, setWss] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const text = useRef(null);
 
+  const images = [
+    TransparentImg2,
+    CountdownThree,
+    CountdownTwo,
+    CountdownOne,
+    CountdownStart,
+    TransparentImg,
+  ];
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const [boostNum, setBoostNum] = useState(10);
+  const [canBoost, setCanBoost] = useState(true);
+
   function sendChat(e) {
     e.preventDefault();
     if (text.current.value === "") return;
-    if (text.current.value.length > 100)
-      return alert("댓글은 100자 이내로 입력해주세요");
+    if (text.current.value.length > 100) {
+      alert("댓글은 100자 이내로 입력해주세요");
+      return;
+    }
     stompClient.send(
       "/publish/messages",
       {},
@@ -61,11 +97,40 @@ function NewPlayPage2() {
     text.current.value = "";
   }
 
+  // 베스트타임 변환 함수
+  function convertTime(time) {
+    const [minutes, secondsAndMillis] = time.split(":");
+    const [seconds, milliseconds] = secondsAndMillis.split(".");
+    const truncatedMillis = milliseconds.slice(0, 2);
+    return `${minutes}:${seconds.padStart(2, "0")}:${truncatedMillis.padEnd(
+      2,
+      "0"
+    )}`;
+  }
+
   useEffect(() => {
-    // RACE TIME 5초 후에 시작
-    const endRunInterval = setTimeout(() => {
-      setIsRunning(true);
-    }, 5000);
+    // 베스트타임 가져오기
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
+      .then((res) => {
+        console.log(res.data);
+        const record = res.data;
+        record.sort((a, b) => {
+          const aTime =
+            a.lapTime === "기권" ? Infinity : parseFloat(a.lapTime) * 1000;
+          const bTime =
+            b.lapTime === "기권" ? Infinity : parseFloat(b.lapTime) * 1000;
+          return aTime - bTime;
+        });
+        setBestTime(convertTime(record[0].lapTime));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setTimeout(() => {
+      setIsTutorial(false);
+    }, 10000);
 
     // 미디어 websocket 연결
     const socketConst = new WebSocket(
@@ -83,14 +148,11 @@ function NewPlayPage2() {
     // 중계 websocket 연결
     const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8582");
 
-    setSocket(socketConst);
     setStompClient(stompClientConst);
     setWss(wssConst);
 
     // 종료 시
     return () => {
-      clearTimeout(endRunInterval);
-      clearInterval(endParticipantInterval);
       socketConst.close();
       wssConst.close();
     };
@@ -102,19 +164,30 @@ function NewPlayPage2() {
 
   useEffect(() => {
     if (wss) {
-      wss.onmessage = function incoming(data) {
-        console.log("get 1", data.data);
-        if (data.data === "1") {
+      wss.onmessage = (message) => {
+        console.log("get message", message.data);
+        if (message.data.status === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
+          setTimeout(() => {
+            setIsRunning(true);
+          }, 5000);
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
-            setCurrentImage(
-              (currentImage) => (currentImage + 1) % images.length
-            );
+            setCurrentImage((prev) => (prev + 1) % images.length);
           }, 1000);
           setTimeout(() => {
             clearInterval(intervalId);
-          }, 5500);
+          }, 5800);
+        }
+        if (message.data.status === "2") {
+          console.log("중계 서버에서 2 받는 데 성공");
+          dispatch(setPlayEndOpen());
+          setTimeout(() => {
+            if (!modal.isPlayEndClicked) {
+              navigate("/spect");
+            }
+            dispatch(setIsPlayEndClicked(false));
+          }, 10000);
         }
       };
 
@@ -122,174 +195,299 @@ function NewPlayPage2() {
         console.log("disconnected");
       };
 
-      window.addEventListener(
-        "keyup",
-        (e) => {
-          if (e.keyCode === 37 || e.keyCode === 39) {
-            setTimeout(() => {
-              console.log("stop");
-              wss.send(41);
-            }, 200);
-          }
-          setKeyState((prevState) => ({
-            ...prevState,
-            [e.keyCode || e.which]: false,
-          }));
-        },
-        true
-      );
+      // window.addEventListener(
+      //   "keyup",
+      //   (e) => {
+      //     if (e.keyCode === 37 || e.keyCode === 39) {
+      //       setTimeout(() => {
+      //         console.log("stop");
+      //         wss.send(41);
+      //       }, 200);
+      //     }
+      //     setKeyState((prevState) => ({
+      //       ...prevState,
+      //       [e.keyCode || e.which]: false,
+      //     }));
+      //   },
+      //   true
+      // );
     }
   }, [wss]);
 
-  const images = [
-    TransparentImg2,
-    CountdownThree,
-    CountdownTwo,
-    CountdownOne,
-    CountdownStart,
-    TransparentImg,
-  ];
+  // 키 입력 (새로운 로직)
 
-  const [currentImage, setCurrentImage] = useState(0);
-
-  const [keyState, setKeyState] = useState({});
-  const [inputSwitch, setInputSwitch] = useState({
-    16: false,
-    17: false,
-    37: false,
-    38: false,
-    39: false,
-    40: false,
-  });
-  useEffect(() => {
-    setTimeout(() => {
-      setIsTutorial(false);
-    }, 10000);
-    window.addEventListener(
-      "keydown",
-      (e) => {
-        setKeyState((prevState) => ({
-          ...prevState,
-          [e.keyCode || e.which]: true,
-        }));
-        if (e.keyCode === 86) {
-          console.log(isTutorial);
-          setIsTutorial((prevState) => !prevState);
-        }
-        if (e.keyCode === 66) {
-          setIsBoost((prevState) => !prevState);
-        }
-      },
-      true
-    );
-  }, []);
+  const [upPressed, setUpPressed] = useState(false);
+  const [leftPressed, setLeftPressed] = useState(false);
+  const [rightPressed, setRightPressed] = useState(false);
+  const [downPressed, setDownPressed] = useState(false);
+  const [shiftPressed, setShiftPressed] = useState(false);
 
   useEffect(() => {
-    const totalLength = 200;
-    const eachInterval = 40;
-    if (keyState[16] && inputSwitch[16] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        16: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("stop");
-        wss.send(31);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          16: false,
-        }));
-      }, totalLength);
-    }
-    if (keyState[17] && inputSwitch[17] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        17: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("ctrl");
+    let interval = null;
+
+    function handleKeyDown(e) {
+      if (e.code === "ArrowUp") {
+        e.preventDefault();
+        setUpPressed(true);
+      }
+      if (e.code === "ArrowLeft") {
+        setLeftPressed(true);
+      }
+      if (e.code === "ArrowRight") {
+        setRightPressed(true);
+      }
+      if (e.code === "ArrowDown") {
+        e.preventDefault();
+        setDownPressed(true);
+      }
+      if (e.code === "ShiftLeft") {
+        setShiftPressed(true);
+      }
+      if (e.code === "ControlLeft" && boostNum > 0 && canBoost) {
         wss.send(17);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          17: false,
-        }));
-      }, totalLength);
+        setBoostNum((prev) => prev - 1);
+        setCanBoost(false);
+        setIsBoost(true);
+        setTimeout(() => {
+          setCanBoost(true);
+          setIsBoost(false);
+        }, 5000);
+        console.log("boost");
+      }
+      if (e.code === "KeyV") {
+        setIsTutorial((prev) => !prev);
+      }
     }
-    if (keyState[37] && inputSwitch[37] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        37: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("left");
-        wss.send(37);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          37: false,
-        }));
-      }, totalLength);
+
+    function handleKeyUp(e) {
+      if (e.code === "ArrowUp") {
+        setUpPressed(false);
+        wss.send(42);
+        console.log("up relased");
+      }
+      if (e.code === "ArrowLeft") {
+        setLeftPressed(false);
+        wss.send(41);
+        console.log("left relased");
+      }
+      if (e.code === "ArrowRight") {
+        setRightPressed(false);
+        wss.send(41);
+        console.log("right relased");
+      }
+      if (e.code === "ArrowDown") {
+        setDownPressed(false);
+        wss.send(43);
+        console.log("down relased");
+      }
+      if (e.code === "ShiftLeft") {
+        setShiftPressed(false);
+      }
     }
-    if (keyState[38] && inputSwitch[38] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        38: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("up");
+
+    function handleInterval() {
+      if (upPressed) {
         wss.send(38);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          38: false,
-        }));
-      }, totalLength);
-    }
-    if (keyState[39] && inputSwitch[39] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        39: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("right");
+        console.log("up");
+      }
+      if (leftPressed) {
+        wss.send(37);
+        console.log("left");
+      }
+      if (rightPressed) {
         wss.send(39);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          39: false,
-        }));
-      }, totalLength);
-    }
-    if (keyState[40] && inputSwitch[40] === false) {
-      setInputSwitch((prevState) => ({
-        ...prevState,
-        40: true,
-      }));
-      const interval = setInterval(() => {
-        console.log("down");
+        console.log("right");
+      }
+      if (downPressed) {
         wss.send(40);
-      }, eachInterval);
-      setTimeout(() => {
-        clearInterval(interval);
-        setInputSwitch((prevState) => ({
-          ...prevState,
-          40: false,
-        }));
-      }, totalLength);
+        console.log("down");
+      }
+      if (shiftPressed) {
+        wss.send(32);
+        console.log("brake");
+      }
     }
-  }, [keyState]);
+
+    if (wss) {
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
+      interval = setInterval(handleInterval, 50);
+    }
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [
+    wss,
+    upPressed,
+    leftPressed,
+    rightPressed,
+    downPressed,
+    shiftPressed,
+    boostNum,
+    canBoost,
+    isBoost,
+  ]);
+
+  // 키 입력 끝 (새로운 로직)
+
+  // 키 입력 부분 시작
+
+  // const [keyState, setKeyState] = useState({});
+  // const [inputSensor, setInputSensor] = useState(true);
+  // const [inputSwitch, setInputSwitch] = useState({
+  //   16: false,
+  //   17: false,
+  //   37: false,
+  //   38: false,
+  //   39: false,
+  //   40: false,
+  // });
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsTutorial(false);
+  //   }, 10000);
+  //   window.addEventListener(
+  //     "keydown",
+  //     (e) => {
+  //       if (e.keyCode === 38 || e.keyCode === 40) {
+  //         e.preventDefault();
+  //       }
+  //       setKeyState((prevState) => ({
+  //         ...prevState,
+  //         [e.keyCode]: true,
+  //       }));
+  //       if (e.keyCode === 86) {
+  //         console.log(isTutorial);
+  //         setIsTutorial((prevState) => !prevState);
+  //       }
+  //       if (e.keyCode === 66) {
+  //         setIsBoost((prevState) => !prevState);
+  //       }
+  //       if (
+  //         e.keyCode === 38 ||
+  //         e.keyCode === 40 ||
+  //         e.keyCode === 37 ||
+  //         e.keyCode === 39
+  //       ) {
+  //         setInputSensor((prevState) => !prevState);
+  //       }
+  //     },
+  //     true
+  //   );
+  // }, []);
+
+  // useEffect(() => {
+  //   const totalLength = 200;
+  //   const eachInterval = 40;
+  //   if (keyState[16] && inputSwitch[16] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       16: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("stop");
+  //       wss.send(31);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         16: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  //   if (keyState[17] && inputSwitch[17] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       17: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("ctrl");
+  //       wss.send(17);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         17: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  //   if (keyState[37] && inputSwitch[37] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       37: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("left");
+  //       wss.send(37);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         37: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  //   if (keyState[38] && inputSwitch[38] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       38: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("up");
+  //       wss.send(38);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         38: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  //   if (keyState[39] && inputSwitch[39] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       39: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("right");
+  //       wss.send(39);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         39: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  //   if (keyState[40] && inputSwitch[40] === false) {
+  //     setInputSwitch((prevState) => ({
+  //       ...prevState,
+  //       40: true,
+  //     }));
+  //     const interval = setInterval(() => {
+  //       console.log("down");
+  //       wss.send(40);
+  //     }, eachInterval);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       setInputSwitch((prevState) => ({
+  //         ...prevState,
+  //         40: false,
+  //       }));
+  //     }, totalLength);
+  //   }
+  // }, [inputSensor]);
+
+  // 키 입력 부분 끝
 
   return (
     <Box
@@ -298,9 +496,10 @@ function NewPlayPage2() {
         flexDirection: "column",
         alignItems: "center",
         height: 950,
+        marginTop: "20px",
       }}
-      tabIndex={0}
-      ref={imgRef}
+      // tabIndex={0}
+      // ref={gameRef}
     >
       <Box
         sx={{
@@ -359,6 +558,68 @@ function NewPlayPage2() {
               RACE TIME
               <RaceTime isRunning={isRunning} />
             </Box>
+            {/* <Box
+              component="img"
+              alt="RectangleResult"
+              src={RectangleResult}
+              sx={{
+                width: "50%",
+                height: "50%",
+                opacity: "92%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            /> */}
+            {/* <Box
+              sx={{
+                width: "50%",
+                height: "50%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "start",
+                textAlign: "center",
+                marginTop: "10px",
+              }}
+            >
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ padding: "8px" }}>Place</th>
+                    <th style={{ padding: "8px" }}>Nickname</th>
+                    <th style={{ padding: "8px" }}>Lap Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{row.place}</td>
+                      <td>{row.nickname}</td>
+                      <td>{row.laptime}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+            <Box
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "2%",
+                left: "40%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              <Typography variant="h1">WIN</Typography>
+            </Box> */}
             <Box
               component="img"
               alt="RectangleBest"
@@ -377,7 +638,7 @@ function NewPlayPage2() {
               sx={{
                 width: "20%",
                 height: "9%",
-                top: "14%",
+                top: "19%",
                 left: "7.5%",
                 color: "white",
                 position: "absolute",
@@ -385,6 +646,20 @@ function NewPlayPage2() {
               }}
             >
               <h3>BEST</h3>
+            </Box>
+            <Box
+              component="h4"
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "22%",
+                left: "7.5%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              {bestTime}
             </Box>
             {isBoost && (
               <Alert
@@ -400,49 +675,6 @@ function NewPlayPage2() {
                 부스터 사용 중
               </Alert>
             )}
-            <Box
-              component="img"
-              alt="rhombusLap"
-              src={rhombusLap}
-              sx={{
-                width: "17%",
-                height: "13%",
-                top: "3%",
-                right: "0",
-                opacity: "50%",
-                position: "absolute",
-                zIndex: 1,
-              }}
-            />
-            <Box
-              component="h4"
-              sx={{
-                color: "white",
-                position: "absolute",
-                top: "1%",
-                right: "7%",
-                zIndex: 1,
-              }}
-            >
-              LAP
-              <p>{`${lap} / ${totalLap}`}</p>
-            </Box>
-            <Box
-              component="img"
-              alt="rhombusPlace"
-              src={rhombusPlace}
-              sx={{
-                width: "20%",
-                height: "11%",
-                top: "17%",
-                right: "0",
-                opacity: "50%",
-                position: "absolute",
-                zIndex: 1,
-                display: "flex",
-                alignItems: "center",
-              }}
-            />
             <Box
               component="img"
               alt="rhombusPlace"
@@ -467,7 +699,7 @@ function NewPlayPage2() {
                 zIndex: 1,
               }}
             >
-              {carSpeed}
+              {/* {carSpeed} */}0
             </Typography>
             <Typography
               variant="h5"
@@ -480,7 +712,7 @@ function NewPlayPage2() {
             >
               km/h
             </Typography>
-            <AppButton
+            <Button
               sx={{
                 width: "13%",
                 height: "6%",
@@ -490,28 +722,19 @@ function NewPlayPage2() {
                 zIndex: 1,
                 display: "flex",
                 alignItems: "center",
+                color: "black",
+                bgcolor: "white",
               }}
+              disabled
             >
-              BOOST
-            </AppButton>
-            <Box
-              component="h4"
-              sx={{
-                top: "15%",
-                right: "7%",
-                color: "white",
-                position: "absolute",
-                zIndex: 1,
-              }}
-            >
-              PLACE
-            </Box>
+              BOOST : {boostNum}
+            </Button>
             <Box
               sx={{
                 width: "25%",
                 height: "20%",
-                top: "30%",
-                right: "-1%",
+                top: "-1.4%",
+                right: "-3.6%",
                 position: "absolute",
                 // bgcolor: "yellow",
                 zIndex: 1,
@@ -551,6 +774,7 @@ function NewPlayPage2() {
               >
                 <ul style={{ listStyleType: "none" }}>
                   {chats.map((item, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
@@ -661,20 +885,11 @@ function NewPlayPage2() {
                   />
                 </div> */}
                 <Viewer2 />
+                <PlayEndModal />
               </Box>
             </Box>
           </Box>
         </Paper>
-
-        <Box
-          sx={{
-            width: "100%",
-            height: "10%",
-            // bgcolor: "orange",
-            borderTop: "solid 1px #E8E8E8",
-            marginTop: "30px",
-          }}
-        />
       </Box>
     </Box>
   );

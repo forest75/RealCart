@@ -2,9 +2,10 @@ package com.ssafy.realcart.config.auth;
 
 import java.util.Arrays;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,12 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.ssafy.realcart.config.filter.TokenAuthenticationFilter;
 import com.ssafy.realcart.config.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.realcart.config.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.realcart.config.handler.TokenAccessDeniedHandler;
+import com.ssafy.realcart.data.entity.auth.RoleType;
 import com.ssafy.realcart.data.repository.IUserRepository;
 import com.ssafy.realcart.data.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.realcart.exception.RestAuthenticationEntryPoint;
@@ -55,39 +56,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
+                    .cors()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()  // 세션을 관리하겠다.
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .accessDeniedHandler(tokenAccessDeniedHandler)
+                    .csrf().disable()
+                    .formLogin().disable()
+                    .httpBasic().disable()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                    .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-//                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/game/participate").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.GET, "/user/all").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers(HttpMethod.POST, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.POST, "/user").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/game/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.DELETE, "/board/notice").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .anyRequest().authenticated()
                 .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                    .oauth2Login()
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorization")   // 해당 uri로 들어오면 oauth2 인가 요청
+                    .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                 .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
+                    .redirectionEndpoint()
+                    .baseUri("/*/oauth2/code/*")
                 .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService)
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-                .failureHandler(oAuth2AuthenticationFailureHandler());
-
+                    .successHandler(oAuth2AuthenticationSuccessHandler())
+                    .failureHandler(oAuth2AuthenticationFailureHandler());
+        // URL /login 요청이 오면 실행되는 UserPasswordAuthenticationFilter 이전에 tokenAuthenticationFilter()를 넣겠다.
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

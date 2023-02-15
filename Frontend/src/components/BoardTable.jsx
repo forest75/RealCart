@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -255,7 +254,7 @@ function CustomPaginationActionsTable({ address, link }) {
   }
 
   return (
-    <TableContainer sx={{ width: 700 }} component={Paper}>
+    <TableContainer sx={{ width: 700, border: "solid 1px #D7D6E0" }}>
       <Table sx={{ minWidth: 200 }} aria-label="custom pagination table">
         <TableBody>
           {tableRow()}

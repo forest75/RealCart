@@ -13,7 +13,6 @@ import {
   setRoomId,
   setIsPlay,
   setIsWait,
-  setForbidOpen,
 } from "../../store/modalSlice";
 
 function ReceptionModal() {
@@ -88,7 +87,8 @@ function ReceptionModal() {
                       console.log(res.data);
                       if (res.data === -100) {
                         dispatch(setReceptionClose());
-                        dispatch(setForbidOpen());
+                        dispatch(setEntryOpen());
+                        dispatch(setIsWait(false));
                       } else if (res.data === -1) {
                         dispatch(setReceptionClose());
                         dispatch(setIsWait(false));

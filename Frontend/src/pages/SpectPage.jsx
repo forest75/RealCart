@@ -1,12 +1,13 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Stomp from "stompjs";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
 import BetWindow from "../components/spect/BetWindow";
 import EntryQueue from "../components/spect/EntryQueue";
 import Versus from "../components/spect/Versus";
@@ -17,7 +18,6 @@ import ForbidModal from "../components/spect/ForbidModal";
 import Viewer1 from "../components/video/Viewer1";
 import Viewer2 from "../components/video/Viewer2";
 import Viewer3 from "../components/video/Viewer3";
-import SendIcon from "@mui/icons-material/Send";
 import {
   setReceptionOpen,
   setEntryOpen,
@@ -27,7 +27,6 @@ import {
   setIsPlay,
 } from "../store/modalSlice";
 import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
-import axios from "axios";
 
 function SpectPage() {
   const videoSlice = useSelector((state) => state.video);
@@ -35,7 +34,6 @@ function SpectPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
 
   const [chats, setChats] = useState([]);
@@ -50,20 +48,13 @@ function SpectPage() {
   const modal = useSelector((state) => state.modal);
 
   // Kurento 관련 함수 시작
-  function connect() {
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function () {
-      stompClient.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
-  }
-
   function sendChat(e) {
     e.preventDefault();
     if (text.current.value === "") return;
-    if (text.current.value.length > 100)
-      return alert("댓글은 100자 이내로 입력해주세요");
+    if (text.current.value.length > 100) {
+      alert("채팅은 100자 이내로 입력해주세요");
+      return;
+    }
     stompClient.send(
       "/publish/messages",
       {},
@@ -92,7 +83,6 @@ function SpectPage() {
       });
     });
 
-    setSocket(socketConst);
     setStompClient(stompClientConst);
 
     return () => {
@@ -224,7 +214,6 @@ function SpectPage() {
           sx={{
             width: "100%",
             height: "90%",
-            borderTop: "solid 1px #E8E8E8",
           }}
         >
           <Box
@@ -246,6 +235,7 @@ function SpectPage() {
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
+                border: "solid 1px #bdbdbd",
               }}
             >
               <div>
@@ -261,11 +251,11 @@ function SpectPage() {
                             dispatch(setVideo3(false));
                           }}
                           sx={{
-                            bgcolor: "tomato",
+                            bgcolor: "#2E4B8A",
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span> Red
+                          <span className="glyphicon glyphicon-user" /> Red
                         </Button>
                         &nbsp;
                         <Button
@@ -275,12 +265,11 @@ function SpectPage() {
                             dispatch(setVideo3(false));
                           }}
                           sx={{
-                            bgcolor: "tomato",
+                            bgcolor: "#2E4B8A",
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span>{" "}
-                          Blue
+                          <span className="glyphicon glyphicon-user" /> Blue
                         </Button>
                         &nbsp;
                         <Button
@@ -290,12 +279,11 @@ function SpectPage() {
                             dispatch(setVideo3(true));
                           }}
                           sx={{
-                            bgcolor: "tomato",
+                            bgcolor: "#2E4B8A",
                             color: "white",
                           }}
                         >
-                          <span className="glyphicon glyphicon-user"></span>{" "}
-                          관전
+                          <span className="glyphicon glyphicon-user" /> 관전
                         </Button>
                       </div>
                     </div>
@@ -315,26 +303,32 @@ function SpectPage() {
         sx={{
           width: "20%",
           height: "700",
-          borderLeft: "solid 1px #E8E8E8",
+          borderLeft: "solid 1px #a1a1a1",
           paddingLeft: "30px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Box
+        <Paper
+          elevation={3}
           display="flex"
           sx={{
-            width: "100%",
-            height: "15%",
+            height: 80,
+            width: 250,
             justifyContent: "center",
             alignItems: "center",
             marginTop: "40px",
+            // bgcolor: "#BAC4D9",
+            border: "solid 1px #bdbdbd",
           }}
         >
           <Button
             sx={{
               height: 80,
               width: 250,
-              bgcolor: "#043774",
-              color: "white",
+              bgcolor: "white",
+              color: "#303038",
             }}
             onClick={() => {
               dispatch(setReceptionOpen());
@@ -342,80 +336,75 @@ function SpectPage() {
           >
             Play
           </Button>
-        </Box>
+        </Paper>
         <BetWindow />
         <Box
-          display="flex"
           sx={{
-            width: "100%",
             height: "50%",
-            justifyContent: "center",
+            width: "90%",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Box
+            id="chat"
             sx={{
-              width: "90%",
-              height: "100%",
+              width: "100%",
+              height: "90%",
+              maxHeight: 315,
+              overflow: "auto",
+              borderTop: "solid 1px #474747",
+              borderLeft: "solid 1px #474747",
+              borderRight: "solid 1px #474747",
+              borderTopRightRadius: "15px",
+              borderTopLeftRadius: "15px",
+            }}
+            ref={chatRef}
+          >
+            <ul style={{ listStyleType: "none" }}>
+              {chats.map((item, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </Box>
+          <form
+            onSubmit={sendChat}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            <Box
-              id="chat"
-              sx={{
-                width: "99.2%",
-                height: "90%",
-                maxHeight: 315,
-                overflow: "auto",
-                border: "solid 1px #E8E8E8",
+            <input
+              ref={text}
+              type="text"
+              style={{
+                width: "70%",
+                height: "50px",
+                border: "solid 1px #474747",
+                borderBottomLeftRadius: "15px",
+              }}
+              placeholder="     채팅을 입력하세요"
+            />
+            <button
+              type="submit"
+              style={{
+                width: "30%",
+                height: "56px",
+                borderTop: "solid 1px #474747",
+                borderBottom: "solid 1px #474747",
+                borderRight: "solid 1px #474747",
+                borderLeft: "none",
+                borderBottomRightRadius: "15px",
+                backgroundColor: "white",
               }}
               ref={chatRef}
             >
-              <ul style={{ listStyleType: "none" }}>
-                {chats.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </Box>
-            <Box
-              display="flex"
-              sx={{
-                height: "10%",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <form
-                onSubmit={sendChat}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <input
-                  ref={text}
-                  type="text"
-                  style={{
-                    width: "70%",
-                    padding: "15px 30px",
-                    border: "solid 1px #E8E8E8",
-                  }}
-                  placeholder="채팅을 입력하세요"
-                />
-                <button
-                  type="submit"
-                  style={{
-                    width: "40%",
-                    padding: "10px",
-                    border: "solid 1px #E8E8E8",
-                  }}
-                >
-                  <SendIcon />
-                </button>
-              </form>
-            </Box>
-          </Box>
+              <SendIcon sx={{ color: "#474747" }} />
+            </button>
+          </form>
         </Box>
         <Box
           display="flex"
@@ -435,7 +424,9 @@ function SpectPage() {
               marginTop: "20px",
             }}
           >
-            버그 및 문제신고
+            <Link to="/reportBoard/write" style={{ textDecoration: "none" }}>
+              버그 및 문제신고
+            </Link>
           </Button>
           <ReceptionModal />
           <ConfirmModal />

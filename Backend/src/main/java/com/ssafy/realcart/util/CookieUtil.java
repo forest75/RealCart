@@ -1,5 +1,8 @@
 package com.ssafy.realcart.util;
 
+import com.ssafy.realcart.service.auth.CustomOAuth2UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.SerializationUtils;
 
 import javax.servlet.http.Cookie;
@@ -9,6 +12,8 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class CookieUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CookieUtil.class);
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -24,6 +29,7 @@ public class CookieUtil {
     }
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+        LOGGER.debug("addCookie 메서드 발생");
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
@@ -34,7 +40,7 @@ public class CookieUtil {
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
-
+        LOGGER.debug("deleteCookie 메서드 발생");
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 if (name.equals(cookie.getName())) {

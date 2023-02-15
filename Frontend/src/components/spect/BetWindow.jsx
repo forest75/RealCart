@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import { betOnA, betOnB } from "../../store/betSlice";
+import axios from "axios";
+import { betOnA, betOnB, setA } from "../../store/betSlice";
 
 // 배팅 창 컴포넌트
 function BetWindow() {
@@ -28,7 +29,7 @@ function BetWindow() {
         justifyContent: "center",
       }}
     >
-      <Paper
+      <Box
         sx={{
           width: "90%",
           height: "90%",
@@ -70,12 +71,28 @@ function BetWindow() {
               <Button
                 onClick={() => {
                   dispatch(betOnA());
+                  const data = { teamId: 1 };
+                  axios
+                    .post(`${process.env.REACT_APP_BACKEND_URL}/game/up`, data)
+                    .then(() => {
+                      axios
+                        .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
+                        .then((response) => {
+                          dispatch(setA(response.data.red));
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
                 }}
                 sx={{
                   width: "100%",
                   height: "100%",
-                  bgcolor: "red",
-                  color: "black",
+                  bgcolor: "#F52A54",
+                  color: "white",
                 }}
               >
                 Red
@@ -91,12 +108,13 @@ function BetWindow() {
               <Button
                 onClick={() => {
                   dispatch(betOnB());
+                  axios.post(`${process.env.REACT_APP_BACKEND_URL}/game/up/2`);
                 }}
                 sx={{
                   width: "100%",
                   height: "100%",
-                  bgcolor: "blue",
-                  color: "black",
+                  bgcolor: "#4236F5",
+                  color: "white",
                 }}
               >
                 Blue
@@ -136,7 +154,7 @@ function BetWindow() {
             {bet.betB}명
           </Box>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }

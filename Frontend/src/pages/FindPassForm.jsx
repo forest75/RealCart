@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
@@ -24,9 +23,11 @@ export default function FormPropsTextFields() {
           m: 1,
         },
         height: 300,
+        marginTop: "200px",
+        marginBottom: "200px",
       }}
     >
-      <Paper elevation={3}>
+      <Box sx={{ border: "solid 1px black" }}>
         <Grid
           container
           spacing={0}
@@ -80,7 +81,7 @@ export default function FormPropsTextFields() {
             </Box>
           </ThemeProvider>
         </Grid>
-      </Paper>
+      </Box>
     </Box>
   );
 }

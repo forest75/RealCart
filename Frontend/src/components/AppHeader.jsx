@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
-import { logout } from "../store/loginSlice";
 import AppButton from "./AppButton";
+import { logout } from "../store/loginSlice";
 import logo from "../assets/logo.png";
 import "../index.css";
 
@@ -74,11 +74,11 @@ function AppHeader() {
               <Link
                 to="/myPage"
                 style={{
-                  color: "black",
+                  color: " black",
                   textDecoration: "none",
                 }}
               >
-                MY PAGE
+                마이페이지
               </Link>
             </MenuItem>
             <Link
@@ -97,10 +97,11 @@ function AppHeader() {
                   height: 50,
                   display: "flex",
                   justifyContent: "center",
+                  color: " black",
                 }}
                 onClick={handleLogout}
               >
-                LOGOUT
+                로그아웃
               </MenuItem>
             </Link>
           </Menu>
@@ -124,7 +125,7 @@ function AppHeader() {
       <AppBar
         elevation={0}
         sx={{
-          borderBottom: "solid 1px  #E2E2E2",
+          borderBottom: "solid 1px #dedfe0",
           bgcolor: "white",
         }}
       >
@@ -141,7 +142,7 @@ function AppHeader() {
             />
           </Link>
           <Box flexGrow={1} />
-          <Link to="/spect" style={{ color: "black", textDecoration: "none" }}>
+          <Link to="/spect" style={{ color: " black", textDecoration: "none" }}>
             <AppButton sx={{ width: 150, height: 70 }}>RACE</AppButton>
           </Link>
           <AppButton sx={{ width: 150, height: 70 }} onClick={handleClick1}>
@@ -168,6 +169,7 @@ function AppHeader() {
                   display: "flex",
                   justifyContent: "center",
                   borderTop: "solid 1px #f2f2f2",
+                  color: " black",
                 }}
               >
                 공지사항
@@ -189,6 +191,7 @@ function AppHeader() {
                   height: 50,
                   display: "flex",
                   justifyContent: "center",
+                  color: " black",
                 }}
               >
                 자유게시판
@@ -206,6 +209,7 @@ function AppHeader() {
                   display: "flex",
                   justifyContent: "center",
                   borderBottom: "solid 1px  #f2f2f2",
+                  color: " black",
                 }}
               >
                 문의

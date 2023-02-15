@@ -8,8 +8,8 @@ import Pagination from "@mui/material/Pagination";
 // import draftToHtml from "draftjs-to-html";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
-import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import Logo from "../../assets/logo.png";
 import CommentBox from "../../components/CommentBox";
 
 function FreeBoardDetail() {
@@ -27,7 +27,6 @@ function FreeBoardDetail() {
   const [commentsCount, setCommentsCount] = useState(0);
   const [nickname, setNickname] = useState("");
   const [date, setDate] = useState("");
-
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
@@ -38,7 +37,7 @@ function FreeBoardDetail() {
         const article = res.data;
 
         let resContent = article.content;
-        console.log(resContent);
+        // console.log(resContent);
         try {
           resContent = JSON.parse(resContent);
           resContent = draftToHtml(resContent);
@@ -73,6 +72,7 @@ function FreeBoardDetail() {
               )
             );
           }
+          console.log(List[0]);
           setComments(List);
         }
         setLoading(false);
@@ -101,13 +101,12 @@ function FreeBoardDetail() {
   };
 
   const onChange = (event) => {
-    setChat(event.target.value);
-    console.log(event.target.value);
     setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
-    if (count > 200) {
-      alert("200자까지만 작성할 수 있습니다.");
-      setChat(chat.substring(0, 199));
-      setCount(chat.replace(/<br\s*\/?>/gm, "\n").length);
+    if (count > 100) {
+      alert("100자까지만 작성할 수 있습니다.");
+    } else {
+      setChat(event.target.value);
+      console.log(event.target.value);
     }
   };
 
@@ -138,6 +137,7 @@ function FreeBoardDetail() {
     // const data = {};
 
     setChat("");
+    navigate("/freeBoard/detail");
   };
 
   // const MyComponent = () => {
@@ -345,7 +345,7 @@ function FreeBoardDetail() {
                       width: "95%",
                     }}
                   >
-                    {count}/200
+                    {count}/100
                   </Box>
                   <AppButton type="submit">등록</AppButton>
                 </Box>
@@ -353,24 +353,17 @@ function FreeBoardDetail() {
             </Box>
           </Box>
         </Box>
-        <CommentBox
-          sx={{
-            width: "100%",
-          }}
-          no="번호"
-          content="내용"
-          author="작성자"
-          date="등록일"
-        />
+
         {comments[page].map((comment) => (
           <CommentBox
             sx={{
               width: "100%",
             }}
-            no={comment.id}
+            no={no}
+            id={comment.id}
             content={comment.content}
             author={comment.nickname}
-            date={comment.createdTime}
+            date={new Date(comment.createdTime).toLocaleDateString()}
           />
         ))}
         <Pagination

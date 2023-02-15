@@ -7,6 +7,8 @@ const modalSlice = createSlice({
     confirmOpen: false,
     entryOpen: false,
     forbidOpen: false,
+    playEndOpen: false,
+    isPlayEndClicked: false,
     roomId: null,
     isWait: false,
     isPlay: false,
@@ -36,6 +38,15 @@ const modalSlice = createSlice({
     setForbidClose: (state) => {
       state.forbidOpen = false;
     },
+    setPlayEndOpen: (state) => {
+      state.playEndOpen = true;
+    },
+    setPlayEndClose: (state) => {
+      state.playEndOpen = false;
+    },
+    setIsPlayEndClicked: (state, action) => {
+      state.isPlayEndClicked = action.payload;
+    },
     setRoomId: (state, action) => {
       state.roomId = action.payload;
     },
@@ -53,10 +64,13 @@ export const {
   setConfirmOpen,
   setEntryOpen,
   setForbidOpen,
+  setPlayEndOpen,
   setReceptionClose,
   setConfirmClose,
   setEntryClose,
   setForbidClose,
+  setPlayEndClose,
+  setIsPlayEndClicked,
   setRoomId,
   setIsWait,
   setIsPlay,

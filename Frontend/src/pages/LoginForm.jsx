@@ -15,7 +15,6 @@ import ArrowButton from "../components/ArrowButton";
 function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(process.env.REACT_APP_BACKEND_URL);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,6 +23,7 @@ function LoginForm() {
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
       .then((response) => {
+        console.log(response.data);
         cookie.set("refreshToken", response.data.refreshToken, {
           secure: true,
         });

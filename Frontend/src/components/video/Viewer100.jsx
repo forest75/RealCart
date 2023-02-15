@@ -179,6 +179,9 @@ function Viewer1() {
           case "stopCommunication":
             dispose();
             break;
+          case "startCommunication1":
+            viewer(1);
+            break;
           default:
             console.error("Unrecognized message", parsedMessage);
         }
