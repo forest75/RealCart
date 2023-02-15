@@ -69,6 +69,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         global car_model, car_no, car_speed, car_gate, left, right, center
         global TCP_IP, TCP_PORT, str_gate1, str_gate2, str_gate3, str_gate4
+        global dc_enable, dc_input_1, dc_input_2, servo_pin, color_s2, color_s3, color_signal
+        global car_speed_limit, car_boost_speed_limit
 
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -84,9 +86,20 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ui.le_gate2.setText(str_gate2)
         self.ui.le_gate3.setText(str_gate3)
         self.ui.le_gate4.setText(str_gate4)
+        
+        self.ui.le_dc_enable.setText(str(dc_enable))
+        self.ui.le_dc_input1.setText(str(dc_input_1))
+        self.ui.le_dc_input2.setText(str(dc_input_2))
+        self.ui.le_servo_pin.setText(str(servo_pin))
+        self.ui.le_speed_limit_speed.setText(str(car_speed_limit))
+        self.ui.le_speed_limit_boost_limit.setText(str(car_boost_speed_limit))
         self.ui.le_handle_left.setText(str(left))
         self.ui.le_handle_center.setText(str(center))
         self.ui.le_handle_right.setText(str(right))
+        self.ui.le_color_s2.setText(str(color_s2))
+        self.ui.le_color_s3.setText(str(color_s3))
+        self.ui.le_color_signal.setText(str(color_signal))
+        
         self.ui.lb_motor_param.setText("Disconnect")
         self.ui.lb_motor_param.setStyleSheet("Color : red")
         self.ui.lb_socket_param.setText("Disconnect")
@@ -382,7 +395,52 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         self.print_log("gate {0} Color Matching is finished".format(temp_no))
         
+    
+    def dcMotorPinSettingSave(self):
+        global init_data, dc_enable, dc_input_1, dc_input_2
         
+        dc_enable = int(self.ui.le_dc_enable.text())
+        dc_input_1 = int(self.ui.le_dc_input1.text())
+        dc_input_2 = int(self.ui.le_dc_input2.text())
+        
+        init_data['DC_enable'] = dc_enable
+        init_data['DC_input1'] = dc_input_1
+        init_data['DC_input2'] = dc_input_2
+        
+        with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
+            json.dump(init_data, temp_file, indent="\t")
+        
+        QMessageBox.information(self, "DC Motor Pin Setting", "DC motor Pin data has been saved")
+        
+    
+    def servoMotorPinSettingSave(self):
+        global init_data, servo_pin
+        
+        servo_pin = int(self.ui.le_servo_pin.text())
+        
+        init_data['Servo_pin'] = servo_pin
+        
+        with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
+            json.dump(init_data, temp_file, indent="\t")
+        
+        QMessageBox.information(self, "Servo Motor Pin Setting", "Servo motor Pin data has been saved")
+        
+    
+    def speedLimitSave(self):
+        global init_data, car_speed_limit, car_boost_speed_limit
+        
+        car_speed_limit = int(self.ui.le_speed_limit_speed.text())
+        car_boost_speed_limit = int(self.ui.le_speed_limit_boost_limit.text())
+        
+        init_data['Speed_limit'] = car_speed_limit
+        init_data['Boost_speed_limit'] = car_boost_speed_limit
+        
+        with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
+            json.dump(init_data, temp_file, indent="\t")
+        
+        QMessageBox.information(self, "Speed Limit Setting", "Speed limit data has been saved")
+    
+    
     def handleSave(self):
         global init_data, left, center, right
         
@@ -398,6 +456,24 @@ class MyApp(QMainWindow, Ui_MainWindow):
             json.dump(init_data, temp_file, indent="\t")
         
         QMessageBox.information(self, "Handle Data Save", "Handle data has been saved")
+        
+        
+    def colorSensorPinSetting(self):
+        global init_data, color_s2, color_s3, color_signal
+        
+        color_s2 = int(self.ui.le_color_s2.text())
+        color_s3 = int(self.ui.le_color_s3.text())
+        color_signal = int(self.ui.le_color_signal.text())
+        
+        init_data['Color_s2'] = color_s2
+        init_data['Color_s3'] = color_s3
+        init_data['Color_signal'] = color_signal
+        
+        with open('RC_car.json', 'w', encoding='utf-8') as temp_file:
+            json.dump(init_data, temp_file, indent="\t")
+        
+        QMessageBox.information(self, "Color Sensor Pin Setting", "COlor Sensor Pin data has been saved")
+        
         
     def closeEvent(self, event):            
         quit_msg = "Do you want to close this window?"
@@ -461,16 +537,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def racing(self):
-        global car_gear, car_speed, car_speed_limit
+        global car_gear, car_speed, car_speed_limit, car_top_speed, car_boost_speed_limit
         global flag_up, flag_down, flag_shift, flag_ctrl, flag_boost
 
         if flag_up:
             car_speed += 10
-            if (car_speed > car_speed_limit): car_speed = car_speed_limit
+            if (car_speed > car_top_speed): car_speed = car_top_speed
     
         elif flag_down:
             car_speed -= 10
-            if (car_speed < -car_speed_limit): car_speed = -car_speed_limit
+            if (car_speed < -car_top_speed): car_speed = -car_top_speed
     
         elif flag_shift:
             car_speed = 0
@@ -478,6 +554,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         elif flag_ctrl and flag_boost == False:
             flag_boost = True
+            car_top_speed = car_boost_speed_limit
             self.boost_timer.start()
 
         else:
@@ -506,9 +583,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     
     def boosting(self):
-        global flag_boost
+        global flag_boost, car_speed_limit, car_top_speed
 
         flag_boost = False
+        car_top_speed = car_speed_limit
         self.boost_timer.stop()
             
     def data_json(self):
@@ -551,10 +629,12 @@ if __name__ == "__main__":
     
     car_model = init_data['Model']
     car_no = init_data['Car_No']
+    car_speed_limit = init_data['Speed_limit']
+    car_boost_speed_limit = init_data['Boost_speed_limit']
+    car_top_speed = car_speed_limit
     car_speed = 0
     car_gate = 0
     car_status = 0
-    car_speed_limit = 80
     car_cur_gate = 0    
     
     TCP_IP = init_data['IP']
@@ -568,15 +648,15 @@ if __name__ == "__main__":
     center = init_data['Handle_center']
     right = init_data['Handle_right']
     
-    dc_enable = 27
-    dc_input_1 = 15
-    dc_input_2 = 18
+    dc_enable = init_data['DC_enable']
+    dc_input_1 = init_data['DC_input1']
+    dc_input_2 = init_data['DC_input2']
 
-    servo_pin = 17
+    servo_pin = init_data['Servo_pin']
 
-    color_s2 = 23
-    color_s3 = 24
-    color_signal = 25
+    color_s2 = init_data['Color_s2']
+    color_s3 = init_data['Color_s3']
+    color_signal = init_data['Color_signal']
 
     tflag_gate_sensing = False
     tflag_driving = False
