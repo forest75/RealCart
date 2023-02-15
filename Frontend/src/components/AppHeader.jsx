@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
-import { logout } from "../store/loginSlice";
 import AppButton from "./AppButton";
+import { logout } from "../store/loginSlice";
 import logo from "../assets/logo.png";
 import "../index.css";
 

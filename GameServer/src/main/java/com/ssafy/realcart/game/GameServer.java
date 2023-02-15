@@ -36,6 +36,7 @@ class RCcarThread implements Runnable{
     Gson gson = new Gson();
     Logger LOGGER = LoggerFactory.getLogger(RCcarThread.class);
 
+
     RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
             this.flag = flag;
@@ -105,7 +106,7 @@ class RCcarThread implements Runnable{
                             }
                             // 2
                             for (WebSocket client : webSocketServer.getConnections()) {
-                                client.send("1");
+                                client.send("{\"id\":1}");
                             }
                             // 3
                             Thread.sleep(5000);
@@ -131,8 +132,11 @@ class RCcarThread implements Runnable{
                      */
                         case 2:
                             // 1
+                            Long endTime = rcCarStatus.timestamp;
+                            Long labTime = endTime - flag.getStartTime();
+                            // 2
                             for (WebSocket client : webSocketServer.getConnections()) {
-                                client.send("2");
+                                client.send("{\"id\":2, \"labtime\":"+labTime+"}");
                                 if(rcCarStatus.carNum == 1){
                                     flag.setPlayer1Status(0);
                                 } else if(rcCarStatus.carNum == 2){
@@ -141,9 +145,6 @@ class RCcarThread implements Runnable{
                                 System.out.println(flag);
                                 client.close();
                             }
-                            // 2
-                            Long endTime = rcCarStatus.timestamp;
-                            Long labTime = endTime - flag.getStartTime();
                             // 3
                             String bodySeg = "";
                             if (rcCarStatus.carNum == 1) {
@@ -153,6 +154,9 @@ class RCcarThread implements Runnable{
                                 bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
                                 flag.setPlayer2Laptime(labTime);
                             }
+                            for(WebSocket client: webSocketServer.getConnections()){
+                                client.send(Long.toString(labTime));
+                            }
                             // 4
                             if (flag.getRequestBody() == "") {
                                 flag.setRequestBody(flag.getRequestBody() + bodySeg);
@@ -160,10 +164,20 @@ class RCcarThread implements Runnable{
                                 flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
                                 flag.sendResultToBackend(flag.getRequestBody());
                                 flag.setGameStatus(0);
+                                // 결과창을 띄우기 위해
+                                for(WebSocket client : webSocketServer.getConnections()){
+                                    client.send("{\"id\":3, \"result\":\""+flag.getRequestBody()+"\"}");
+                                }
                             }
                             // 5
                             if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
                                 flag.initiateAll();
+                            }
+                            break;
+                        // 주행 중에는 주행 정보를 클라이언트에게 보내준다.
+                        case 3:
+                            for(WebSocket client : webSocketServer.getConnections()){
+                                client.send(jsonData);
                             }
                             break;
                     }
