@@ -50,22 +50,26 @@ public class BoardNoticeService implements IBoardNoticeService {
 			boardNoticeDto.setId(boardNotice.getId());
 			boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
 			boardNoticeDto.setTitle(boardNotice.getTitle());
+			boardNoticeDto.setHit(boardNotice.getHit());
 			boardNoticeDtos.add(boardNoticeDto);
 		}
 		return boardNoticeDtos;
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public BoardNoticeDto getBoardNotice(int id) {
 		BoardNotice boardNotice = boardNoticeDAO.getBoardNotice(id);
 		if(boardNotice == null) return null;
+		boardNotice.setHit(boardNotice.getHit() + 1);
+		boardNoticeDAO.saveNotice(boardNotice);
 		BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
 		boardNoticeDto.setContent(boardNotice.getContent());
 		boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());
 		boardNoticeDto.setId(boardNotice.getId());
 		boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
 		boardNoticeDto.setTitle(boardNotice.getTitle());
+		boardNoticeDto.setHit(boardNotice.getHit()+1);
 		return boardNoticeDto;
 	}
 

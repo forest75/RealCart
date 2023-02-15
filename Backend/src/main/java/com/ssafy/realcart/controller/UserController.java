@@ -104,6 +104,20 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    
+    @PutMapping(value = "/{email}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody UserDto userDto){
+        LOGGER.info("updateUser 메서드가 userController에서 호출되었습니다.");
+        try {
+            UserDto loginUser = userService.updateUser(email, userDto);
+            if(loginUser != null){
+                return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     @PostMapping("/ban/{nickname}")
     public ResponseEntity<String> banUser(@PathVariable String nickname, @RequestBody int days){

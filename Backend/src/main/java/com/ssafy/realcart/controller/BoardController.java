@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.realcart.data.dto.AnswerDto;
 import com.ssafy.realcart.data.dto.BoardDto;
 import com.ssafy.realcart.data.dto.BoardFreeDto;
 import com.ssafy.realcart.data.dto.BoardNoticeDto;
@@ -210,6 +211,33 @@ public class BoardController {
     	}
         return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 실패");
     }
+    @PostMapping(value="/report/{id}")
+    public ResponseEntity<String> addAnswer(@PathVariable int id, @RequestBody AnswerDto answerDto){
+    	LOGGER.info("addAnswer 메서드를  BoardController에서 진입");
+    	if(boardReportService.addAnswer(id, answerDto)){
+    		return ResponseEntity.status(HttpStatus.OK).body("답변 게시 성공");
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("답변 게시 실패");
+    }
+    
+    @PutMapping(value="/report/{id}/{answerId}")
+    public ResponseEntity<String> changeAnswer(@PathVariable int id, @PathVariable int answerId, @RequestBody AnswerDto answerDto){
+    	LOGGER.info("changeAnswer 메서드를  BoardController에서 진입");
+    	if(boardReportService.changeAnswer(answerId, answerDto)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("답변 수정 성공");
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("답변 수정 실패");
+    }
+    
+    @DeleteMapping(value="/report/{id}/{answerId}")
+    public ResponseEntity<String> deleteAnswer(@PathVariable int id, @PathVariable int answerId){
+    	LOGGER.info("deleteAnswer 메서드를  BoardController에서 진입");
+    	if(boardReportService.deleteAnswer(answerId)) {
+    		return ResponseEntity.status(HttpStatus.OK).body("답변 삭제 성공");
+    		
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).body("답변 삭제 실패");
+    }
     
     @PostMapping(value="/free/report/{id}")
     public ResponseEntity<String> reportPost(@PathVariable int id){
@@ -228,4 +256,14 @@ public class BoardController {
         }
         return ResponseEntity.status(HttpStatus.OK).body("게시글 신고 해제 실패");
     }
+    
+    @PutMapping(value="/report/end/{id}")
+    public ResponseEntity<String> changeReportEndState(@PathVariable int id){
+    	LOGGER.info("changeReportEndState 메서드를  BoardController에서 진입");
+        if(boardReportService.changeReportEndState(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("문의 해결");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("문의 해결 실패");
+    }
+
 }

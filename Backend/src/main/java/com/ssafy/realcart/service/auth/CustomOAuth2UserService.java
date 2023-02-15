@@ -82,7 +82,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateUser(User user, OAuth2UserInfo userInfo) {
-        LOGGER.debug("updateUser 메서드가 CustomOAuth2UserService에서 실행됨");
+
         if (userInfo.getName() != null && !userInfo.getName().equals(user.getUsername())) {
             user.setUsername(userInfo.getName());
         }

@@ -144,10 +144,6 @@ public class UserService implements IUserService {
         return userDtoList;
     }
 
-    @Override
-    public boolean updateUser(String email) {
-        return false;
-    }
 
     @Override
     public boolean deleteUser(String email) {
@@ -175,6 +171,7 @@ public class UserService implements IUserService {
             LOGGER.info("email 주소가 존재하지 않습니다.");
             throw new RuntimeException();
         }
+        if(user.getIsBan() == 1) return null;
         // TO-DO: User가 isBan인 경우 BanList에 접근하여 Ban 지속 기간에 오늘이 포함되는지 확인할 것
         String tempPassword = sha256(userDto.getPassword(), user.getSalt().getBytes());
         if(user.getPassword().equals(tempPassword)){
@@ -274,6 +271,29 @@ public class UserService implements IUserService {
         }
         return false;
     }
+	@Override
+	public UserDto updateUser(String email, UserDto userDto) throws NoSuchAlgorithmException {
+		User user = userDAO.getUser(email);
+		if(user == null) return null;
+		if(userDto.getNickname().length() < 3) return null;
+		User checkUser = userDAO.checkNickname(userDto.getNickname());
+		if(checkUser == null || user.equals(checkUser)) {
+			user.setNickname(userDto.getNickname());
+		}
+		if(userDto.getPassword() != null && userDto.getPassword().length() >= 8) {
+			byte[] salt = getSalt();
+			user.setSalt(bytesToHex(salt));
+			user.setPassword(sha256(userDto.getPassword(), bytesToHex(salt).getBytes()));
+		}
+		userDAO.updateUser(user);
+		UserDto newUserDto = new UserDto().builder()
+				.email(user.getEmail())
+				.intro(user.getIntro())
+				.nickname(user.getNickname())
+				.username(user.getUsername())
+				.build();
+		return newUserDto;
+	}
 }
 
 class Email implements Runnable{

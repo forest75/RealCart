@@ -94,10 +94,10 @@ public class BoardFreeService implements IBoardFreeService {
     public BoardFreeDto getBoardFree(int id) {
         BoardFree board = boardFreeDAO.getBoardFree(id);
         if(board != null){
-            board.setHit(board.getHit()+1);
-            boardFreeDAO.saveFree(board);
+        	board.setHit(board.getHit() + 1);
+        	boardFreeDAO.saveFree(board);
             BoardFreeDto boardFreeDto = new BoardFreeDto();
-            boardFreeDto.setHit(board.getHit());
+            boardFreeDto.setHit(board.getHit() + 1);
             boardFreeDto.setNickname(board.getUser().getNickname());
             boardFreeDto.setTitle(board.getTitle());
             boardFreeDto.setContent(board.getContent());
