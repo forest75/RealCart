@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { DataGrid } from "@mui/x-data-grid";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
 import axios from "axios";
@@ -14,8 +14,10 @@ import Advertise from "../assets/img/advertise.png";
 import BoardTable from "../components/BoardTable";
 import { Link } from "react-router-dom";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import MainPoster from "../components/video/MainPoster";
 
 function MainPage() {
+  const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -26,6 +28,8 @@ function MainPage() {
   const [articleList, setArticleList] = useState([]);
   var webRtcPeer;
   var mediaId;
+
+  const [isVideo, setIsVideo] = useState(false);
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -164,6 +168,40 @@ function MainPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+        if (res.data.player1 === "" || res.data.player2 === "") {
+          setIsVideo(false);
+        } else {
+          setIsVideo(true);
+        }
+      });
+    }, 10000);
+
+    if (!user) {
+      console.log("user 없음");
+      const token = localStorage.getItem("access-token");
+      if (token) {
+        axios
+          .get(`https://i8a403.p.ssafy.io/api/user`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            dispatch(login(response.data.body.user));
+            localStorage.setItem(
+              "user",
+              JSON.stringify(response.data.body.user)
+            );
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -257,18 +295,22 @@ function MainPage() {
               alignItems: "center",
             }}
           >
-            <video
-              ref={video}
-              id="video"
-              autoPlay={true}
-              width="800px"
-              height="600px"
-              poster={WebRtcImg}
-              onClick={() => {
-                navigate("/spect");
-              }}
-              muted={true}
-            />
+            {isVideo ? (
+              <video
+                ref={video}
+                id="video"
+                autoPlay={true}
+                width="800px"
+                height="600px"
+                poster={WebRtcImg}
+                onClick={() => {
+                  navigate("/spect");
+                }}
+                muted={true}
+              />
+            ) : (
+              <MainPoster />
+            )}
           </Paper>
         </Box>
         <Box

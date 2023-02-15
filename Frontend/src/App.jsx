@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
 import AppHeader from "./components/AppHeader";
-import LoginForm from "./pages/LoginForm";
+import LoginForm from "./pages/TokenLoginForm";
 import RegistForm from "./pages/RegistForm";
 import FindPassForm from "./pages/FindPassForm";
 import AppFooter from "./components/AppFooter";
@@ -32,7 +32,8 @@ import Auth from "./pages/Auth";
 import AuthAdmin from "./pages/AuthAdmin";
 import AuthPlayer from "./pages/AuthPlayer";
 
-const SpectPageWithAuth = Auth(SpectPage);
+// const SpectPageWithAuth = Auth(SpectPage);
+const SpectPageWithAuth = SpectPage;
 // const PlayPageWithAuth = Auth(PlayPage);
 const NewPlayPageWithAuth = AuthPlayer(NewPlayPage);
 const NewPlayPage2WithAuth = AuthPlayer(NewPlayPage2);

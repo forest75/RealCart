@@ -1,70 +1,47 @@
 import React from "react";
-import axios from "axios";
-// import { useDispatch } from "react-redux";
-// import cookie from "js-cookie";
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-// import { login } from "../store/loginSlice";
+import axios from "../util/axiosInstance";
+import { login } from "../store/loginSlice";
 import RegistForm from "../components/AppForm";
 import ArrowButton from "../components/ArrowButton";
 
-function LoginForm() {
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
+function TokenLoginForm() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // const data = { email: e.target[0].value, password: e.target[2].value };
-
-    // await axios
-    //   .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     cookie.set("refreshToken", response.data.refreshToken, {
-    //       secure: true,
-    //     });
-    //     localStorage.setItem("user", JSON.stringify(response.data));
-    //     dispatch(login(response.data));
-    //     navigate("/");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
     const data = { id: e.target[0].value, password: e.target[2].value };
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/login`, data)
       .then((response) => {
-        console.log("토큰", response.data);
-        // cookie.set("refreshToken", response.data.refreshToken, {
-        //   secure: true,
-        // });
-        // localStorage.setItem("user", JSON.stringify(response.data));
-        // dispatch(login(response.data));
-        // navigate("/");
+        localStorage.setItem("token", response.data.body.token);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    await axios
+      .get(`https://i8a403.p.ssafy.io/api/user`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        dispatch(login(response.data.body.user));
+        localStorage.setItem("user", JSON.stringify(response.data.body.user));
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-  // const handleSumbit = async (e) => {
-  //   e.preventDefault();
-  //   const data = { email: e.target[0].value, password: e.target[2].value };
-
-  //   await axios
-  //     .post("http://3.34.23.91:8080/user", data)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   return (
     <Box>
@@ -171,7 +148,6 @@ function LoginForm() {
                   <GoogleIcon />
                 </Box>
               </Box>
-              {/* <a href="https://i8a403.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://i8a403.p.ssafy.io/oauth/redirect"> */}
               <Box
                 sx={{
                   width: "38%",
@@ -210,4 +186,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default TokenLoginForm;

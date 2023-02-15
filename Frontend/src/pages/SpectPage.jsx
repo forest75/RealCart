@@ -18,6 +18,7 @@ import ForbidModal from "../components/spect/ForbidModal";
 import Viewer1 from "../components/video/Viewer1";
 import Viewer2 from "../components/video/Viewer2";
 import Viewer3 from "../components/video/Viewer3";
+import Poster1 from "../components/video/Poster1";
 import {
   setReceptionOpen,
   setEntryOpen,
@@ -27,7 +28,6 @@ import {
   setIsPlay,
 } from "../store/modalSlice";
 import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
-import CarHandle from "../assets/car_handle.png";
 
 function SpectPage() {
   const videoSlice = useSelector((state) => state.video);
@@ -97,9 +97,11 @@ function SpectPage() {
         dispatch(setVideo1(false));
         dispatch(setVideo2(false));
         dispatch(setVideo3(false));
+      } else {
+        dispatch(setVideo1(true));
       }
     });
-  }, [queue, dispatch]);
+  }, [queue, dispatch, videoSlice]);
 
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
@@ -300,9 +302,9 @@ function SpectPage() {
                     </div>
                   </div>
                   <div className="col-md-7">
-                    {videoSlice.video1 ? <Viewer1 /> : CarHandle}
-                    {videoSlice.video2 ? <Viewer2 /> : CarHandle}
-                    {videoSlice.video3 ? <Viewer3 /> : CarHandle}
+                    {videoSlice.video1 ? <Viewer1 /> : Poster1}
+                    {videoSlice.video2 ? <Viewer2 /> : Poster1}
+                    {videoSlice.video3 ? <Viewer3 /> : Poster1}
                   </div>
                 </div>
               </div>

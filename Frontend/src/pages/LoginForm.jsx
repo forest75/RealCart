@@ -36,6 +36,20 @@ function LoginForm() {
       });
   };
 
+  // const handleSumbit = async (e) => {
+  //   e.preventDefault();
+  //   const data = { email: e.target[0].value, password: e.target[2].value };
+
+  //   await axios
+  //     .post("http://3.34.23.91:8080/user", data)
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   return (
     <Box>
       <Box

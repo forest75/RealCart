@@ -1,11 +1,12 @@
-import axios from 'axios';
+/* eslint-disable */
+import axios from "axios";
 import store from "../redux/configStore";
-import {jwtUtils} from "./jwtUtils";
+import { jwtUtils } from "./jwtUtils";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
   timeout: 30000,
-})
+});
 
 instance.interceptors.request.use(
   (config) => {
@@ -19,7 +20,7 @@ instance.interceptors.request.use(
 
       return config;
     } catch (err) {
-      console.error('[_axios.interceptors.request] config : ' + err);
+      console.error("[_axios.interceptors.request] config : " + err);
     }
     return config;
   },
