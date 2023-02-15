@@ -27,6 +27,7 @@ import {
   setIsPlay,
 } from "../store/modalSlice";
 import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
+import CarHandle from "../assets/car_handle.png";
 
 function SpectPage() {
   const videoSlice = useSelector((state) => state.video);
@@ -89,6 +90,16 @@ function SpectPage() {
       socketConst.close();
     };
   }, []);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+      if (res.data.player1 === "" || res.data.player2 === "") {
+        dispatch(setVideo1(false));
+        dispatch(setVideo2(false));
+        dispatch(setVideo3(false));
+      }
+    });
+  }, [queue, dispatch]);
 
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
@@ -289,9 +300,9 @@ function SpectPage() {
                     </div>
                   </div>
                   <div className="col-md-7">
-                    {videoSlice.video1 ? <Viewer1 /> : null}
-                    {videoSlice.video2 ? <Viewer2 /> : null}
-                    {videoSlice.video3 ? <Viewer3 /> : null}
+                    {videoSlice.video1 ? <Viewer1 /> : CarHandle}
+                    {videoSlice.video2 ? <Viewer2 /> : CarHandle}
+                    {videoSlice.video3 ? <Viewer3 /> : CarHandle}
                   </div>
                 </div>
               </div>
