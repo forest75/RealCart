@@ -132,22 +132,29 @@ class MyApp(QMainWindow, Ui_MainWindow):
         socket_connect_thread.start()
 
     def keyUp(self):
-        pass
+        global client_socket
+        client_socket.send('&'.encode())
 
     def keyDown(self):
-        pass
+        global client_socket
+        client_socket.send('('.encode())
 
     def keyLeft(self):
-        pass
+        global client_socket
+        client_socket.send('%'.encode())
 
     def keyRight(self):
-        pass
+        global client_socket
+        client_socket.send('\''.encode())
 
     def keyCtrl(self):
-        pass
+        global client_socket
+        temp_char = chr(17)
+        client_socket.send(temp_char.encode())
 
     def keyShift(self):
-        pass
+        global client_socket
+        client_socket.send(' '.encode())
     
     def startSignal(self):
         client_socket.send('1'.encode())
