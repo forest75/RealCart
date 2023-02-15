@@ -364,6 +364,7 @@ function SpectPage() {
           >
             <ul style={{ listStyleType: "none" }}>
               {chats.map((item, index) => (
+                // eslint-disable-next-line react/no-array-index-key
                 <li key={index}>{item}</li>
               ))}
             </ul>
@@ -399,7 +400,6 @@ function SpectPage() {
                 borderBottomRightRadius: "5px",
                 backgroundColor: "#303038",
               }}
-              ref={chatRef}
             >
               <SendIcon sx={{ color: "white" }} />
             </button>
