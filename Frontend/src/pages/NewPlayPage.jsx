@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import SendIcon from "@mui/icons-material/Send";
 import Stomp from "stompjs";
+import axios from "axios";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
 import RectangleBest from "../assets/Rectangle_Best.png";
@@ -28,16 +29,23 @@ import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage() {
+  const [bestTime, setBestTime] = useState("00:00:00");
+  const queue = useSelector((state) => state.queue);
+  const [winPlayer, setWinPlayer] = useState("");
+  const [losePlayer, setLosePlayer] = useState("");
+  const [winPlayerTime, setWinPlayerTime] = useState("");
+  const [losePlayerTime, setLosePlayerTime] = useState("");
+
   const rows = [
     {
       place: 1,
-      nickname: "김빵",
-      laptime: "1:23:45",
+      nickname: winPlayer,
+      laptime: winPlayerTime,
     },
     {
       place: 2,
-      nickname: "김빵",
-      laptime: "1:23:45",
+      nickname: losePlayer,
+      laptime: losePlayerTime,
     },
   ];
   const modal = useSelector((state) => state.modal);
@@ -89,7 +97,41 @@ function NewPlayPage() {
     text.current.value = "";
   }
 
+  // 베스트타임 변환 함수
+  function convertTime(time) {
+    const [minutes, secondsAndMillis] = time.split(":");
+    const [seconds, milliseconds] = secondsAndMillis.split(".");
+    const truncatedMillis = milliseconds.slice(0, 2);
+    return `${minutes}:${seconds.padStart(2, "0")}:${truncatedMillis.padEnd(
+      2,
+      "0"
+    )}`;
+  }
+
   useEffect(() => {
+    // 베스트타임 가져오기
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
+      .then((res) => {
+        console.log(res.data);
+        const record = res.data;
+        record.sort((a, b) => {
+          const aTime =
+            a.lapTime === "기권" ? Infinity : parseFloat(a.lapTime) * 1000;
+          const bTime =
+            b.lapTime === "기권" ? Infinity : parseFloat(b.lapTime) * 1000;
+          return aTime - bTime;
+        });
+        setBestTime(convertTime(record[0].lapTime));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setTimeout(() => {
+      setIsTutorial(false);
+    }, 10000);
+
     // 미디어 websocket 연결
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -124,7 +166,7 @@ function NewPlayPage() {
     if (wss) {
       wss.onmessage = (message) => {
         console.log("get message", message.data);
-        if (message.data === "1") {
+        if (message.data.status === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
           setTimeout(() => {
             setIsRunning(true);
@@ -137,7 +179,7 @@ function NewPlayPage() {
             clearInterval(intervalId);
           }, 5800);
         }
-        if (message.data === "2") {
+        if (message.data.status === "2") {
           console.log("중계 서버에서 2 받는 데 성공");
           dispatch(setPlayEndOpen());
           setTimeout(() => {
@@ -211,6 +253,9 @@ function NewPlayPage() {
           setIsBoost(false);
         }, 5000);
         console.log("boost");
+      }
+      if (e.code === "KeyV") {
+        setIsTutorial((prev) => !prev);
       }
     }
 
@@ -601,6 +646,20 @@ function NewPlayPage() {
               }}
             >
               <h3>BEST</h3>
+            </Box>
+            <Box
+              component="h4"
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "22%",
+                left: "7.5%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              {bestTime}
             </Box>
             {isBoost && (
               <Alert

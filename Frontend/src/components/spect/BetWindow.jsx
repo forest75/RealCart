@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import axios from "axios";
 import { betOnA, betOnB } from "../../store/betSlice";
 
 // 배팅 창 컴포넌트
@@ -70,6 +71,17 @@ function BetWindow() {
               <Button
                 onClick={() => {
                   dispatch(betOnA());
+                  const data = "1";
+                  axios
+                    .post(`${process.env.REACT_APP_BACKEND_URL}/game/up`, {
+                      data,
+                    })
+                    .then((response) => {
+                      console.log(response);
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
                 }}
                 sx={{
                   width: "100%",
@@ -91,6 +103,7 @@ function BetWindow() {
               <Button
                 onClick={() => {
                   dispatch(betOnB());
+                  axios.post(`${process.env.REACT_APP_BACKEND_URL}/game/up/2`);
                 }}
                 sx={{
                   width: "100%",
