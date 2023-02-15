@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { betOnA, betOnB } from "../../store/betSlice";
+import { betOnA, betOnB, setA } from "../../store/betSlice";
 
 // 배팅 창 컴포넌트
 function BetWindow() {
@@ -71,13 +71,18 @@ function BetWindow() {
               <Button
                 onClick={() => {
                   dispatch(betOnA());
-                  const data = "1";
+                  const data = { teamId: 1 };
                   axios
-                    .post(`${process.env.REACT_APP_BACKEND_URL}/game/up`, {
-                      data,
-                    })
-                    .then((response) => {
-                      console.log(response);
+                    .post(`${process.env.REACT_APP_BACKEND_URL}/game/up`, data)
+                    .then(() => {
+                      axios
+                        .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
+                        .then((response) => {
+                          dispatch(setA(response.data.red));
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
                     })
                     .catch((error) => {
                       console.error(error);

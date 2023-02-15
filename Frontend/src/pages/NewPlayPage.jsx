@@ -75,7 +75,7 @@ function NewPlayPage() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  const [boostNum, setBoostNum] = useState(2);
+  const [boostNum, setBoostNum] = useState(10);
   const [canBoost, setCanBoost] = useState(true);
 
   function sendChat(e) {
@@ -558,7 +558,7 @@ function NewPlayPage() {
               RACE TIME
               <RaceTime isRunning={isRunning} />
             </Box>
-            <Box
+            {/* <Box
               component="img"
               alt="RectangleResult"
               src={RectangleResult}
@@ -571,8 +571,8 @@ function NewPlayPage() {
                 position: "absolute",
                 zIndex: 1,
               }}
-            />
-            <Box
+            /> */}
+            {/* <Box
               sx={{
                 width: "50%",
                 height: "50%",
@@ -606,7 +606,7 @@ function NewPlayPage() {
                   ))}
                 </tbody>
               </table>
-            </Box>
+            </Box> */}
             <Box
               sx={{
                 width: "25%",
