@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -10,12 +11,22 @@ import ArticleBoxTitle from "../../components/ArticleBoxTitle";
 import AppButton from "../../components/AppButton";
 
 function NoticeBoard() {
+  const user = useSelector((state) => state.login.user);
   const [page, setPage] = useState(0);
+  const [displayWright, setDisplayWright] = useState("");
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
   const [loading, setLoading] = useState(true);
   const [articleList, setArticleList] = useState([]);
+
+  useEffect(() => {
+    if (user.nickname === "관리자") {
+      setDisplayWright("");
+    } else {
+      setDisplayWright("none");
+    }
+  });
 
   useEffect(() => {
     axios
@@ -119,7 +130,7 @@ function NoticeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/noticeBoard/write">
+            <Link to="/noticeBoard/write" sx={{ display: { displayWright } }}>
               <AppButton
                 sx={{
                   border: 1,

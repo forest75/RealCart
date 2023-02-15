@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 
 function AppButton({ children, sx, ...otherProps }) {
   const mergedSx = {
-    ...{ bgcolor: "white", color: "black" },
+    ...{ bgcolor: "white", color: " black", textDecoration: "none" },
     ...sx,
   };
   return (
