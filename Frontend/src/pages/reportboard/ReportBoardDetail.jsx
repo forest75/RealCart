@@ -3,8 +3,8 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
-import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import Logo from "../../assets/logo.png";
 
 function ReportBoardDetail() {
   const navigate = useNavigate();
