@@ -2,6 +2,7 @@ package com.ssafy.realcart.config.auth;
 
 import java.util.Arrays;
 
+import com.ssafy.realcart.data.entity.auth.RoleType;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,14 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())  // 해당 uri로 들어오는 request는, 해당 권한을 갖고있어야 함
 //                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
+                .baseUri("/oauth2/authorization")   // 해당 uri로 들어오면 oauth2 인가 요청
                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                 .and()
                 .redirectionEndpoint()

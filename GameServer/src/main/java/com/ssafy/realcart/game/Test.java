@@ -12,7 +12,7 @@ public class Test {
 
     public static void main(String[] args) throws Exception{
         try {
-            String requestBody = "닉1,12342,닉2,195812";
+            String requestBody = "fleur,12342,소정캡짱,195812";
             // EC2에서는 수정
             String url = "https://i8a403.p.ssafy.io/api/game/result";
             URL obj = new URL(url);
@@ -21,12 +21,11 @@ public class Test {
             con.setRequestMethod("POST");
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "text/plain");
-            con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
+//            con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
             con.setUseCaches(false);
 
             System.out.println(requestBody);
             try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
-//                dos.writeBytes(requestBody);
                 dos.writeUTF(requestBody);
             }
 

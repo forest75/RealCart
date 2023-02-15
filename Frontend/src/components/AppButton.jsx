@@ -21,7 +21,7 @@ function AppButton({ children, sx, ...otherProps }) {
 AppButton.defaultProps = {
   sx: {
     bgcolor: "white",
-    color: "black",
+    color: " black",
   },
   children: "",
 };

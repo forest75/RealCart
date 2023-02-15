@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
@@ -93,9 +92,10 @@ export default function RegistForm() {
         "& > :not(style)": {
           m: 1,
         },
+        marginTop: "60px",
       }}
     >
-      <Paper elevation={3}>
+      <Box sx={{ border: "solid 1px black" }}>
         <ThemeProvider theme={theme}>
           <Grid
             sx={{
@@ -232,7 +232,7 @@ export default function RegistForm() {
             </Box>
           </Grid>
         </ThemeProvider>
-      </Paper>
+      </Box>
     </Box>
   );
 }

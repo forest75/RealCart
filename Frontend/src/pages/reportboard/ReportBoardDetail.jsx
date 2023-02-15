@@ -3,8 +3,8 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
-import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import Logo from "../../assets/logo.png";
 
 function ReportBoardDetail() {
   const navigate = useNavigate();
@@ -54,12 +54,12 @@ function ReportBoardDetail() {
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
-          height: "80vh",
+          height: "70vh",
           width: "80%",
           display: "flex",
           flexDirection: "column",
           alignContent: "center",
-          justifyContent: "center",
+          marginTop: "60px",
         }}
       >
         <Box

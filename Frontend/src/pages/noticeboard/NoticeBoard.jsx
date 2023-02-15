@@ -13,7 +13,7 @@ import AppButton from "../../components/AppButton";
 function NoticeBoard() {
   const user = useSelector((state) => state.login.user);
   const [page, setPage] = useState(0);
-  const [displayWright, setDisplayWright] = useState("");
+  const [displayWright, setDisplayWright] = useState("none");
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
@@ -75,7 +75,7 @@ function NoticeBoard() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: 700,
+        height: 1000,
       }}
     >
       <Box
@@ -84,7 +84,9 @@ function NoticeBoard() {
           height: "10%",
         }}
       >
-        <Typography variant="h5">공지사항</Typography>
+        <Typography variant="h5" sx={{ color: "#34343C" }}>
+          공지사항
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -113,6 +115,7 @@ function NoticeBoard() {
             <ArticleBox
               sx={{
                 width: "80%",
+                color: "black",
               }}
               board="noticeBoard"
               key={article.id}
@@ -134,8 +137,9 @@ function NoticeBoard() {
               <AppButton
                 sx={{
                   border: 1,
-                  bgcolor: "black",
+                  bgcolor: "#34343C",
                   color: "white",
+                  marginTop: "20px",
                 }}
               >
                 글쓰기

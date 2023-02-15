@@ -18,22 +18,10 @@ class SERVO_MOTOR:
             self.error = 1
             print('SERVO MOTOR ERROR :', e)
     
-    def steering(self, direction):
-        
+    def steering(self, dutycycle):        
         try:
-            if (direction == 'center'):
-                self.pwm.ChangeDutyCycle(7.75)
-                time.sleep(0.3)
-                
-            elif (direction == 'left'):
-                self.pwm.ChangeDutyCycle(5.5)
-                time.sleep(0.3)
-                
-            elif (direction == 'right'):
-                self.pwm.ChangeDutyCycle(9)
-                time.sleep(0.3)
-            
-            flag_handling = False
+            self.pwm.ChangeDutyCycle(dutycycle)
+            time.sleep(0.3)
         
         except:
             print('servo_motor.steering Error')

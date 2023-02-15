@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-
 import AppButton from "../../components/AppButton";
 import ArticleBox from "../../components/ArticleBox";
 import ArticleBoxTitle from "../../components/ArticleBoxTitle";
@@ -75,7 +74,7 @@ function FreeBoard() {
           display: "flex",
         }}
       >
-        <Typography variant="h5" flexGrow={1}>
+        <Typography variant="h5" flexGrow={1} sx={{ color: "#34343C" }}>
           자유게시판
         </Typography>
       </Box>
@@ -106,6 +105,7 @@ function FreeBoard() {
             <ArticleBox
               sx={{
                 width: "80%",
+                color: "black",
               }}
               board="freeBoard"
               key={article.id}
@@ -127,8 +127,9 @@ function FreeBoard() {
               <AppButton
                 sx={{
                   border: 1,
-                  bgcolor: "black",
+                  bgcolor: "#34343C",
                   color: "white",
+                  marginTop: "20px",
                 }}
               >
                 글쓰기
