@@ -3,16 +3,18 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import SendIcon from "@mui/icons-material/Send";
 import Stomp from "stompjs";
-import AppButton from "../components/AppButton";
+import axios from "axios";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
 import RectangleBest from "../assets/Rectangle_Best.png";
 import RectangleRace from "../assets/Rectangle_Racetime.png";
+import RectangleResult from "../assets/Rectangle_Result.png";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import TransparentImg2 from "../assets/img/transparent-copy.png";
 import CountdownOne from "../assets/count_1.png";
@@ -27,6 +29,25 @@ import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage2() {
+  const [bestTime, setBestTime] = useState("00:00:00");
+  const queue = useSelector((state) => state.queue);
+  const [winPlayer, setWinPlayer] = useState("");
+  const [losePlayer, setLosePlayer] = useState("");
+  const [winPlayerTime, setWinPlayerTime] = useState("");
+  const [losePlayerTime, setLosePlayerTime] = useState("");
+
+  const rows = [
+    {
+      place: 1,
+      nickname: winPlayer,
+      laptime: winPlayerTime,
+    },
+    {
+      place: 2,
+      nickname: losePlayer,
+      laptime: losePlayerTime,
+    },
+  ];
   const modal = useSelector((state) => state.modal);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,6 +75,9 @@ function NewPlayPage2() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
+  const [boostNum, setBoostNum] = useState(10);
+  const [canBoost, setCanBoost] = useState(true);
+
   function sendChat(e) {
     e.preventDefault();
     if (text.current.value === "") return;
@@ -73,11 +97,40 @@ function NewPlayPage2() {
     text.current.value = "";
   }
 
+  // 베스트타임 변환 함수
+  function convertTime(time) {
+    const [minutes, secondsAndMillis] = time.split(":");
+    const [seconds, milliseconds] = secondsAndMillis.split(".");
+    const truncatedMillis = milliseconds.slice(0, 2);
+    return `${minutes}:${seconds.padStart(2, "0")}:${truncatedMillis.padEnd(
+      2,
+      "0"
+    )}`;
+  }
+
   useEffect(() => {
-    // RACE TIME 5초 후에 시작
+    // 베스트타임 가져오기
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
+      .then((res) => {
+        console.log(res.data);
+        const record = res.data;
+        record.sort((a, b) => {
+          const aTime =
+            a.lapTime === "기권" ? Infinity : parseFloat(a.lapTime) * 1000;
+          const bTime =
+            b.lapTime === "기권" ? Infinity : parseFloat(b.lapTime) * 1000;
+          return aTime - bTime;
+        });
+        setBestTime(convertTime(record[0].lapTime));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     setTimeout(() => {
-      setIsRunning(true);
-    }, 5000);
+      setIsTutorial(false);
+    }, 10000);
 
     // 미디어 websocket 연결
     const socketConst = new WebSocket(
@@ -113,17 +166,20 @@ function NewPlayPage2() {
     if (wss) {
       wss.onmessage = (message) => {
         console.log("get message", message.data);
-        if (message.data === "1") {
+        if (message.data.status === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
+          setTimeout(() => {
+            setIsRunning(true);
+          }, 5000);
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
           }, 1000);
           setTimeout(() => {
             clearInterval(intervalId);
-          }, 5500);
+          }, 5800);
         }
-        if (message.data === "2") {
+        if (message.data.status === "2") {
           console.log("중계 서버에서 2 받는 데 성공");
           dispatch(setPlayEndOpen());
           setTimeout(() => {
@@ -187,9 +243,19 @@ function NewPlayPage2() {
       if (e.code === "ShiftLeft") {
         setShiftPressed(true);
       }
-      if (e.code === "ControlLeft") {
+      if (e.code === "ControlLeft" && boostNum > 0 && canBoost) {
         wss.send(17);
+        setBoostNum((prev) => prev - 1);
+        setCanBoost(false);
+        setIsBoost(true);
+        setTimeout(() => {
+          setCanBoost(true);
+          setIsBoost(false);
+        }, 5000);
         console.log("boost");
+      }
+      if (e.code === "KeyV") {
+        setIsTutorial((prev) => !prev);
       }
     }
 
@@ -253,7 +319,17 @@ function NewPlayPage2() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [wss, upPressed, leftPressed, rightPressed, downPressed, shiftPressed]);
+  }, [
+    wss,
+    upPressed,
+    leftPressed,
+    rightPressed,
+    downPressed,
+    shiftPressed,
+    boostNum,
+    canBoost,
+    isBoost,
+  ]);
 
   // 키 입력 끝 (새로운 로직)
 
@@ -482,6 +558,68 @@ function NewPlayPage2() {
               RACE TIME
               <RaceTime isRunning={isRunning} />
             </Box>
+            {/* <Box
+              component="img"
+              alt="RectangleResult"
+              src={RectangleResult}
+              sx={{
+                width: "50%",
+                height: "50%",
+                opacity: "92%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            /> */}
+            {/* <Box
+              sx={{
+                width: "50%",
+                height: "50%",
+                top: "17%",
+                right: "25%",
+                position: "absolute",
+                zIndex: 1,
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "start",
+                textAlign: "center",
+                marginTop: "10px",
+              }}
+            >
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ padding: "8px" }}>Place</th>
+                    <th style={{ padding: "8px" }}>Nickname</th>
+                    <th style={{ padding: "8px" }}>Lap Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, index) => (
+                    <tr key={index}>
+                      <td>{row.place}</td>
+                      <td>{row.nickname}</td>
+                      <td>{row.laptime}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+            <Box
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "2%",
+                left: "40%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              <Typography variant="h1">WIN</Typography>
+            </Box> */}
             <Box
               component="img"
               alt="RectangleBest"
@@ -508,6 +646,20 @@ function NewPlayPage2() {
               }}
             >
               <h3>BEST</h3>
+            </Box>
+            <Box
+              component="h4"
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "22%",
+                left: "7.5%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
+              {bestTime}
             </Box>
             {isBoost && (
               <Alert
@@ -560,7 +712,7 @@ function NewPlayPage2() {
             >
               km/h
             </Typography>
-            <AppButton
+            <Button
               sx={{
                 width: "13%",
                 height: "6%",
@@ -570,10 +722,13 @@ function NewPlayPage2() {
                 zIndex: 1,
                 display: "flex",
                 alignItems: "center",
+                color: "black",
+                bgcolor: "white",
               }}
+              disabled
             >
-              BOOST
-            </AppButton>
+              BOOST : {boostNum}
+            </Button>
             <Box
               sx={{
                 width: "25%",
