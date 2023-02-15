@@ -106,7 +106,7 @@ class RCcarThread implements Runnable{
                             }
                             // 2
                             for (WebSocket client : webSocketServer.getConnections()) {
-                                client.send("{\"id\":1}");
+                                client.send("{\"status\":1}");
                             }
                             // 3
                             Thread.sleep(5000);
@@ -136,7 +136,7 @@ class RCcarThread implements Runnable{
                             Long labTime = endTime - flag.getStartTime();
                             // 2
                             for (WebSocket client : webSocketServer.getConnections()) {
-                                client.send("{\"id\":2, \"labtime\":"+labTime+"}");
+                                client.send("{\"status\":2, \"labtime\":"+labTime+"}");
                                 if(rcCarStatus.carNum == 1){
                                     flag.setPlayer1Status(0);
                                 } else if(rcCarStatus.carNum == 2){
@@ -166,7 +166,7 @@ class RCcarThread implements Runnable{
                                 flag.setGameStatus(0);
                                 // 결과창을 띄우기 위해
                                 for(WebSocket client : webSocketServer.getConnections()){
-                                    client.send("{\"id\":3, \"result\":\""+flag.getRequestBody()+"\"}");
+                                    client.send("{\"status\":3, \"result\":\""+flag.getRequestBody()+"\"}");
                                 }
                             }
                             // 5
