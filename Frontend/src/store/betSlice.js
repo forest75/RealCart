@@ -22,9 +22,11 @@ const betSlice = createSlice({
       state.isBet = false;
     },
     setA: (state, action) => {
+      if (state.isBet) return; // 중복배팅 방지
       state.betA = action.payload;
     },
     setB: (state, action) => {
+      if (state.isBet) return; // 중복배팅 방지
       state.betB = action.payload;
     },
   },
