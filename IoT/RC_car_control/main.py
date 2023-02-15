@@ -518,10 +518,19 @@ class MyApp(QMainWindow, Ui_MainWindow):
         return json_data
 
     def print_log(self, msg):
+        global date
+
+
         temp_msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " " + msg
-        f = open('../log/log.txt','a')
+        temp_file = "./log/"+ date + "_log.txt"
+
+        if not os.path.isdir('./log'):
+            os.mkdir('./log')
+
+        f = open(temp_file,'a')
         f.write(temp_msg + '\n')
         f.close()
+
         print(temp_msg)
         self.ui.tb_log.append(temp_msg)
 
@@ -548,7 +557,9 @@ if __name__ == "__main__":
     init_data = json.load(json_file)
     
     lock = threading.Lock()
-    
+
+    date = str(datetime.now().strftime('%Y-%m-%d'))
+
     car_model = init_data['Model']
     car_no = init_data['Car_No']
     car_speed = 0
