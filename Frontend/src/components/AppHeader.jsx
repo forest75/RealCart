@@ -125,7 +125,7 @@ function AppHeader() {
       <AppBar
         elevation={0}
         sx={{
-          borderBottom: "solid 1px black",
+          borderBottom: "solid 1px #dedfe0",
           bgcolor: "white",
         }}
       >
