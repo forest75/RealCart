@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+import com.ssafy.realcart.data.dto.BetDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,26 @@ public class GameController {
         int num = gameService.participateGame(nickname);
         return new ResponseEntity<>(num, HttpStatus.OK);
     }
-    
+
+    @PostMapping(value="/up")
+    public ResponseEntity<String> upBet(@RequestBody Map<String, Integer> teamMap) {
+        LOGGER.info("UP 메서드가 gameController에서 호출되었습니다.");
+        if(gameService.up(teamMap.get("teamId"))){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(value="/bet")
+    public ResponseEntity<BetDto> getBet() {
+        LOGGER.info("getUP 메서드가 gameController에서 호출되었습니다.");
+        BetDto betDto = gameService.getBet();
+        if(betDto != null){
+            return new ResponseEntity<BetDto>(betDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<BetDto>(betDto, HttpStatus.BAD_REQUEST);
+    }
+
     @GetMapping(value="/queue")
     public ResponseEntity<String> checkQueue() {
 

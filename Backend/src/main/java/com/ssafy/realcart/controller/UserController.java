@@ -2,12 +2,15 @@ package com.ssafy.realcart.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 
+import com.ssafy.realcart.common.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.realcart.data.dto.UserDto;
@@ -26,11 +29,20 @@ public class UserController {
     public UserController(IUserService userService){
         this.userService = userService;
     }
-    @GetMapping()
+    @GetMapping(value="/all")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         LOGGER.info("getAllUsers 메서드가 userController에서 호출되었습니다.");
         List<UserDto> userList = userService.getAllUsers();
         return new ResponseEntity<List<UserDto>>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ApiResponse getUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserDto user = userService.getUser(principal.getUsername());
+
+        return ApiResponse.success("user", user);
     }
 
     @GetMapping(value="/checkemail")
@@ -120,9 +132,9 @@ public class UserController {
     }
 
     @PostMapping("/ban/{nickname}")
-    public ResponseEntity<String> banUser(@PathVariable String nickname, @RequestBody int days){
+    public ResponseEntity<String> banUser(@PathVariable String nickname){
         LOGGER.info("banUser 메서드가 userController에서 호출되었습니다.");
-        if(userService.banUser(nickname, days)) {
+        if(userService.banUser(nickname)) {
         	return new ResponseEntity<String>("유저 밴 성공", HttpStatus.OK);
         }
         return new ResponseEntity<String>("유저 밴 실패", HttpStatus.BAD_REQUEST);
@@ -138,9 +150,9 @@ public class UserController {
     }
 
     @PostMapping("/findpwd")
-    public ResponseEntity<String> findPwd(@RequestBody String email){
+    public ResponseEntity<String> findPwd(@RequestBody Map<String, String> emailMap){
         LOGGER.info("findPwd 메서드가 userController에서 호출되었습니다.");
-        if(userService.findPwd(email)) {
+        if(userService.findPwd(emailMap.get("email"))) {
             return new ResponseEntity<String>("이메일 확인하세요.", HttpStatus.OK);
         }
         return new ResponseEntity<String>("가입하지 않은 유저입니다.", HttpStatus.BAD_REQUEST);

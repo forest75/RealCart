@@ -7,4 +7,6 @@ public interface IUserRepository extends CrudRepository<User, Integer> {
     User findByNickname(String nickname);
     User findByEmail(String email);
     User saveAndFlush(User user);
+
+    User findByUserIdAndRefreshToken(String userId, String refreshToken);
 }

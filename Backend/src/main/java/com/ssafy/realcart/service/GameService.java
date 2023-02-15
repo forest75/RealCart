@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.ssafy.realcart.data.dto.BetDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class GameService implements IGameService{
 	private String[] waitingUsers = new String[2];
 	private long timeLimit = -1;
 	private int recent = -1;
+	private int red = 0;
+	private int blue = 0;
 	
 	private IUserDAO userDAO;
 	private IGameDAO gameDAO;
@@ -330,6 +333,8 @@ public class GameService implements IGameService{
 	public boolean createGame() {
 		Game game = gameDAO.createGame();
 		recent = game.getId();
+		red = 0;
+		blue = 0;
 		Arrays.fill(currentUsers, null);
 		int size = queue.size();
 		int index = 0;
@@ -383,6 +388,26 @@ public class GameService implements IGameService{
 			}
 		}
 		return gameDto;
+	}
+
+	@Override
+	public boolean up(int teamId) {
+		if(teamId == 1){
+			red++;
+		}
+		else if(teamId == 2){
+			blue++;
+		}
+		else{
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public BetDto getBet() {
+		BetDto betDto = new BetDto().builder().red(red).blue(blue).build();
+		return betDto;
 	}
 
 }

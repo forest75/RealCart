@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -151,7 +150,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean banUser(String nickname, int days) {
+    public boolean banUser(String nickname) {
     	User user = userDAO.checkNickname(nickname);
     	if(user != null) {
     		user.setIsBan((byte)1);
@@ -176,6 +175,7 @@ public class UserService implements IUserService {
         String tempPassword = sha256(userDto.getPassword(), user.getSalt().getBytes());
         if(user.getPassword().equals(tempPassword)){
             UserDto loginUser = new UserDto();
+            loginUser.setEmail(user.getEmail());
             loginUser.setIntro(user.getIntro());
             loginUser.setNickname(user.getNickname());
             loginUser.setUsername(user.getUsername());
@@ -271,7 +271,13 @@ public class UserService implements IUserService {
         }
         return false;
     }
-	@Override
+
+    @Override
+    public UserDto getUser(String username) {
+        return null;
+    }
+
+    @Override
 	public UserDto updateUser(String email, UserDto userDto) throws NoSuchAlgorithmException {
 		User user = userDAO.getUser(email);
 		if(user == null) return null;

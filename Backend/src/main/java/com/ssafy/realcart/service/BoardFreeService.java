@@ -78,6 +78,7 @@ public class BoardFreeService implements IBoardFreeService {
             for (Comment comment:
                  comments) {
                 CommentDto commentDto = new CommentDto();
+                commentDto.setId(comment.getId());
                 commentDto.setNickname(comment.getUser().getNickname());
                 commentDto.setContent(comment.getContent());
                 commentDto.setCreatedTime(comment.getCreatedDate());
@@ -110,6 +111,7 @@ public class BoardFreeService implements IBoardFreeService {
             for (Comment comment:
                     comments) {
                 CommentDto commentDto = new CommentDto();
+                commentDto.setId(comment.getId());
                 commentDto.setNickname(comment.getUser().getNickname());
                 commentDto.setContent(comment.getContent());
                 commentDto.setCreatedTime(comment.getCreatedDate());
