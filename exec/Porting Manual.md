@@ -4,7 +4,7 @@
 - [Signaling Server](#signal-server)
 - [Game Server](#game-server)
 - [IOT](#iot)
-- [Scenario](#https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/exec/%EC%8B%9C%EC%97%B0_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png)
+- [Scenario](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/exec/%EC%8B%9C%EC%97%B0_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png)
 ## Web BackEnd
 ---
 ### What you need
