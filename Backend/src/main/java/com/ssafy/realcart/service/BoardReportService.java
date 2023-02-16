@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +73,12 @@ public class BoardReportService implements IBoardReportService {
 	public BoardReportDto getBoardReport(int id) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
 		if(boardReport == null) return null;
+		if(boardReport.getIsPrivate() == (byte) 1){
+			org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(!principal.getUsername().equals(boardReport.getUser().getEmail())){
+				return null;
+			}
+		}
 		boardReport.setHit(boardReport.getHit() + 1);
 		boardReportDAO.saveReport(boardReport);
 		BoardReportDto boardReportDto = new BoardReportDto();
@@ -103,7 +110,9 @@ public class BoardReportService implements IBoardReportService {
 	@Transactional
 	public boolean changeReport(int id, BoardReportRequestDto boardDto) {
 		BoardReport boardReport = boardReportDAO.getBoardReport(id);
+		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(boardReport != null) {
+			if(!boardReport.getUser().getEmail().equals(principal.getUsername())) return false;
 			boardReport.setContent(boardDto.getContent());
 			boardReport.setTitle(boardDto.getTitle());
 			boardReport.setCategory(boardDto.getCategory());
@@ -116,7 +125,14 @@ public class BoardReportService implements IBoardReportService {
 	@Override
 	@Transactional
 	public boolean deleteReport(int id) {
-		return boardReportDAO.deleteReport(id);
+
+		BoardReport boardReport = boardReportDAO.getBoardReport(id);
+		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(boardReport != null) {
+			if (!boardReport.getUser().getEmail().equals(principal.getUsername())) return false;
+			return boardReportDAO.deleteReport(id);
+		}
+		return false;
 	}
 
 	@Override
