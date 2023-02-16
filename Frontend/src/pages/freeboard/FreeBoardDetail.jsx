@@ -28,6 +28,8 @@ function FreeBoardDetail() {
   const [commentsCount, setCommentsCount] = useState(0);
   const [nickname, setNickname] = useState("");
   const [date, setDate] = useState("");
+  const [isUser, setIsUser] = useState("none");
+
   const onChangePage = (event, value) => {
     setPage(value - 1);
   };
@@ -48,8 +50,13 @@ function FreeBoardDetail() {
         setTitle(article.title);
         setNickname(article.nickname);
         setDate(new Date(article.createdTime).toLocaleDateString());
-
         setCommentsCount(article.comments.length);
+        if (user.nickname === nickname) {
+          setIsUser("");
+        } else {
+          setIsUser("none");
+        }
+
         if (article.comments.length === 0) {
           setComments([
             [
@@ -240,11 +247,16 @@ function FreeBoardDetail() {
             </AppButton>
           </Link>
           <Link to={`/freeBoard/modify?no=${no}`}>
-            <AppBlackButton sx={{ borderRadius: "5px", marginRight: "10px" }}>
+            <AppBlackButton
+              sx={{ display: isUser, borderRadius: "5px", marginRight: "10px" }}
+            >
               수정
             </AppBlackButton>
           </Link>
-          <AppBlackButton sx={{ borderRadius: "5px" }} onClick={handleDelete}>
+          <AppBlackButton
+            sx={{ display: isUser, borderRadius: "5px" }}
+            onClick={handleDelete}
+          >
             삭제
           </AppBlackButton>
         </Box>

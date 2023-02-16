@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import draftToHtml from "draftjs-to-html";
 import axios from "../../util/axiosInstance";
 import AppButton from "../../components/AppButton";
@@ -8,12 +9,14 @@ import AppBlackButton from "../../components/AppBlackButton";
 import Logo from "../../assets/logo.png";
 
 function ReportBoardDetail() {
+  const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [nickname, setNickname] = useState();
   const [date, setDate] = useState();
   const [searchParams] = useSearchParams();
+  const [isUser, setIsUser] = useState("none");
   const no = Number(searchParams.get("no"));
 
   useEffect(() => {
@@ -29,6 +32,11 @@ function ReportBoardDetail() {
           setContent(resContent);
           setNickname(res.data.nickname);
           setDate(new Date(res.data.createdTime).toLocaleDateString());
+        }
+        if (user.Nickname === nickname) {
+          setIsUser("");
+        } else {
+          setIsUser("none");
         }
       })
       .catch((err) => {
@@ -150,11 +158,20 @@ function ReportBoardDetail() {
             </AppButton>
           </Link>
           <Link to={`/reportBoard/modify?no=${no}`}>
-            <AppBlackButton sx={{ borderRadius: "5px", marginRight: "10px" }}>
+            <AppBlackButton
+              sx={{
+                display: isUser,
+                borderRadius: "5px",
+                marginRight: "10px",
+              }}
+            >
               수정
             </AppBlackButton>
           </Link>
-          <AppBlackButton sx={{ borderRadius: "5px" }} onClick={handleDelete}>
+          <AppBlackButton
+            sx={{ display: isUser, borderRadius: "5px" }}
+            onClick={handleDelete}
+          >
             삭제
           </AppBlackButton>
         </Box>

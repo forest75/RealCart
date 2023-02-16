@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import axios from "../../util/axiosInstance";
@@ -13,7 +14,18 @@ function NoticeBoardDetail() {
   const [content, setContent] = useState();
   const [date, setDate] = useState("");
   const [searchParams] = useSearchParams();
+  const [displayWright, setDisplayWright] = useState("none");
   const no = Number(searchParams.get("no"));
+  const user = useSelector((state) => state.login.user);
+
+  useEffect(() => {
+    if (user.nickname === "관리자") {
+      setDisplayWright("");
+    } else {
+      setDisplayWright("none");
+    }
+    console.log(displayWright);
+  }, []);
 
   useEffect(() => {
     axios
@@ -141,16 +153,30 @@ function NoticeBoardDetail() {
           }}
         >
           <Link to="/noticeBoard">
-            <AppButton sx={{ border: "solid 1px black", marginRight: "10px" }}>
+            <AppButton
+              sx={{
+                border: "solid 1px black",
+                marginRight: "10px",
+              }}
+            >
               목록
             </AppButton>
           </Link>
           <Link to={`/noticeBoard/modify?no=${no}`}>
-            <AppBlackButton sx={{ borderRadius: "5px", marginRight: "10px" }}>
+            <AppBlackButton
+              sx={{
+                display: displayWright,
+                borderRadius: "5px",
+                marginRight: "10px",
+              }}
+            >
               수정
             </AppBlackButton>
           </Link>
-          <AppBlackButton sx={{ borderRadius: "5px" }} onClick={handleDelete}>
+          <AppBlackButton
+            sx={{ display: displayWright, borderRadius: "5px" }}
+            onClick={handleDelete}
+          >
             삭제
           </AppBlackButton>
         </Box>
