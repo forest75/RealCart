@@ -115,13 +115,13 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
-- 기능명세서
-- 이해관계자 파악 및 분석
-- Swagger UI
-- 페르소나
-- ERD
-- Usecase 다이어그램
-- Usecase Scenario
+- [기능명세서](docs/기능명세서.png)
+- [이해관계자 파악 및 분석]
+- [Swagger UI]
+- [페르소나]
+- [ERD]
+- [Usecase 다이어그램]
+- [Usecase Scenario]
 
 ## 	🚩: 프로젝트 결과물
 
