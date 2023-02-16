@@ -29,6 +29,7 @@ import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage() {
+  const [showResult, setShowResult] = useState(false);
   const [bestTime, setBestTime] = useState("00:00:00");
   const queue = useSelector((state) => state.queue);
   const [winPlayer, setWinPlayer] = useState("");
@@ -54,7 +55,7 @@ function NewPlayPage() {
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
-  // const [carSpeed, setCarSpeed] = useState(0);
+  const [carSpeed, setCarSpeed] = useState(0);
   const [isBoost, setIsBoost] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
@@ -187,6 +188,41 @@ function NewPlayPage() {
               navigate("/spect");
             }
             dispatch(setIsPlayEndClicked(false));
+          }, 10000);
+        }
+        if (message.data.status === "3") {
+          console.log("중계 서버에서 3 받는 데 성공");
+          setCarSpeed(message.data.speed);
+        }
+        if (message.data.status === "4") {
+          console.log("중계 서버에서 4 받는 데 성공");
+          const result = message.data.result.split(",");
+          let winner, loser, winnerTime, loserTime;
+          if (result[1] === "기권") {
+            winner = result[2];
+            loser = result[0];
+            winnerTime = result[3];
+            loserTime = result[1];
+          }
+          if (result[3] === "기권") {
+            winner = result[0];
+            loser = result[2];
+            winnerTime = result[1];
+            loserTime = result[3];
+          }
+          if (result[1] !== "기권" && result[3] !== "기권") {
+            winner = result[1] < result[3] ? result[0] : result[2];
+            loser = result[1] < result[3] ? result[2] : result[0];
+            winnerTime = result[1] < result[3] ? result[1] : result[3];
+            loserTime = result[1] < result[3] ? result[3] : result[1];
+          }
+          setWinPlayer(winner);
+          setLosePlayer(loser);
+          setWinPlayerTime(winnerTime);
+          setLosePlayerTime(loserTime);
+          setShowResult(true);
+          setTimeout(() => {
+            setShowResult(false);
           }, 10000);
         }
       };
@@ -560,55 +596,60 @@ function NewPlayPage() {
               RACE TIME
               <RaceTime isRunning={isRunning} />
             </Box>
-            {/* <Box
-              component="img"
-              alt="RectangleResult"
-              src={RectangleResult}
-              sx={{
-                width: "50%",
-                height: "50%",
-                opacity: "92%",
-                top: "17%",
-                right: "25%",
-                position: "absolute",
-                zIndex: 1,
-              }}
-            /> */}
-            {/* <Box
-              sx={{
-                width: "50%",
-                height: "50%",
-                top: "17%",
-                right: "25%",
-                position: "absolute",
-                zIndex: 1,
-                color: "white",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "start",
-                textAlign: "center",
-                marginTop: "10px",
-              }}
-            >
-              <table>
-                <thead>
-                  <tr>
-                    <th style={{ padding: "8px" }}>Place</th>
-                    <th style={{ padding: "8px" }}>Nickname</th>
-                    <th style={{ padding: "8px" }}>Lap Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, index) => (
-                    <tr key={index}>
-                      <td>{row.place}</td>
-                      <td>{row.nickname}</td>
-                      <td>{row.laptime}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box> */}
+            {showResult ? (
+              <Box>
+                <Box
+                  component="img"
+                  alt="RectangleResult"
+                  src={RectangleResult}
+                  sx={{
+                    width: "50%",
+                    height: "50%",
+                    opacity: "92%",
+                    top: "17%",
+                    right: "25%",
+                    position: "absolute",
+                    zIndex: 1,
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: "50%",
+                    height: "50%",
+                    top: "17%",
+                    right: "25%",
+                    position: "absolute",
+                    zIndex: 1,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "start",
+                    textAlign: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style={{ padding: "8px" }}>Place</th>
+                        <th style={{ padding: "8px" }}>Nickname</th>
+                        <th style={{ padding: "8px" }}>Lap Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((row, index) => (
+                        <tr key={index}>
+                          <td>{row.place}</td>
+                          <td>{row.nickname}</td>
+                          <td>{row.laptime}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Box>
+              </Box>
+            ) : null}
+
             <Box
               sx={{
                 width: "25%",
@@ -701,7 +742,7 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              {/* {carSpeed} */}0
+              {carSpeed}
             </Typography>
             <Typography
               variant="h5"
