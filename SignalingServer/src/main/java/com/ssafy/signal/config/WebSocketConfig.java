@@ -12,6 +12,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import com.ssafy.signal.CallHandler;
+import com.ssafy.signal.GameHandler;
 
 @Configuration
 @EnableWebSocket
@@ -22,10 +23,14 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 	@Autowired
 	CallHandler callHandler;
 	
+	@Autowired
+	GameHandler gameHandler;
+	
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(callHandler, "/call").setAllowedOrigins("*");
+		registry.addHandler(gameHandler, "/gamenet").setAllowedOrigins("*");
 	}
 	
 	@Override

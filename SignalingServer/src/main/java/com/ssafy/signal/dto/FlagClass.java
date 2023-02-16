@@ -1,12 +1,10 @@
-package com.ssafy.realcart.game;
+package com.ssafy.signal.dto;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
 
 public class FlagClass {
     private String player1Nickname = "";
@@ -151,13 +149,13 @@ public class FlagClass {
     public synchronized void sendNewGameToBackend() {
         try {
             // EC2에서는 수정
-            String url = "http://localhost:8060/game";
+            String url = "http://127.0.0.1:8060/game";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Content-Length", Integer.toString(0));
             con.setUseCaches(false);
 
@@ -180,24 +178,19 @@ public class FlagClass {
     public synchronized void sendResultToBackend(String requestBody) {
         try {
             // EC2에서는 수정
-
-            String url = "http://localhost:8060/game/result";
-
+            String url = "http://127.0.0.1:8060/game/result";
             URL obj = new URL(url);
-
-
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Content-Type", "Application/json;charset=UTF-8");
             con.setRequestProperty("Content-Length", Integer.toString(requestBody.length()));
-
             con.setUseCaches(false);
-
 
             System.out.println(requestBody);
             try (DataOutputStream dos = new DataOutputStream(con.getOutputStream())) {
+//                dos.writeBytes(requestBody);
                 dos.writeUTF(requestBody);
             }
 

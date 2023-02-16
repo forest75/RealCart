@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 import ReportBox from "../../components/ReportBox";
 import ReportBoxTitle from "../../components/ReportBoxTitle";
 
@@ -116,7 +116,7 @@ function ReportBoard() {
               }}
               board="reportboard"
               key={article.id}
-              no={article.id}
+              no={article.length}
               category={article.category}
               title={article.title}
               author={article.nickname}
@@ -132,16 +132,13 @@ function ReportBoard() {
             }}
           >
             <Link to="/reportBoard/write">
-              <AppButton
+              <AppBlackButton
                 sx={{
-                  border: 1,
-                  bgcolor: "#34343C",
-                  color: "white",
                   marginTop: "20px",
                 }}
               >
                 글쓰기
-              </AppButton>
+              </AppBlackButton>
             </Link>
           </Box>
           <Pagination

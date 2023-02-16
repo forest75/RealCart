@@ -2,10 +2,10 @@ package com.ssafy.realcart.config.auth;
 
 import java.util.Arrays;
 
-import com.ssafy.realcart.data.entity.auth.RoleType;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,12 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.ssafy.realcart.config.filter.TokenAuthenticationFilter;
 import com.ssafy.realcart.config.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.realcart.config.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.realcart.config.handler.TokenAccessDeniedHandler;
+import com.ssafy.realcart.data.entity.auth.RoleType;
 import com.ssafy.realcart.data.repository.IUserRepository;
 import com.ssafy.realcart.data.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.realcart.exception.RestAuthenticationEntryPoint;
@@ -68,12 +68,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                     .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
-                    .authorizeRequests()
-                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-    //                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())  // 해당 uri로 들어오는 request는, 해당 권한을 갖고있어야 함
-    //                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                    .antMatchers("/**").permitAll()
-                    .anyRequest().authenticated()
+                .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/game/participate").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.GET, "/user/all").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers(HttpMethod.POST, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.POST, "/user").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/game/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers(HttpMethod.DELETE, "/board/notice").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .anyRequest().authenticated()
                 .and()
                     .oauth2Login()
                     .authorizationEndpoint()

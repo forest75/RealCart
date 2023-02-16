@@ -6,7 +6,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 function ArrowButton({ children, sx, ...otherProps }) {
   const mergedSx = {
-    ...{ bgcolor: "white", color: "black", border: 1 },
+    ...{ bgcolor: "white", color: "black", textDecoration: "none" },
     ...sx,
   };
   return (

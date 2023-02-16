@@ -3,8 +3,10 @@ package com.ssafy.realcart.controller;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.realcart.common.ApiResponse;
+<<<<<<< HEAD
 import com.ssafy.realcart.config.auth.AppProperties;
 import com.ssafy.realcart.data.entity.User;
 import com.ssafy.realcart.data.entity.auth.AuthReqModel;
@@ -14,14 +16,19 @@ import com.ssafy.realcart.service.auth.AuthToken;
 import com.ssafy.realcart.service.auth.AuthTokenProvider;
 import com.ssafy.realcart.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
+=======
+>>>>>>> ofeat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+=======
+>>>>>>> ofeat
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,15 +53,32 @@ public class UserController {
     private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 
+<<<<<<< HEAD
 //    @Autowired
 //    public UserController(IUserService userService){
 //        this.userService = userService;
 //    }
     @GetMapping()
+=======
+    @Autowired
+    public UserController(IUserService userService){
+        this.userService = userService;
+    }
+    @GetMapping(value="/all")
+>>>>>>> ofeat
     public ResponseEntity<List<UserDto>> getAllUsers() {
         LOGGER.info("getAllUsers 메서드가 userController에서 호출되었습니다.");
         List<UserDto> userList = userService.getAllUsers();
         return new ResponseEntity<List<UserDto>>(userList, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ApiResponse getUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserDto user = userService.getUser(principal.getUsername());
+        
+        return ApiResponse.success("user", user);
     }
 
     @GetMapping(value="/checkemail")
@@ -128,6 +152,20 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    
+    @PutMapping()
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto){
+        LOGGER.info("updateUser 메서드가 userController에서 호출되었습니다.");
+        try {
+            UserDto loginUser = userService.updateUser(userDto);
+            if(loginUser != null){
+                return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     @GetMapping(value="/login")
     public ApiResponse login(
@@ -188,9 +226,9 @@ public class UserController {
     }
 
     @PostMapping("/ban/{nickname}")
-    public ResponseEntity<String> banUser(@PathVariable String nickname, @RequestBody int days){
+    public ResponseEntity<String> banUser(@PathVariable String nickname){
         LOGGER.info("banUser 메서드가 userController에서 호출되었습니다.");
-        if(userService.banUser(nickname, days)) {
+        if(userService.banUser(nickname)) {
         	return new ResponseEntity<String>("유저 밴 성공", HttpStatus.OK);
         }
         return new ResponseEntity<String>("유저 밴 실패", HttpStatus.BAD_REQUEST);
@@ -203,5 +241,40 @@ public class UserController {
         	return new ResponseEntity<String>("유저 밴 해제 성공", HttpStatus.OK);
         }
         return new ResponseEntity<String>("유저 밴 해제 실패", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/findpwd")
+    public ResponseEntity<String> findPwd(@RequestBody Map<String, String> emailMap){
+        LOGGER.info("findPwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.findPwd(emailMap.get("email"))) {
+            return new ResponseEntity<String>("이메일 확인하세요.", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("가입하지 않은 유저입니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(value="/changepwd/{email}/{salt}")
+    public ResponseEntity<String> changePwd(@PathVariable("email") String email, @PathVariable("salt") String salt) throws NoSuchAlgorithmException {
+        LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.changePwd(email, salt)){
+            String msg = "비밀번호 변경 성공";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "유효한 코드가 아닙니다.";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+    }
+    
+    @GetMapping(value="/bcrypt/{email}")
+    public ResponseEntity<String> changePwd(@PathVariable("email") String email) throws NoSuchAlgorithmException {
+        LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
+        if(userService.changePwd(email)){
+            String msg = "비밀번호 변경 성공";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
+        else{
+            String msg = "유효한 코드가 아닙니다.";
+            return new ResponseEntity<>(msg, HttpStatus.OK);
+        }
     }
 }

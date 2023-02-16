@@ -11,13 +11,20 @@ public interface IUserService {
 
     boolean createUser(UserDto userDto) throws NoSuchAlgorithmException;
     List<UserDto> getAllUsers();
-    boolean updateUser(String email);
+    UserDto updateUser(UserDto userDto) throws NoSuchAlgorithmException;
     boolean deleteUser(String email);
-    boolean banUser(String nickname, int days);
+    boolean banUser(String nickname);
     UserDto login(UserDto userDto) throws NoSuchAlgorithmException;
     boolean checkEmail(String email);
     boolean checkNickname(String nickname);
     boolean verifyEmail(String email, String salt);
     void preprocessMail(UserDto userDto);
 	boolean clearUserBan(String nickname);
+
+    boolean findPwd(String email);
+
+    boolean changePwd(String email, String salt) throws NoSuchAlgorithmException;
+
+    UserDto getUser(String username);
+	boolean changePwd(String email);
 }

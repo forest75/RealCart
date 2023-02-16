@@ -46,8 +46,6 @@ public class BoardFreeDAO implements IBoardFreeDAO {
         Optional<BoardFree> article = boardFreeRepository.findById(id);
         if(article.isPresent()){
             BoardFree boardFree = article.get();
-            boardFree.setHit(boardFree.getHit() + 1);
-            boardFreeRepository.save(boardFree);
             return boardFree;
         }
         return null;

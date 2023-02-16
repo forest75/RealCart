@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
@@ -41,7 +42,7 @@ public class AuthController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
-    @GetMapping(value="/login")
+    @PostMapping(value="/login")
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -75,22 +76,12 @@ public class AuthController {
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        // userId refresh token 으로 DB 확인
+        // 없는 경우 새로 등록
+        String userRefreshToken = refreshToken.getToken();
         User user = userRepository.findByEmail(userId);
-        if (user == null){
-            return ApiResponse.fail();
-        }
-        String userRefreshToken = user.getRefreshToken();
-        if (userRefreshToken == null) {
-            // 없는 경우 새로 등록
-            userRefreshToken = refreshToken.getToken();
-            user.setRefreshToken(userRefreshToken);
-            userRepository.saveAndFlush(user);
-        } else {
-            // DB에 refresh 토큰 업데이트
-            user.setRefreshToken(refreshToken.getToken());
-            userRepository.saveAndFlush(user);
-        }
+        user.setRefreshToken(userRefreshToken);
+        userRepository.saveAndFlush(user);
+
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
@@ -104,9 +95,6 @@ public class AuthController {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
-        if (!authToken.validate()) {
-            return ApiResponse.invalidAccessToken();
-        }
 
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
@@ -114,32 +102,33 @@ public class AuthController {
             return ApiResponse.notExpiredTokenYet();
         }
 
-        String userId = claims.getSubject();
+
+        String userEmail = claims.getSubject();
+
         RoleType roleType = RoleType.of(claims.get("role", String.class));
 
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
                 .orElse((null));
+
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
-        if (authRefreshToken.validate()) {
+        if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
 
         // userId refresh token 으로 DB 확인
-        User user = userRepository.findByEmail(userId);
-        if(user == null) {
-            return ApiResponse.fail();
-        }
-        String userRefreshToken = user.getRefreshToken();
+        User userRefreshToken = userRepository.findByEmailAndRefreshToken(userEmail, refreshToken);
+
         if (userRefreshToken == null) {
             return ApiResponse.invalidRefreshToken();
         }
 
         Date now = new Date();
         AuthToken newAccessToken = tokenProvider.createAuthToken(
-                userId,
+
+                userEmail,
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
@@ -157,7 +146,9 @@ public class AuthController {
             );
 
             // DB에 refresh 토큰 업데이트
-            user.setRefreshToken(authRefreshToken.getToken());
+
+            userRefreshToken.setRefreshToken(authRefreshToken.getToken());
+            userRepository.saveAndFlush(userRefreshToken);
 
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);

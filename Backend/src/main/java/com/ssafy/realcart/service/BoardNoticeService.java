@@ -42,29 +42,34 @@ public class BoardNoticeService implements IBoardNoticeService {
 	public List<BoardNoticeDto> getBoardNoticeAll() {
 		List<BoardNotice> boardNotices = boardNoticeDAO.getBoardNoticeAll();
 		List<BoardNoticeDto> boardNoticeDtos = new ArrayList<BoardNoticeDto>();
-		for (BoardNotice boardNotice : boardNotices) {
+		for (int i = boardNotices.size() - 1; i >= 0; i--) {
+			BoardNotice boardNotice = boardNotices.get(i);
 			BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
 			boardNoticeDto.setContent(boardNotice.getContent());
 			boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());
 			boardNoticeDto.setId(boardNotice.getId());
 			boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
 			boardNoticeDto.setTitle(boardNotice.getTitle());
+			boardNoticeDto.setHit(boardNotice.getHit());
 			boardNoticeDtos.add(boardNoticeDto);
 		}
 		return boardNoticeDtos;
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public BoardNoticeDto getBoardNotice(int id) {
 		BoardNotice boardNotice = boardNoticeDAO.getBoardNotice(id);
 		if(boardNotice == null) return null;
+		boardNotice.setHit(boardNotice.getHit() + 1);
+		boardNoticeDAO.saveNotice(boardNotice);
 		BoardNoticeDto boardNoticeDto = new BoardNoticeDto();
 		boardNoticeDto.setContent(boardNotice.getContent());
 		boardNoticeDto.setCreatedTime(boardNotice.getCreatedDate());
 		boardNoticeDto.setId(boardNotice.getId());
 		boardNoticeDto.setModifiedTime(boardNotice.getModifiedDate());
 		boardNoticeDto.setTitle(boardNotice.getTitle());
+		boardNoticeDto.setHit(boardNotice.getHit()+1);
 		return boardNoticeDto;
 	}
 

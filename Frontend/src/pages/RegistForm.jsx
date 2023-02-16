@@ -11,8 +11,8 @@ export default function RegistForm() {
   const navigate = useNavigate();
   const [pwd, setPwd] = useState("");
   const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
   const [emailCheck, setEmailCheck] = useState("");
+  const [nickname, setNickname] = useState("");
   const [nicknameCheck, setNicknameCheck] = useState("");
 
   const handleRegist = async (e) => {
@@ -73,8 +73,7 @@ export default function RegistForm() {
       .catch((error) => {
         console.log(error);
       });
-  }, [nickname]);
-
+  });
   const theme = createTheme({
     palette: {
       white: "#ffffff",
