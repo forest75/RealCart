@@ -33,7 +33,7 @@ import AuthAdmin from "./pages/AuthAdmin";
 import AuthPlayer from "./pages/AuthPlayer";
 
 // const SpectPageWithAuth = Auth(SpectPage);
-const SpectPageWithAuth = SpectPage;
+const SpectPageWithAuth = Auth(SpectPage);
 // const PlayPageWithAuth = Auth(PlayPage);
 const NewPlayPageWithAuth = AuthPlayer(NewPlayPage);
 const NewPlayPage2WithAuth = AuthPlayer(NewPlayPage2);
