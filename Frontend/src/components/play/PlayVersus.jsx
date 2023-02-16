@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import axios from "../../util/axiosInstance";
 import { setPlayer, setRank1, setRank2 } from "../../store/queueSlice";
+import { setA, setB } from "../../store/betSlice";
 
 function PlayVersus() {
   const dispatch = useDispatch();
@@ -14,6 +15,11 @@ function PlayVersus() {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
       dispatch(setPlayer(res.data));
     });
+    setTimeout(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+        dispatch(setPlayer(res.data));
+      });
+    }, 10000);
   }, [queue, dispatch]);
 
   useEffect(() => {
@@ -28,6 +34,32 @@ function PlayVersus() {
         dispatch(setRank2(res.data));
       });
   }, [queue, dispatch]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
+      .then((response) => {
+        console.log(response.data);
+        dispatch(setA(response.data.red));
+        dispatch(setB(response.data.blue));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    const endBet = setInterval(() => {
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
+        .then((response) => {
+          console.log(response.data);
+          dispatch(setA(response.data.red));
+          dispatch(setB(response.data.blue));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, 5000);
+    return () => clearInterval(endBet);
+  }, [bet, dispatch]);
 
   return (
     <Box
