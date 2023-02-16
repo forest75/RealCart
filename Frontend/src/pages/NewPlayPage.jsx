@@ -36,6 +36,7 @@ function NewPlayPage() {
   const [losePlayer, setLosePlayer] = useState("");
   const [winPlayerTime, setWinPlayerTime] = useState("");
   const [losePlayerTime, setLosePlayerTime] = useState("");
+  const [isWin, setIsWin] = useState(true);
 
   const rows = [
     {
@@ -110,6 +111,17 @@ function NewPlayPage() {
   }
 
   useEffect(() => {
+    setTimeout(() => {
+      const intervalId = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % images.length);
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(intervalId);
+      }, 5800);
+    }, 5000);
+    setTimeout(() => {
+      setIsRunning(true);
+    }, 10000);
     // 베스트타임 가져오기
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
@@ -167,7 +179,8 @@ function NewPlayPage() {
     if (wss) {
       wss.onmessage = (message) => {
         console.log("get message", message.data);
-        if (message.data.status === "1") {
+        const messageObj = JSON.parse(message.data);
+        if (messageObj.status === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
           setTimeout(() => {
             setIsRunning(true);
@@ -180,7 +193,7 @@ function NewPlayPage() {
             clearInterval(intervalId);
           }, 5800);
         }
-        if (message.data.status === "2") {
+        if (messageObj.status === "2") {
           console.log("중계 서버에서 2 받는 데 성공");
           dispatch(setPlayEndOpen());
           setTimeout(() => {
@@ -190,19 +203,20 @@ function NewPlayPage() {
             dispatch(setIsPlayEndClicked(false));
           }, 10000);
         }
-        if (message.data.status === "3") {
+        if (messageObj.status === "3") {
           console.log("중계 서버에서 3 받는 데 성공");
-          setCarSpeed(message.data.speed);
+          setCarSpeed(messageObj.speed);
         }
-        if (message.data.status === "4") {
+        if (messageObj.status === "4") {
           console.log("중계 서버에서 4 받는 데 성공");
-          const result = message.data.result.split(",");
+          const result = messageObj.result.split(",");
           let winner, loser, winnerTime, loserTime;
           if (result[1] === "기권") {
             winner = result[2];
             loser = result[0];
             winnerTime = result[3];
             loserTime = result[1];
+            0;
           }
           if (result[3] === "기권") {
             winner = result[0];
@@ -215,6 +229,12 @@ function NewPlayPage() {
             loser = result[1] < result[3] ? result[2] : result[0];
             winnerTime = result[1] < result[3] ? result[1] : result[3];
             loserTime = result[1] < result[3] ? result[3] : result[1];
+          }
+          if (winner == user.nickname) {
+            setIsWin(true);
+          }
+          if (loser == user.nickname) {
+            setIsWin(false);
           }
           setWinPlayer(winner);
           setLosePlayer(loser);
@@ -586,7 +606,7 @@ function NewPlayPage() {
               sx={{
                 width: "25%",
                 height: "13%",
-                top: "2%",
+                top: "3.5%",
                 left: "7.5%",
                 color: "white",
                 position: "absolute",
@@ -594,6 +614,18 @@ function NewPlayPage() {
               }}
             >
               RACE TIME
+            </Box>
+            <Box
+              sx={{
+                width: "25%",
+                height: "13%",
+                top: "7%",
+                left: "7.5%",
+                color: "white",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            >
               <RaceTime isRunning={isRunning} />
             </Box>
             {showResult ? (
@@ -661,7 +693,12 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              <Typography variant="h1">WIN</Typography>
+              {showResult && isWin ? (
+                <Typography variant="h1">WIN</Typography>
+              ) : null}
+              {showResult && !isWin ? (
+                <Typography variant="h1">LOSE</Typography>
+              ) : null}
             </Box>
             <Box
               component="img"
@@ -688,7 +725,7 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              <h3>BEST</h3>
+              <h4>BEST</h4>
             </Box>
             <Box
               component="h4"
@@ -795,7 +832,7 @@ function NewPlayPage() {
             </Box>
             <Box
               sx={{
-                width: "25%",
+                width: "26%",
                 height: "50%",
                 bottom: "0",
                 position: "absolute",
@@ -909,8 +946,8 @@ function NewPlayPage() {
                   <Box
                     sx={{
                       zIndex: 1,
-                      width: "30%",
-                      height: "50%",
+                      width: "20%",
+                      height: "30%",
                     }}
                     component="img"
                     alt="slide"
