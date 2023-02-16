@@ -120,7 +120,7 @@ function NoticeBoard() {
               }}
               board="noticeBoard"
               key={article.id}
-              // no={article.id}
+              no={article.id}
               title={article.title}
               author="admin"
               date={new Date(article.createdTime).toLocaleDateString()}

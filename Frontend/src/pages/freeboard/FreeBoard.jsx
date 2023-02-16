@@ -109,6 +109,7 @@ function FreeBoard() {
               }}
               board="freeBoard"
               key={article.id}
+              no={article.id}
               title={article.title}
               author={article.nickname}
               date={new Date(article.createdTime).toLocaleDateString()}

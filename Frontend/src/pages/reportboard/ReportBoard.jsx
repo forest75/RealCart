@@ -124,7 +124,7 @@ function ReportBoard() {
               }}
               board="reportboard"
               key={article.id}
-              // no={handleNo}
+              no={article.id}
               category={article.category}
               title={article.title}
               author={article.nickname}
