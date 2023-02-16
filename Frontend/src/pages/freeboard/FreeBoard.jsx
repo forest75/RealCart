@@ -5,7 +5,8 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
-import AppButton from "../../components/AppButton";
+// import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 import ArticleBox from "../../components/ArticleBox";
 import ArticleBoxTitle from "../../components/ArticleBoxTitle";
 
@@ -124,16 +125,13 @@ function FreeBoard() {
             }}
           >
             <Link to="/freeBoard/write">
-              <AppButton
+              <AppBlackButton
                 sx={{
-                  border: 1,
-                  bgcolor: "#34343C",
-                  color: "white",
                   marginTop: "20px",
                 }}
               >
                 글쓰기
-              </AppButton>
+              </AppBlackButton>
             </Link>
           </Box>
           <Pagination

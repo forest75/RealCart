@@ -13,6 +13,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 
 function ReportBoardWrite() {
   const navigate = useNavigate();
@@ -184,17 +185,17 @@ function ReportBoardWrite() {
                 취소
               </AppButton>
             </Link>
-            <AppButton
+            <AppBlackButton
               sx={{
                 width: "100px",
                 height: "40px",
                 bgcolor: "black",
-                color: "white",
+                borderRadius: "5px",
               }}
               onClick={handleSubmit}
             >
               등록
-            </AppButton>
+            </AppBlackButton>
           </Box>
         </Box>
       </Box>

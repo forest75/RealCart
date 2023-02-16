@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 
 function ReportBoardModify() {
   const navigate = useNavigate();
@@ -188,17 +189,17 @@ function ReportBoardModify() {
                 취소
               </AppButton>
             </Link>
-            <AppButton
+            <AppBlackButton
               sx={{
                 width: "100px",
                 height: "40px",
                 bgcolor: "black",
-                color: "white",
+                borderRadius: "5px",
               }}
               onClick={handleSubmit}
             >
               수정
-            </AppButton>
+            </AppBlackButton>
           </Box>
         </Box>
       </Box>

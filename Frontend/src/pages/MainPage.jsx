@@ -234,153 +234,169 @@ function MainPage() {
     >
       <Box
         sx={{
-          width: "90%",
-          height: "100%",
+          width: "100%",
+          height: "45%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Box
+        <Paper
+          elevation={2}
           sx={{
-            width: "100%",
-            height: "45%",
+            width: "1300px",
+            height: "700px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Paper
-            elevation={2}
-            sx={{
-              width: "1300px",
-              height: "700px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+          <video
+            ref={video}
+            id="video"
+            autoPlay={true}
+            width="800px"
+            height="600px"
+            poster={WebRtcImg}
+            onClick={() => {
+              navigate("/spect");
             }}
-          >
-            <video
-              ref={video}
-              id="video"
-              autoPlay={true}
-              width="800px"
-              height="600px"
-              poster={WebRtcImg}
-              onClick={() => {
-                navigate("/spect");
-              }}
-              muted={true}
-            />
-          </Paper>
-        </Box>
+            muted={true}
+          />
+        </Paper>
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          height: "50%",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
         <Box
           sx={{
-            width: "100%",
-            height: "50%",
+            width: "40%",
+            height: "100%",
             display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
           <Box
             sx={{
-              width: "50%",
-              height: "100%",
+              width: "100%",
+              height: "45%",
+              editable: "false",
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                width: "90%",
-                height: "90%",
-                editable: "false",
-              }}
-            >
-              <Box
+            <Box sx={{ width: "100%", marginBottom: "20px" }}>
+              <Typography
+                variant="h7"
                 sx={{
                   height: "5%",
+                  fontWeight: "bold",
+                  color: " black",
                 }}
               >
-                <Typography
-                  variant="h7"
-                  sx={{
-                    fontWeight: "bold",
-                    color: " black",
-                  }}
-                >
-                  공지사항
-                </Typography>
-              </Box>
-              <BoardTable address="board/notice" link="/noticeBoard" />
-
-              <Box
-                sx={{
-                  height: "5%",
-                  margin: "20px 0px",
-                }}
-              >
-                <Typography
-                  variant="h7"
-                  sx={{
-                    fontWeight: "bold",
-                    color: " black",
-                  }}
-                >
-                  게시글
-                </Typography>
-              </Box>
-              <BoardTable address="board/free" link="/freeBoard" />
+                공지사항
+              </Typography>
             </Box>
+
+            <BoardTable
+              sx={{ width: "100%" }}
+              address="board/notice"
+              link="/noticeBoard"
+            />
           </Box>
           <Box
             sx={{
-              width: "50%",
-              height: "100%",
+              width: "100%",
+              height: "45%",
+              editable: "false",
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
               alignItems: "center",
+            }}
+          >
+            <Box sx={{ width: "100%", marginBottom: "20px" }}>
+              <Typography
+                variant="h7"
+                sx={{
+                  fontWeight: "bold",
+                  color: " black",
+                }}
+              >
+                게시글
+              </Typography>
+            </Box>
+
+            <BoardTable
+              sx={{ width: "100%" }}
+              address="board/free"
+              link="/freeBoard"
+            />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            width: "40%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "90%",
+              height: "90%",
             }}
           >
             <Box
               sx={{
-                width: "90%",
-                height: "90%",
+                height: "5%",
+                width: "100%",
+                display: "flex",
               }}
             >
-              <Box
+              <Typography
+                variant="h7"
                 sx={{
-                  height: "5%",
-                  width: "90%",
-                  display: "flex",
-                  justifyContent: "space-between",
+                  fontWeight: "bold",
+                  color: " black",
+                  width: "50%",
                 }}
               >
-                <Typography
-                  variant="h7"
-                  sx={{
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    color: " black",
-                  }}
-                >
-                  Ranking
-                </Typography>
-                <Typography
-                  variant="h7"
-                  sx={{
-                    textAlign: "center",
-                  }}
-                >
-                  <Link
-                    style={{ textDecoration: "none", color: "black" }}
-                    to="/myPage"
-                  >
-                    <MilitaryTechIcon />
-                    나의 랭킹 보러가기
-                  </Link>
-                </Typography>
-              </Box>
+                Ranking
+              </Typography>
 
-              <BoardTable address="record" />
+              <Typography
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  width: "50%",
+                  textAlign: "right",
+                }}
+                variant="h7"
+              >
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                  }}
+                  to="/myPage"
+                >
+                  <MilitaryTechIcon />
+                  나의 랭킹 보러가기
+                </Link>
+              </Typography>
             </Box>
+
+            <BoardTable address="record" />
           </Box>
         </Box>
       </Box>

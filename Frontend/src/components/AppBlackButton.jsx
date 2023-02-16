@@ -1,11 +1,26 @@
-import React from "react";
+import { React, useState } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
 function AppButton({ children, sx, ...otherProps }) {
+  const [color, setColor] = useState("white");
+
+  const handleOver = () => {
+    setColor("black");
+  };
+
+  const handleOut = () => {
+    setColor("white");
+  };
   const mergedSx = {
-    ...{ bgcolor: "white", color: " black", textDecorationLine: "none" },
+    ...{
+      bgcolor: "black",
+      color: { color },
+      textDecorationLine: "none",
+      border: "solid 1px black",
+      borderRadius: "15px",
+    },
     ...sx,
   };
   return (
@@ -13,6 +28,8 @@ function AppButton({ children, sx, ...otherProps }) {
       sx={mergedSx}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...otherProps}
+      onMouseOver={handleOver}
+      onMouseOut={handleOut}
     >
       <Box sx={{ textDecoration: "none" }}>{children}</Box>
     </Button>
@@ -21,8 +38,8 @@ function AppButton({ children, sx, ...otherProps }) {
 
 AppButton.defaultProps = {
   sx: {
-    bgcolor: "white",
-    color: " black",
+    bgcolor: "black",
+    color: " white",
     textDecoration: "none",
   },
   children: "",

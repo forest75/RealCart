@@ -8,6 +8,8 @@ function AppForm({
   pwd,
   nicknameCheck,
   sx,
+  placeholder,
+  variant,
   ...otherProps
 }) {
   // console.log(pwd);
@@ -135,6 +137,8 @@ function AppForm({
           required
           label="닉네임"
           type="text"
+          placeholder={placeholder}
+          variant={variant}
           fullWidth
           error={verifier.nickname()}
           helperText={nicknameHelper()}
@@ -154,6 +158,8 @@ AppForm.defaultProps = {
   emailCheck: "",
   pwd: "",
   nicknameCheck: "",
+  placeholder: "",
+  variant: "",
 };
 
 AppForm.propTypes = {
@@ -163,6 +169,8 @@ AppForm.propTypes = {
   emailCheck: PropTypes.string,
   pwd: PropTypes.string,
   nicknameCheck: PropTypes.string,
+  placeholder: PropTypes.string,
+  variant: PropTypes.string,
 };
 
 export default AppForm;

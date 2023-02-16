@@ -5,6 +5,7 @@ import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 
 function NoticeBoardDetail() {
   const navigate = useNavigate();
@@ -130,49 +131,28 @@ function NoticeBoardDetail() {
             />
           </Box>
         </Box>
+
         <Box
           sx={{
-            height: "5%",
             width: "100%",
-
+            marginTop: "200px",
             display: "flex",
             justifyContent: "flex-end",
           }}
         >
-          <Link
-            to="/noticeBoard"
-            sx={{ textDecoration: "none", color: "black" }}
-          >
+          <Link to="/noticeBoard">
             <AppButton sx={{ border: "solid 1px black", marginRight: "10px" }}>
               목록
             </AppButton>
           </Link>
-          <Link
-            to={`/noticeBoard/modify?no=${no}`}
-            sx={{ textDecoration: "none", color: "black" }}
-          >
-            <AppButton
-              sx={{
-                backgroundColor: "black",
-                color: "white",
-                border: "solid 1px black",
-                marginRight: "10px",
-              }}
-            >
+          <Link to={`/noticeBoard/modify?no=${no}`}>
+            <AppBlackButton sx={{ borderRadius: "5px", marginRight: "10px" }}>
               수정
-            </AppButton>
+            </AppBlackButton>
           </Link>
-          <AppButton
-            sx={{
-              backgroundColor: "black",
-              color: "white",
-              border: "solid 1px black",
-              marginRight: "10px",
-            }}
-            onClick={handleDelete}
-          >
+          <AppBlackButton sx={{ borderRadius: "5px" }} onClick={handleDelete}>
             삭제
-          </AppButton>
+          </AppBlackButton>
         </Box>
       </Box>
     </Box>

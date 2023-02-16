@@ -8,7 +8,7 @@ import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
 import ArticleBox from "../../components/ArticleBox";
 import ArticleBoxTitle from "../../components/ArticleBoxTitle";
-import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 
 function NoticeBoard() {
   const user = useSelector((state) => state.login.user);
@@ -134,16 +134,13 @@ function NoticeBoard() {
             }}
           >
             <Link to="/noticeBoard/write" sx={{ display: { displayWright } }}>
-              <AppButton
+              <AppBlackButton
                 sx={{
-                  border: 1,
-                  bgcolor: "#34343C",
-                  color: "white",
                   marginTop: "20px",
                 }}
               >
                 글쓰기
-              </AppButton>
+              </AppBlackButton>
             </Link>
           </Box>
           <Pagination

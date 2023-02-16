@@ -14,12 +14,29 @@ function BetWindow() {
   // 배팅 비율을 계산하여 저장
   const [proportionA, setProportionA] = useState(0.5);
   const [proportionB, setProportionB] = useState(0.5);
+  const [rcolor, setRColor] = useState("white");
+  const [bcolor, setBColor] = useState("white");
   useEffect(() => {
     if (bet.betA + bet.betB !== 0) {
       setProportionA(bet.betA / (bet.betA + bet.betB));
       setProportionB(bet.betB / (bet.betA + bet.betB));
     }
   }, [bet]);
+
+  const handleRHover = () => {
+    setRColor("#F52A54");
+  };
+
+  const handleROut = () => {
+    setRColor("white");
+  };
+  const handleBHover = () => {
+    setBColor("#4236F5");
+  };
+  const handleBOut = () => {
+    setBColor("white");
+  };
+
   return (
     <Box
       display="flex"
@@ -92,8 +109,10 @@ function BetWindow() {
                   width: "100%",
                   height: "100%",
                   bgcolor: "#F52A54",
-                  color: "white",
+                  color: rcolor,
                 }}
+                onMouseOver={handleRHover}
+                onMouseOut={handleROut}
               >
                 Red
               </Button>
@@ -104,6 +123,8 @@ function BetWindow() {
                 width: `${Math.max(proportionB * 70 + 30, 30)}%`,
                 animation: "widthChange 0.5s ease-in-out",
               }}
+              onMouseOver={handleBHover}
+              onMouseOut={handleBOut}
             >
               <Button
                 onClick={() => {
@@ -114,7 +135,7 @@ function BetWindow() {
                   width: "100%",
                   height: "100%",
                   bgcolor: "#4236F5",
-                  color: "white",
+                  color: bcolor,
                 }}
               >
                 Blue
