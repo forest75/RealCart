@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Box from "@mui/material/Box";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
+import axios from "../../util/axiosInstance";
 import Logo from "../../assets/logo.png";
 import AppButton from "../../components/AppButton";
 import AppBlackButton from "../../components/AppBlackButton";

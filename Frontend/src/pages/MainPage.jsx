@@ -2,10 +2,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 import Stomp from "stompjs";
 import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
@@ -15,8 +15,10 @@ import BoardTable from "../components/BoardTable";
 import { Link } from "react-router-dom";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import MainPoster from "../components/video/MainPoster";
+import { login } from "../store/loginSlice";
 
 function MainPage() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const [ws, setWs] = useState(null);
@@ -181,14 +183,16 @@ function MainPage() {
     if (!user) {
       console.log("user 없음");
       const token = localStorage.getItem("access-token");
+      console.log(token);
       if (token) {
         axios
           .get(`https://i8a403.p.ssafy.io/api/user`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access-token")}`,
             },
           })
           .then((response) => {
+            console.log(response.data);
             dispatch(login(response.data.body.user));
             localStorage.setItem(
               "user",
@@ -197,6 +201,7 @@ function MainPage() {
             navigate("/");
           })
           .catch((error) => {
+            console.log("에러뜸0-----------------");
             console.log(error);
           });
       }

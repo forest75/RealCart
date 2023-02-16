@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import axios from "../../util/axiosInstance";
 import { setPlayer, setRank1, setRank2 } from "../../store/queueSlice";
 
 function PlayVersus() {

@@ -21,7 +21,7 @@ function TokenLoginForm() {
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/accounts/auth/login`, data)
       .then((response) => {
-        localStorage.setItem("token", response.data.body.token);
+        localStorage.setItem("access-token", response.data.body.token);
       })
       .catch((error) => {
         console.log(error);
@@ -30,7 +30,7 @@ function TokenLoginForm() {
     await axios
       .get(`https://i8a403.p.ssafy.io/api/user`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       })
       .then((response) => {
