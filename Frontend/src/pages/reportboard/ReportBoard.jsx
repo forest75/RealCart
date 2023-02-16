@@ -116,7 +116,7 @@ function ReportBoard() {
               }}
               board="reportboard"
               key={article.id}
-              no={article.length}
+              no={article.id}
               category={article.category}
               title={article.title}
               author={article.nickname}
