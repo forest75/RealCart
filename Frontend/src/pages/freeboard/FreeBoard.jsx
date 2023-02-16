@@ -96,7 +96,6 @@ function FreeBoard() {
             sx={{
               width: "80%",
             }}
-            no="번호"
             title="제목"
             author="작성자"
             date="등록일"
@@ -110,7 +109,6 @@ function FreeBoard() {
               }}
               board="freeBoard"
               key={article.id}
-              no={article.id}
               title={article.title}
               author={article.nickname}
               date={new Date(article.createdTime).toLocaleDateString()}
