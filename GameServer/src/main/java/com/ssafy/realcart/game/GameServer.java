@@ -48,6 +48,9 @@ class RCcarThread implements Runnable{
             System.out.println("socket I/O streams are created.");
             webSocketServer = new WsHandler(webSocketPort, pw);
             webSocketServer.start();
+
+
+
             System.out.println("websocket server started on port " + webSocketPort);
         } catch (IOException e) {
             LOGGER.error("Connection error raised. ", e);
