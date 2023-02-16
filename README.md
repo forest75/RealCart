@@ -1,6 +1,6 @@
 ## :car: RealCart - 실시간 RC카 웹게임
 
-
+![image](docs/img/realcartBanner.png)
 
 ## :video_game: 프로젝트 진행 기간
 
@@ -35,8 +35,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
     
 - ### 관전 화면
   
-  ![spectjpg](file://C:\Users\SSAFY\Desktop\img\spect.jpg?msec=1676548933103)현재 진행중인 게임을 Player 1 카메라, Player 2 카메라, 관전 카메라로 관전할 수 있습니다.
-  
+  ![image](docs/img/spect.jpg)
   - 게임을 원하는 유저는 "입장" 버튼을 눌러 대기열에 등록할 수 있습니다.
   - 채팅을 통해 관전 중인 다른 사람들과 게임을 즐길 수 있습니다.
   - 배팅 버튼을 통해 현재 플레이 중인 유저들을 응원할 수 있습니다.
@@ -44,8 +43,9 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
   - 본인 순서에도 일정 시간 이상 입장하지 않은 유저는 대기열에서 제외됩니다.
 - ### 게임 화면
   
-  ![playjpg](file://C:\Users\SSAFY\Desktop\img\play.jpg?msec=1676548940623)화살표 키입력을 통해 게임을 즐길 수 있습니다.
+  ![image](docs/img/play.jpg)
   
+  화살표 키입력을 통해 게임을 즐길 수 있습니다.
   - 부스터와 급정지 기능도 제공합니다.
   - 쉬운 조작을 위해 게임 화면에 도우미 화면을 띄워줍니다.
   - 관전 화면에 있는 유저들과 채팅이 가능합니다.
@@ -53,14 +53,15 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
   - 중도에 브라우저를 끄거나 비정상 종료 시 기권처리됩니다.
 - ### 게시글
   
-  ![boardjpg](file://C:\Users\SSAFY\Desktop\img\board.jpg?msec=1676548955534)게임을 즐기는 유저들의 자유 글을 볼 수 있는 게시판입니다.
+  ![image](docs/img/board.jpg)
+  게임을 즐기는 유저들의 자유 글을 볼 수 있는 게시판입니다.
   
   - 원하는 게시글에 댓글을 달 수 있습니다.
   - 문의사항이 있으면 관리자와 소통할 수 있습니다.
   - 공지사항을 볼 수 있습니다.
 - ### 마이페이지
   
-  ![mypagejpg](file://C:\Users\SSAFY\Desktop\img\mypage.jpg?msec=1676549062456)
+  ![image](docs/img/comment.png)
   
   - 내 경기 기록 랭킹과 히스토리 열람이 가능합니다.
   - 닉네임과 패스워드 변경이 가능합니다.
@@ -69,7 +70,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
-![mainTechpng](file://C:\Users\SSAFY\Desktop\img\mainTech.png?msec=1676548469578)
+![image](docs/img/maintTech.jpg)
 
 ## :ok_man:협업 툴
 
@@ -107,7 +108,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
-![rolepng](file://C:\Users\SSAFY\Desktop\img\role.png?msec=1676548765873)
+![image](docs/img/role.png)
 
 ## :triangular_flag_on_post: 프로젝트 산출물
 
