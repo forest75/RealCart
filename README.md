@@ -127,6 +127,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
+- [포팅메뉴얼](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/exec/Porting%20Manual.md)
 - [중간발표](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/docs/ppt/A403%20%EC%A4%91%EA%B0%84%EB%B0%9C%ED%91%9C.pdf)
 - [최종발표](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/docs/ppt/%EC%B5%9C%EC%A2%85%EB%B0%9C%ED%91%9C.pdf)
 
