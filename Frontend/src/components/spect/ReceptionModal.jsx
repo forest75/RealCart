@@ -87,7 +87,7 @@ function ReceptionModal() {
                       console.log(res.data);
                       if (res.data === -100) {
                         dispatch(setReceptionClose());
-                        dispatch(setEntryOpen());
+                        alert("게임 도중 기권했거나 유효하지 않은 유저입니다.");
                         dispatch(setIsWait(false));
                       } else if (res.data === -1) {
                         dispatch(setReceptionClose());
