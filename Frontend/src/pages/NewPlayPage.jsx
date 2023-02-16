@@ -314,7 +314,6 @@ function NewPlayPage() {
           setCanBoost(true);
           setIsBoost(false);
         }, 5000);
-        console.log("boost");
       }
       if (e.code === "KeyV") {
         setIsTutorial((prev) => !prev);
@@ -325,22 +324,18 @@ function NewPlayPage() {
       if (e.code === "ArrowUp") {
         setUpPressed(false);
         wss.send(42);
-        console.log("up relased");
       }
       if (e.code === "ArrowLeft") {
         setLeftPressed(false);
         wss.send(41);
-        console.log("left relased");
       }
       if (e.code === "ArrowRight") {
         setRightPressed(false);
         wss.send(41);
-        console.log("right relased");
       }
       if (e.code === "ArrowDown") {
         setDownPressed(false);
         wss.send(43);
-        console.log("down relased");
       }
       if (e.code === "ShiftLeft") {
         setShiftPressed(false);
@@ -350,23 +345,18 @@ function NewPlayPage() {
     function handleInterval() {
       if (upPressed) {
         wss.send(38);
-        console.log("up");
       }
       if (leftPressed) {
         wss.send(37);
-        console.log("left");
       }
       if (rightPressed) {
         wss.send(39);
-        console.log("right");
       }
       if (downPressed) {
         wss.send(40);
-        console.log("down");
       }
       if (shiftPressed) {
         wss.send(32);
-        console.log("brake");
       }
     }
 
