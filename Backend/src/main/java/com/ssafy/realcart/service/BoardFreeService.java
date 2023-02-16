@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,6 +148,9 @@ public class BoardFreeService implements IBoardFreeService {
 	@Transactional
 	public boolean changeFree(int id, BoardDto boardDto) {
 		BoardFree board = boardFreeDAO.getBoardFree(id);
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(board == null) return false;
+        if(!board.getUser().getEmail().equals(principal.getUsername())) return false;
 		board.setContent(boardDto.getContent());
 		board.setTitle(boardDto.getTitle());
 		return boardFreeDAO.saveFree(board);
@@ -156,6 +160,10 @@ public class BoardFreeService implements IBoardFreeService {
 	@Override
 	@Transactional
 	public boolean deleteFree(int id) {
+        BoardFree board = boardFreeDAO.getBoardFree(id);
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(board == null) return false;
+        if(!board.getUser().getEmail().equals(principal.getUsername())) return false;
 		return boardFreeDAO.deleteFree(id);
 	}
 
@@ -165,6 +173,8 @@ public class BoardFreeService implements IBoardFreeService {
 	public boolean changeComment(int commentId, CommentDto commentDto) {
 		Comment comment = boardFreeDAO.getComment(commentId); 
 		if(comment != null) {
+            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(!comment.getUser().getEmail().equals(principal.getUsername())) return false;
 			comment.setContent(commentDto.getContent());
 			boardFreeDAO.saveFreeComment(comment);
 			return true;
@@ -176,7 +186,14 @@ public class BoardFreeService implements IBoardFreeService {
 	@Override
 	@Transactional
 	public boolean deleteComment(int commentId) {
-		return boardFreeDAO.deleteComment(commentId);
+        Comment comment = boardFreeDAO.getComment(commentId);
+        if(comment != null) {
+            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(!comment.getUser().getEmail().equals(principal.getUsername())) return false;
+		    return boardFreeDAO.deleteComment(commentId);
+
+        }
+        return false;
 	}
 
 

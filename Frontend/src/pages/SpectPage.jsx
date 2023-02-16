@@ -83,9 +83,9 @@ function SpectPage() {
           videoSlice.video2 === false &&
           videoSlice.video3 === false
         ) {
-          dispatch(setVideo1(true));
+          dispatch(setVideo1(false));
           dispatch(setVideo2(false));
-          dispatch(setVideo3(false));
+          dispatch(setVideo3(true));
           setVideoReady(true);
         }
       });
