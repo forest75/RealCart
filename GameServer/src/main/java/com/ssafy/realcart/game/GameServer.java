@@ -156,9 +156,6 @@ class RCcarThread implements Runnable{
                                 bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
                                 flag.setPlayer2Laptime(labTime);
                             }
-                            for(WebSocket client: webSocketServer.getConnections()){
-                                client.send(Long.toString(labTime));
-                            }
                             // 4
                             if (flag.getRequestBody() == "") {
                                 flag.setRequestBody(flag.getRequestBody() + bodySeg);
