@@ -106,6 +106,7 @@ function AppForm({
           sx={sx}
           required
           label="비밀번호"
+          variant={variant}
           type="password"
           fullWidth
           error={verifier.password()}
