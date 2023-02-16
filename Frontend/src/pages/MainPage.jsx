@@ -395,7 +395,7 @@ function MainPage() {
               <Box
                 sx={{
                   height: "5%",
-                  width: "90%",
+                  width: "100%",
                   display: "flex",
                   justifyContent: "space-between",
                 }}
@@ -403,8 +403,9 @@ function MainPage() {
                 <Typography
                   variant="h7"
                   sx={{
+                    width: "50%",
                     fontWeight: "bold",
-                    textAlign: "center",
+                    textAlign: "Left",
                     color: " black",
                   }}
                 >
@@ -413,7 +414,8 @@ function MainPage() {
                 <Typography
                   variant="h7"
                   sx={{
-                    textAlign: "center",
+                    width: "50%",
+                    textAlign: "Right",
                   }}
                 >
                   <Link
