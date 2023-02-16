@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 import NewContent from "./NewContent";
 
 function InitialContent({

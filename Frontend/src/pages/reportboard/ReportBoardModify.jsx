@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -7,6 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import axios from "../../util/axiosInstance";
 import AppButton from "../../components/AppButton";
 import AppBlackButton from "../../components/AppBlackButton";
 

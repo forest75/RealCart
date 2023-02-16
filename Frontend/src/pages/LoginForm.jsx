@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import cookie from "js-cookie";
 import Box from "@mui/material/Box";
@@ -8,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import axios from "../util/axiosInstance";
 import { login } from "../store/loginSlice";
 import RegistForm from "../components/AppForm";
 import ArrowButton from "../components/ArrowButton";
