@@ -124,12 +124,10 @@ class RCcarThread implements Runnable{
                             break;
                     /*
                     2일 때..(Finish)
-                    1-1. 게임끝 신호 "2" 를 프론트에게 보낸다.
-                    1-2. 플레이어 상태를 0으로 만든다.
-                    1-3. 웹소켓 연결을 끊는다.
-                    2. 기록을 위해 timestamp를 받는다.
-                    3. 백엔드로 문자를 넘기기 위해 bodyseq을 만듦
-                    4. setGameStatus(0)을 실행
+                    1. 랩타임을 계산한다.
+                    2. 랭킹 기록을 위해 클라이언트에게 labTime을 넘긴다.
+                    3. 백엔드로 문자를 넘기기 위해 bodyseq을 만든다.
+                    4. bodyseq를 조합하여 백엔드로 전송하고 setGameStatus(0)을 실행
                     5. initiateAll()로 모두 초기화한다.
                      */
                         case 2:
@@ -145,6 +143,7 @@ class RCcarThread implements Runnable{
                                     flag.setPlayer2Status(0);
                                 }
                                 System.out.println(flag);
+                                ////////////////WebSocket Closed/////////////////
                                 client.close();
                             }
                             // 3
