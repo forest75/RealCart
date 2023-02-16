@@ -105,7 +105,7 @@ public class CallHandler extends TextWebSocketHandler {
 				}
 				for (UserSession viewer : viewers.get(mediaId).values()) {
 					JsonObject response = new JsonObject();
-					response.addProperty("id", "stopCommunication" + mediaId);
+					response.addProperty("id", "stopCommunication");
 					if(viewer.getSession().isOpen()) {
 						viewer.sendMessage(response);
 					}
@@ -126,7 +126,7 @@ public class CallHandler extends TextWebSocketHandler {
 			int mediaId = jsonMessage.get("mediaId").getAsInt(); 
 			if (presenters.isEmpty() || sessions[mediaId] == null || presenters.get(sessions[mediaId]) == null) {
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "viewerResponse" + mediaId);
+				response.addProperty("id", "viewerResponse");
 				response.addProperty("response", "rejected");
 				response.addProperty("message", "No active sender now.");
 				session.sendMessage(new TextMessage(response.toString()));
@@ -144,7 +144,7 @@ public class CallHandler extends TextWebSocketHandler {
 					@Override
 					public void onEvent(IceCandidateFoundEvent event) {
 						JsonObject response = new JsonObject();
-						response.addProperty("id", "iceCandidate" + mediaId);
+						response.addProperty("id", "iceCandidate");
 						response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
 						try {
 							synchronized (session) {
@@ -161,7 +161,7 @@ public class CallHandler extends TextWebSocketHandler {
 				String sdpAnswer = nextWebRtc.processOffer(sdpOffer);
 				
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "viewerResponse" + mediaId);
+				response.addProperty("id", "viewerResponse");
 				response.addProperty("response", "accepted");
 				response.addProperty("sdpAnswer", sdpAnswer);
 				
@@ -191,7 +191,7 @@ public class CallHandler extends TextWebSocketHandler {
 					@Override
 					public void onEvent(IceCandidateFoundEvent event) {
 						JsonObject response = new JsonObject();
-						response.addProperty("id", "iceCandidate" + mediaId);
+						response.addProperty("id", "iceCandidate");
 						response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
 						try {
 							synchronized(session) {
@@ -208,7 +208,7 @@ public class CallHandler extends TextWebSocketHandler {
 				String sdpAnswer = presenterWebRtc.processOffer(sdpOffer);
 				
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "presenterResponse" + mediaId);
+				response.addProperty("id", "presenterResponse");
 				response.addProperty("response", "accepted");
 				response.addProperty("sdpAnswer", sdpAnswer);
 				
@@ -218,11 +218,28 @@ public class CallHandler extends TextWebSocketHandler {
 				presenterWebRtc.gatherCandidates();
 				presenters.put(sessionId, presenterUserSession);
 				sessions[mediaId] = sessionId;
-				viewers.put(mediaId, new ConcurrentHashMap<String, UserSession>());
+				ConcurrentHashMap<String, UserSession> newViewers = new ConcurrentHashMap<String, UserSession>();
+				if(viewers.getOrDefault(mediaId, null) == null) {
+					viewers.put(mediaId, new ConcurrentHashMap<String, UserSession>());
+				}
+				else {
+					for (UserSession viewer : viewers.get(mediaId).values()) {
+						response = new JsonObject();
+						response.addProperty("id", "startCommunication"+mediaId);
+						if(viewer.getSession().isOpen()) {
+							WebRtcEndpoint nextWebRtc = new WebRtcEndpoint.Builder(pipeline).build();
+							viewer.setWebRtcEndpoint(nextWebRtc);
+							presenterWebRtc.connect(nextWebRtc);
+							viewer.sendMessage(response);
+							newViewers.put(viewer.getSession().getId(), viewer);
+						}
+					}
+					viewers.put(mediaId, newViewers);
+				}
 				
 			} else {
 				JsonObject response = new JsonObject();
-				response.addProperty("id", "presenterResponse" + mediaId);
+				response.addProperty("id", "presenterResponse");
 				response.addProperty("response", "rejected");
 				response.addProperty("message", "Another user is currently acting as sender. Try again later ...");
 				session.sendMessage(new TextMessage(response.toString()));

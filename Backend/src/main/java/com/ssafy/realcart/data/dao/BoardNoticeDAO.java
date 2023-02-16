@@ -42,6 +42,7 @@ public class BoardNoticeDAO implements IBoardNoticeDAO {
 		
 		if(selectedBoardNotice.isPresent()) {
 			BoardNotice boardNotice = selectedBoardNotice.get();
+			
 			return boardNotice;
 		}
 		return null;

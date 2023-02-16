@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.ssafy.realcart.data.dto.BetDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class GameService implements IGameService{
 	private String[] waitingUsers = new String[2];
 	private long timeLimit = -1;
 	private int recent = -1;
+	private int red = 0;
+	private int blue = 0;
 	
 	private IUserDAO userDAO;
 	private IGameDAO gameDAO;
@@ -142,7 +145,6 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[1] = nickname;
-				startGame();
 				return -2;
 			}
 			//WaitingUsers가 1명이라면
@@ -150,7 +152,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -163,7 +164,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -176,13 +176,11 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[1] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -196,7 +194,6 @@ public class GameService implements IGameService{
 			//WaitingUsers가 0명이라면
 			if(waitingUsers[0] == null && waitingUsers[1] == null) {
 				currentUsers[0] = nickname;
-				startGame();
 				return -2;
 			}
 			//WaitingUsers가 1명이라면
@@ -204,7 +201,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -217,7 +213,6 @@ public class GameService implements IGameService{
 				if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -230,13 +225,11 @@ public class GameService implements IGameService{
 				if(waitingUsers[0].equals(nickname)) {
 					waitingUsers[0] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else if(waitingUsers[1].equals(nickname)) {
 					waitingUsers[1] = null;
 					currentUsers[0] = nickname;
-					startGame();
 					return -2;
 				}
 				else {
@@ -290,6 +283,7 @@ public class GameService implements IGameService{
 		if(currentUsers[0] == null || currentUsers[1] == null) {
 			return false;
 		}
+		startGame();
 		Game game = gameDAO.getGame(recent);
 		List<Play> list = playDAO.getPlay(game.getId());
 		for (Play play : list) {
@@ -339,12 +333,16 @@ public class GameService implements IGameService{
 	public boolean createGame() {
 		Game game = gameDAO.createGame();
 		recent = game.getId();
+		red = 0;
+		blue = 0;
 		Arrays.fill(currentUsers, null);
 		int size = queue.size();
 		int index = 0;
 		while(size-- > 0) {
 			if(index > 1) break;
-			waitingUsers[index++] = queue.poll();
+			if(waitingUsers[index] == null) {
+				waitingUsers[index++] = queue.poll();
+			}
 			timeLimit = System.currentTimeMillis(); // 시간제한이 다시 생김
 		}
 		return true;
@@ -390,6 +388,26 @@ public class GameService implements IGameService{
 			}
 		}
 		return gameDto;
+	}
+
+	@Override
+	public boolean up(int teamId) {
+		if(teamId == 1){
+			red++;
+		}
+		else if(teamId == 2){
+			blue++;
+		}
+		else{
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public BetDto getBet() {
+		BetDto betDto = new BetDto().builder().red(red).blue(blue).build();
+		return betDto;
 	}
 
 }
