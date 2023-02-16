@@ -41,7 +41,7 @@ function MyPage() {
       nickname,
     };
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/user`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/user/nickname`, data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
@@ -78,7 +78,7 @@ function MyPage() {
     };
     console.log(data);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/user`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/user/password`, data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
