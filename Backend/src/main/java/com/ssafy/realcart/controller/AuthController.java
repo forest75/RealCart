@@ -29,8 +29,8 @@ import java.util.Date;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/accounts/auth")
 @RequiredArgsConstructor
+@RequestMapping("/accounts/auth")
 public class AuthController {
 
     private final AppProperties appProperties;
