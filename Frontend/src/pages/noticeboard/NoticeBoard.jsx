@@ -106,7 +106,7 @@ function NoticeBoard() {
             sx={{
               width: "80%",
             }}
-            no="번호"
+            // no="번호"
             title="제목"
             author="작성자"
             date="등록일"
@@ -120,7 +120,7 @@ function NoticeBoard() {
               }}
               board="noticeBoard"
               key={article.id}
-              no={article.id}
+              // no={article.id}
               title={article.title}
               author="admin"
               date={new Date(article.createdTime).toLocaleDateString()}
