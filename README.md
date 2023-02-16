@@ -1,4 +1,4 @@
-## :car: RealCart - 실시간 RC카 웹게임
+## 🚗 RealCart - 실시간 RC카 웹게임
 
 ![image](docs/img/realcartBanner.png)
 
@@ -71,7 +71,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
-![image](docs/img/maintTech.png)
+![image](docs/img/mainTech.png)
 
 ## :ok_man:협업 툴
 
