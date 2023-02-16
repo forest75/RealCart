@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { DataGrid } from "@mui/x-data-grid";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import kurentoUtils from "kurento-utils";
 import axios from "axios";
@@ -14,8 +14,10 @@ import Advertise from "../assets/img/advertise.png";
 import BoardTable from "../components/BoardTable";
 import { Link } from "react-router-dom";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import MainPoster from "../components/video/MainPoster";
 
 function MainPage() {
+  const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const [ws, setWs] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -26,6 +28,8 @@ function MainPage() {
   const [articleList, setArticleList] = useState([]);
   var webRtcPeer;
   var mediaId;
+
+  const [isVideo, setIsVideo] = useState(false);
 
   function presenterResponse(message) {
     if (message.response != "accepted") {
@@ -164,6 +168,40 @@ function MainPage() {
   }
 
   useEffect(() => {
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+        if (res.data.player1 === "" || res.data.player2 === "") {
+          setIsVideo(false);
+        } else {
+          setIsVideo(true);
+        }
+      });
+    }, 10000);
+
+    if (!user) {
+      console.log("user 없음");
+      const token = localStorage.getItem("access-token");
+      if (token) {
+        axios
+          .get(`https://i8a403.p.ssafy.io/api/user`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {
+            dispatch(login(response.data.body.user));
+            localStorage.setItem(
+              "user",
+              JSON.stringify(response.data.body.user)
+            );
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+
     const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
@@ -234,169 +272,157 @@ function MainPage() {
     >
       <Box
         sx={{
-          width: "100%",
-          height: "45%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: "90%",
+          height: "100%",
         }}
       >
-        <Paper
-          elevation={2}
+        <Box
           sx={{
-            width: "1300px",
-            height: "700px",
+            width: "100%",
+            height: "45%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <video
-            ref={video}
-            id="video"
-            autoPlay={true}
-            width="800px"
-            height="600px"
-            poster={WebRtcImg}
-            onClick={() => {
-              navigate("/spect");
-            }}
-            muted={true}
-          />
-        </Paper>
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          height: "50%",
-          display: "flex",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Box
-          sx={{
-            width: "40%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <Box
+          <Paper
+            elevation={2}
             sx={{
-              width: "100%",
-              height: "45%",
-              editable: "false",
+              width: "1300px",
+              height: "700px",
               display: "flex",
-              flexDirection: "column",
+              justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Box sx={{ width: "100%", marginBottom: "20px" }}>
-              <Typography
-                variant="h7"
-                sx={{
-                  height: "5%",
-                  fontWeight: "bold",
-                  color: " black",
+            {isVideo ? (
+              <video
+                ref={video}
+                id="video"
+                autoPlay={true}
+                width="800px"
+                height="600px"
+                poster={WebRtcImg}
+                onClick={() => {
+                  navigate("/spect");
                 }}
-              >
-                공지사항
-              </Typography>
-            </Box>
-
-            <BoardTable
-              sx={{ width: "100%" }}
-              address="board/notice"
-              link="/noticeBoard"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: "45%",
-              editable: "false",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ width: "100%", marginBottom: "20px" }}>
-              <Typography
-                variant="h7"
-                sx={{
-                  fontWeight: "bold",
-                  color: " black",
-                }}
-              >
-                게시글
-              </Typography>
-            </Box>
-
-            <BoardTable
-              sx={{ width: "100%" }}
-              address="board/free"
-              link="/freeBoard"
-            />
-          </Box>
+                muted={true}
+              />
+            ) : (
+              <MainPoster />
+            )}
+          </Paper>
         </Box>
         <Box
           sx={{
-            width: "40%",
-            height: "100%",
+            width: "100%",
+            height: "50%",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
           }}
         >
           <Box
             sx={{
-              width: "90%",
-              height: "90%",
+              width: "50%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Box
               sx={{
-                height: "5%",
-                width: "100%",
-                display: "flex",
+                width: "90%",
+                height: "90%",
+                editable: "false",
               }}
             >
-              <Typography
-                variant="h7"
+              <Box
                 sx={{
-                  fontWeight: "bold",
-                  color: " black",
-                  width: "50%",
+                  height: "5%",
                 }}
               >
-                Ranking
-              </Typography>
-
-              <Typography
-                style={{
-                  textDecoration: "none",
-                  color: "black",
-                  width: "50%",
-                  textAlign: "right",
-                }}
-                variant="h7"
-              >
-                <Link
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
+                <Typography
+                  variant="h7"
+                  sx={{
+                    fontWeight: "bold",
+                    color: " black",
                   }}
-                  to="/myPage"
                 >
-                  <MilitaryTechIcon />
-                  나의 랭킹 보러가기
-                </Link>
-              </Typography>
-            </Box>
+                  공지사항
+                </Typography>
+              </Box>
+              <BoardTable address="board/notice" link="/noticeBoard" />
 
-            <BoardTable address="record" />
+              <Box
+                sx={{
+                  height: "5%",
+                  margin: "20px 0px",
+                }}
+              >
+                <Typography
+                  variant="h7"
+                  sx={{
+                    fontWeight: "bold",
+                    color: " black",
+                  }}
+                >
+                  게시글
+                </Typography>
+              </Box>
+              <BoardTable address="board/free" link="/freeBoard" />
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: "50%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "90%",
+                height: "90%",
+              }}
+            >
+              <Box
+                sx={{
+                  height: "5%",
+                  width: "90%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h7"
+                  sx={{
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    color: " black",
+                  }}
+                >
+                  Ranking
+                </Typography>
+                <Typography
+                  variant="h7"
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Link
+                    style={{ textDecoration: "none", color: "black" }}
+                    to="/myPage"
+                  >
+                    <MilitaryTechIcon />
+                    나의 랭킹 보러가기
+                  </Link>
+                </Typography>
+              </Box>
+
+              <BoardTable address="record" />
+            </Box>
           </Box>
         </Box>
       </Box>
