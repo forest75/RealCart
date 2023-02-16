@@ -14,6 +14,7 @@ import Logo from "../../assets/logo.png";
 import CommentBox from "../../components/CommentBox";
 
 function FreeBoardDetail() {
+  const user = useSelector((state) => state.login.user);
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
@@ -23,7 +24,6 @@ function FreeBoardDetail() {
   const [chat, setChat] = useState("");
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const user = useSelector((state) => state.login.user);
   const [page, setPage] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
   const [nickname, setNickname] = useState("");
@@ -51,7 +51,7 @@ function FreeBoardDetail() {
         setNickname(article.nickname);
         setDate(new Date(article.createdTime).toLocaleDateString());
         setCommentsCount(article.comments.length);
-        if (user.nickname === nickname) {
+        if (user.nickname === article.nickname) {
           setIsUser("");
         } else {
           setIsUser("none");

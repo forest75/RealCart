@@ -33,7 +33,7 @@ function ReportBoardDetail() {
           setNickname(res.data.nickname);
           setDate(new Date(res.data.createdTime).toLocaleDateString());
         }
-        if (user.Nickname === nickname) {
+        if (user.nickname === res.data.nickname) {
           setIsUser("");
         } else {
           setIsUser("none");

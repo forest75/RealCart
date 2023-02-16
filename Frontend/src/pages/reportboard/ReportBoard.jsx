@@ -18,6 +18,13 @@ function ReportBoard() {
 
   const [loading, setLoading] = useState(true);
   const [articleList, setArticleList] = useState([]);
+  // const [no, setNo] = useState(0);
+  // let no = 0;
+
+  // const handleNo = () => {
+  //   no = { no } + 1;
+  //   return no;
+  // };
 
   useEffect(() => {
     axios
@@ -50,6 +57,7 @@ function ReportBoard() {
               )
             );
           }
+          console.log(articles);
           setArticleList(List);
         }
         setLoading(false);
@@ -102,7 +110,7 @@ function ReportBoard() {
               width: "80%",
             }}
             board="reportboard"
-            no="번호"
+            // no="번호"
             title="제목"
             author="작성자"
             date="등록일"
@@ -116,7 +124,7 @@ function ReportBoard() {
               }}
               board="reportboard"
               key={article.id}
-              no={article.id}
+              // no={handleNo}
               category={article.category}
               title={article.title}
               author={article.nickname}
