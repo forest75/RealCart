@@ -5,13 +5,16 @@ function Poster1() {
   return (
     <Box
       sx={{
-        width: "640px",
-        height: "480px",
+        width: "100%",
+        height: "100%",
         bgcolor: "black",
         color: "white",
+        display: "flex",
+        justifyContent: "center",
+        align: "center",
       }}
     >
-      다음 게임을 준비 중입니다.
+      <Box>다음 게임을 준비 중입니다.</Box>
     </Box>
   );
 }
