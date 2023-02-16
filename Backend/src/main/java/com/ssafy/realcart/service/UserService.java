@@ -16,6 +16,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,12 +143,6 @@ public class UserService implements IUserService {
         return userDtoList;
     }
 
-
-    @Override
-    public boolean deleteUser(String email) {
-        return false;
-    }
-
     @Override
     public boolean banUser(String nickname) {
     	User user = userDAO.checkNickname(nickname);
@@ -220,17 +215,6 @@ public class UserService implements IUserService {
     }
 
 	@Override
-	public void preprocessMail(UserDto userDto) {
-		User user = userDAO.getUser(userDto.getEmail());
-		StringBuilder sb = new StringBuilder();
-
-        sb.append("Hello ").append(userDto.getUsername()).append("\n").append("Please click this link to finalize your signup.")
-                        .append("\n").append("https://i8a403.p.ssafy.io/user/verifyemail/").append(userDto.getEmail()).append("/").append(user.getEmailSalt());
-        sendMail(userDto.getEmail(), "RealCart Email Verification", sb.toString());
-		
-	}
-
-	@Override
 	public boolean clearUserBan(String nickname) {
 		User user = userDAO.checkNickname(nickname);
     	if(user != null) {
@@ -261,17 +245,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean changePwd(String email, String salt) throws NoSuchAlgorithmException {
-        User user = userDAO.getUser(email);
-        if(user != null && user.getSalt().equals(salt)){
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userDAO.updateUser(user);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public UserDto getUser(String useremail) {
     	User user = userDAO.getUser(useremail);
     	if(user == null) return null;
@@ -283,29 +256,6 @@ public class UserService implements IUserService {
         return userDto;
     }
 
-    @Override
-	public UserDto updateUser(UserDto userDto) throws NoSuchAlgorithmException {
-    	if(userDto.getEmail() == null) return null;
-		User user = userDAO.getUser(userDto.getEmail());
-		if(user == null) return null;
-		if(userDto.getNickname().length() < 3) return null;
-		User checkUser = userDAO.checkNickname(userDto.getNickname());
-		if(checkUser == null || user.equals(checkUser)) {
-			user.setNickname(userDto.getNickname());
-		}
-		if(userDto.getPassword() != null && userDto.getPassword().length() >= 8) {
-			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		}
-		userDAO.updateUser(user);
-		UserDto newUserDto = new UserDto().builder()
-				.email(user.getEmail())
-				.intro(user.getIntro())
-				.nickname(user.getNickname())
-				.username(user.getUsername())
-				.build();
-		return newUserDto;
-	}
-
 	@Override
 	public boolean changePwd(String email) {
 		User user = userDAO.getUser(email);
@@ -315,6 +265,54 @@ public class UserService implements IUserService {
 		userDAO.updateUser(user);
 		return true;
 	}
+
+    @Override
+    public UserDto updateNickname(UserDto userDto) {
+        if(userDto.getEmail() == null) return null;
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userDAO.getUser(userDto.getEmail());
+        if(user == null) return null;
+        if(!principal.getUsername().equals(user.getEmail())){
+            return null;
+        }
+        if(userDto.getNickname().length() < 3) return null;
+        User checkUser = userDAO.checkNickname(userDto.getNickname());
+        if(checkUser == null || user.equals(checkUser)) {
+            user.setNickname(userDto.getNickname());
+        }
+
+        userDAO.updateUser(user);
+        UserDto newUserDto = new UserDto().builder()
+                .email(user.getEmail())
+                .intro(user.getIntro())
+                .nickname(user.getNickname())
+                .username(user.getUsername())
+                .build();
+        return newUserDto;
+    }
+
+    @Override
+    public UserDto updatePassword(UserDto userDto) {
+        if(userDto.getPassword() == null) return null;
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userDAO.getUser(userDto.getEmail());
+        if(user == null) return null;
+        if(!principal.getUsername().equals(user.getEmail())){
+            return null;
+        }
+        if(userDto.getPassword() != null && userDto.getPassword().length() >= 8) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+        userDAO.updateUser(user);
+        UserDto newUserDto = new UserDto().builder()
+                .email(user.getEmail())
+                .intro(user.getIntro())
+                .nickname(user.getNickname())
+                .username(user.getUsername())
+                .build();
+
+        return newUserDto;
+    }
 }
 
 class Email implements Runnable{

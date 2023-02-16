@@ -137,17 +137,27 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     
-    @PutMapping()
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto){
+    @PutMapping(value = "/nickname")
+    public ResponseEntity<UserDto> updateNickname(@RequestBody UserDto userDto){
         LOGGER.info("updateUser 메서드가 userController에서 호출되었습니다.");
-        try {
-            UserDto loginUser = userService.updateUser(userDto);
-            if(loginUser != null){
-                return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+
+        UserDto loginUser = userService.updateNickname(userDto);
+        if(loginUser != null){
+            return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
         }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping(value ="/password")
+    public ResponseEntity<UserDto> updatePassword(@RequestBody UserDto userDto){
+        LOGGER.info("updateUser 메서드가 userController에서 호출되었습니다.");
+
+        UserDto loginUser = userService.updatePassword(userDto);
+        if(loginUser != null){
+            return new ResponseEntity<UserDto>(loginUser, HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -236,18 +246,6 @@ public class UserController {
         return new ResponseEntity<String>("가입하지 않은 유저입니다.", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value="/changepwd/{email}/{salt}")
-    public ResponseEntity<String> changePwd(@PathVariable("email") String email, @PathVariable("salt") String salt) throws NoSuchAlgorithmException {
-        LOGGER.info("changePwd 메서드가 userController에서 호출되었습니다.");
-        if(userService.changePwd(email, salt)){
-            String msg = "비밀번호 변경 성공";
-            return new ResponseEntity<>(msg, HttpStatus.OK);
-        }
-        else{
-            String msg = "유효한 코드가 아닙니다.";
-            return new ResponseEntity<>(msg, HttpStatus.OK);
-        }
-    }
     
     @GetMapping(value="/bcrypt/{email}")
     public ResponseEntity<String> changePwd(@PathVariable("email") String email) throws NoSuchAlgorithmException {

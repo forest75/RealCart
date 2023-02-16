@@ -35,10 +35,6 @@ class RCcarThread implements Runnable{
     FlagClass flag = null;
     Gson gson = new Gson();
     Logger LOGGER = LoggerFactory.getLogger(RCcarThread.class);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
     RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
@@ -52,6 +48,9 @@ class RCcarThread implements Runnable{
             System.out.println("socket I/O streams are created.");
             webSocketServer = new WsHandler(webSocketPort, pw);
             webSocketServer.start();
+
+
+
             System.out.println("websocket server started on port " + webSocketPort);
         } catch (IOException e) {
             LOGGER.error("Connection error raised. ", e);
