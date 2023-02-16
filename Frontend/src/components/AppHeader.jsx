@@ -35,6 +35,7 @@ function AppHeader() {
   };
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("access-token");
     dispatch(logout());
     setAnchorEl2(null);
   };
