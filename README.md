@@ -29,7 +29,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 - ### 로그인 화면
   
-  ![loginjpg](file://C:\Users\SSAFY\Desktop\img\login.jpg?msec=1676549079738)
+<img src="https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/docs/img/login.jpg"> 
   
   - 게임 참가를 원하는 예비유저들은 회원가입과 일반로그인,소셜로그인을 할 수 있습니다.
     
