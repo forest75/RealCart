@@ -1,5 +1,9 @@
 # RealCart Porting Manual
-
+- [Web FrontEnd](#web-frontend)
+- [Web BackEnd](#web-backend)
+- [Signaling Server](#signal-server)
+- [Game Server](#game-server)
+- [IOT](#iot)
 ## Web BackEnd
 ---
 ### What you need
@@ -75,4 +79,30 @@
 We use MySql version 8.0.31
 [Dump Files](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/tree/master/exec/Dump)
 
+## Signal Server
+---
+### What you need
+- STS or Intellij (I am using both STS Version 3 and Intellij IDEA 2021.2)
+- Java 11
+- Springboot Version 2.7.8
+- Gradle 7.6
+
+### Dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.kurento:kurento-client:6.18.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+### Application.yml
+#### MatterMost
+Same as MatterMost Setting in Web BackEnd
+
+### [Media Server Install Guide](#https://doc-kurento.readthedocs.io/en/latest/user/installation.html)
+
+### Notice
+Signal Server must be with Media Server
 
