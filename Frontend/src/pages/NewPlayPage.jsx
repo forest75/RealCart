@@ -29,12 +29,14 @@ import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
 function NewPlayPage() {
+  const [showResult, setShowResult] = useState(false);
   const [bestTime, setBestTime] = useState("00:00:00");
   const queue = useSelector((state) => state.queue);
   const [winPlayer, setWinPlayer] = useState("");
   const [losePlayer, setLosePlayer] = useState("");
   const [winPlayerTime, setWinPlayerTime] = useState("");
   const [losePlayerTime, setLosePlayerTime] = useState("");
+  const [isWin, setIsWin] = useState(true);
 
   const rows = [
     {
@@ -54,7 +56,7 @@ function NewPlayPage() {
   const [chats, setChats] = useState([]);
   const chatRef = useRef(null);
 
-  // const [carSpeed, setCarSpeed] = useState(0);
+  const [carSpeed, setCarSpeed] = useState(0);
   const [isBoost, setIsBoost] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
@@ -109,6 +111,17 @@ function NewPlayPage() {
   }
 
   useEffect(() => {
+    setTimeout(() => {
+      const intervalId = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % images.length);
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(intervalId);
+      }, 5800);
+    }, 5000);
+    setTimeout(() => {
+      setIsRunning(true);
+    }, 10000);
     // 베스트타임 가져오기
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
@@ -166,7 +179,8 @@ function NewPlayPage() {
     if (wss) {
       wss.onmessage = (message) => {
         console.log("get message", message.data);
-        if (message.data.status === "1") {
+        const messageObj = JSON.parse(message.data);
+        if (messageObj.status === "1") {
           console.log("중계 서버에서 1 받는 데 성공");
           setTimeout(() => {
             setIsRunning(true);
@@ -179,7 +193,7 @@ function NewPlayPage() {
             clearInterval(intervalId);
           }, 5800);
         }
-        if (message.data.status === "2") {
+        if (messageObj.status === "2") {
           console.log("중계 서버에서 2 받는 데 성공");
           dispatch(setPlayEndOpen());
           setTimeout(() => {
@@ -187,6 +201,48 @@ function NewPlayPage() {
               navigate("/spect");
             }
             dispatch(setIsPlayEndClicked(false));
+          }, 10000);
+        }
+        if (messageObj.status === "3") {
+          console.log("중계 서버에서 3 받는 데 성공");
+          setCarSpeed(messageObj.speed);
+        }
+        if (messageObj.status === "4") {
+          console.log("중계 서버에서 4 받는 데 성공");
+          const result = messageObj.result.split(",");
+          let winner, loser, winnerTime, loserTime;
+          if (result[1] === "기권") {
+            winner = result[2];
+            loser = result[0];
+            winnerTime = result[3];
+            loserTime = result[1];
+            0;
+          }
+          if (result[3] === "기권") {
+            winner = result[0];
+            loser = result[2];
+            winnerTime = result[1];
+            loserTime = result[3];
+          }
+          if (result[1] !== "기권" && result[3] !== "기권") {
+            winner = result[1] < result[3] ? result[0] : result[2];
+            loser = result[1] < result[3] ? result[2] : result[0];
+            winnerTime = result[1] < result[3] ? result[1] : result[3];
+            loserTime = result[1] < result[3] ? result[3] : result[1];
+          }
+          if (winner == user.nickname) {
+            setIsWin(true);
+          }
+          if (loser == user.nickname) {
+            setIsWin(false);
+          }
+          setWinPlayer(winner);
+          setLosePlayer(loser);
+          setWinPlayerTime(winnerTime);
+          setLosePlayerTime(loserTime);
+          setShowResult(true);
+          setTimeout(() => {
+            setShowResult(false);
           }, 10000);
         }
       };
@@ -550,7 +606,7 @@ function NewPlayPage() {
               sx={{
                 width: "25%",
                 height: "13%",
-                top: "2%",
+                top: "3.5%",
                 left: "7.5%",
                 color: "white",
                 position: "absolute",
@@ -558,57 +614,74 @@ function NewPlayPage() {
               }}
             >
               RACE TIME
-              <RaceTime isRunning={isRunning} />
             </Box>
-            {/* <Box
-              component="img"
-              alt="RectangleResult"
-              src={RectangleResult}
+            <Box
               sx={{
-                width: "50%",
-                height: "50%",
-                opacity: "92%",
-                top: "17%",
-                right: "25%",
-                position: "absolute",
-                zIndex: 1,
-              }}
-            /> */}
-            {/* <Box
-              sx={{
-                width: "50%",
-                height: "50%",
-                top: "17%",
-                right: "25%",
-                position: "absolute",
-                zIndex: 1,
+                width: "25%",
+                height: "13%",
+                top: "7%",
+                left: "7.5%",
                 color: "white",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "start",
-                textAlign: "center",
-                marginTop: "10px",
+                position: "absolute",
+                zIndex: 1,
               }}
             >
-              <table>
-                <thead>
-                  <tr>
-                    <th style={{ padding: "8px" }}>Place</th>
-                    <th style={{ padding: "8px" }}>Nickname</th>
-                    <th style={{ padding: "8px" }}>Lap Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, index) => (
-                    <tr key={index}>
-                      <td>{row.place}</td>
-                      <td>{row.nickname}</td>
-                      <td>{row.laptime}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box> */}
+              <RaceTime isRunning={isRunning} />
+            </Box>
+            {showResult ? (
+              <Box>
+                <Box
+                  component="img"
+                  alt="RectangleResult"
+                  src={RectangleResult}
+                  sx={{
+                    width: "50%",
+                    height: "50%",
+                    opacity: "92%",
+                    top: "17%",
+                    right: "25%",
+                    position: "absolute",
+                    zIndex: 1,
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: "50%",
+                    height: "50%",
+                    top: "17%",
+                    right: "25%",
+                    position: "absolute",
+                    zIndex: 1,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "start",
+                    textAlign: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style={{ padding: "8px" }}>Place</th>
+                        <th style={{ padding: "8px" }}>Nickname</th>
+                        <th style={{ padding: "8px" }}>Lap Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((row, index) => (
+                        <tr key={index}>
+                          <td>{row.place}</td>
+                          <td>{row.nickname}</td>
+                          <td>{row.laptime}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Box>
+              </Box>
+            ) : null}
+
             <Box
               sx={{
                 width: "25%",
@@ -620,7 +693,12 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              <Typography variant="h1">WIN</Typography>
+              {showResult && isWin ? (
+                <Typography variant="h1">WIN</Typography>
+              ) : null}
+              {showResult && !isWin ? (
+                <Typography variant="h1">LOSE</Typography>
+              ) : null}
             </Box>
             <Box
               component="img"
@@ -647,7 +725,7 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              <h3>BEST</h3>
+              <h4>BEST</h4>
             </Box>
             <Box
               component="h4"
@@ -701,7 +779,7 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              {/* {carSpeed} */}0
+              {carSpeed}
             </Typography>
             <Typography
               variant="h5"
@@ -754,7 +832,7 @@ function NewPlayPage() {
             </Box>
             <Box
               sx={{
-                width: "25%",
+                width: "26%",
                 height: "50%",
                 bottom: "0",
                 position: "absolute",
@@ -868,8 +946,8 @@ function NewPlayPage() {
                   <Box
                     sx={{
                       zIndex: 1,
-                      width: "30%",
-                      height: "50%",
+                      width: "20%",
+                      height: "30%",
                     }}
                     component="img"
                     alt="slide"

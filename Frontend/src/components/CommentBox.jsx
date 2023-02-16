@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import PersonIcon from "@mui/icons-material/Person";
-import { useNavigate } from "react-router-dom";
 import axios from "../util/axiosInstance";
 import AppButton from "./AppButton";
 
@@ -19,7 +18,7 @@ function ArticleBox({ sx, no, id, content, author, date, ...otherProps }) {
     },
     ...sx,
   };
-  const navigate = useNavigate();
+
   const handleDelete = async (e) => {
     console.log(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}/${id}`);
     e.preventDefault();
@@ -28,8 +27,9 @@ function ArticleBox({ sx, no, id, content, author, date, ...otherProps }) {
     await axios
       .delete(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}/${id}`, {})
       .then((response) => {
-        navigate(`/freeBoard/detail?no=${no}`);
         console.log(response);
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -96,10 +96,7 @@ function ArticleBox({ sx, no, id, content, author, date, ...otherProps }) {
           </Box>
         </Box>
       </Box>
-      <Box>
-        <AppButton>수정</AppButton>
-        <AppButton onClick={handleDelete}>삭제</AppButton>
-      </Box>
+      <AppButton onClick={handleDelete}>삭제</AppButton>
     </Box>
   );
 }

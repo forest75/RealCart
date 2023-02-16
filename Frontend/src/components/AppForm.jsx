@@ -91,6 +91,7 @@ function AppForm({
           sx={sx}
           required
           label="이메일"
+          variant={variant}
           type="email"
           fullWidth
           error={verifier.email()}
@@ -106,6 +107,7 @@ function AppForm({
           sx={sx}
           required
           label="비밀번호"
+          variant={variant}
           type="password"
           fullWidth
           error={verifier.password()}
@@ -120,6 +122,7 @@ function AppForm({
         <TextField
           sx={sx}
           required
+          variant={variant}
           label="비밀번호 확인"
           type="password"
           fullWidth

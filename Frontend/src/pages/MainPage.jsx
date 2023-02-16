@@ -171,13 +171,18 @@ function MainPage() {
 
   useEffect(() => {
     setInterval(() => {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
-        if (res.data.player1 === "" || res.data.player2 === "") {
-          setIsVideo(false);
-        } else {
-          setIsVideo(true);
-        }
-      });
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
+        .then((res) => {
+          if (res.data.player1 === "" || res.data.player2 === "") {
+            setIsVideo(false);
+          } else {
+            setIsVideo(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, 10000);
 
     if (!user) {
@@ -395,7 +400,7 @@ function MainPage() {
               <Box
                 sx={{
                   height: "5%",
-                  width: "90%",
+                  width: "100%",
                   display: "flex",
                   justifyContent: "space-between",
                 }}
@@ -403,8 +408,9 @@ function MainPage() {
                 <Typography
                   variant="h7"
                   sx={{
+                    width: "50%",
                     fontWeight: "bold",
-                    textAlign: "center",
+                    textAlign: "Left",
                     color: " black",
                   }}
                 >
@@ -413,7 +419,8 @@ function MainPage() {
                 <Typography
                   variant="h7"
                   sx={{
-                    textAlign: "center",
+                    width: "50%",
+                    textAlign: "Right",
                   }}
                 >
                   <Link
