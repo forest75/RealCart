@@ -35,10 +35,6 @@ class RCcarThread implements Runnable{
     FlagClass flag = null;
     Gson gson = new Gson();
     Logger LOGGER = LoggerFactory.getLogger(RCcarThread.class);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
     RCcarThread(int socketPort, int webSocketPort, FlagClass flag){
         try {
@@ -167,10 +163,6 @@ class RCcarThread implements Runnable{
                                 flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
                                 flag.sendResultToBackend(flag.getRequestBody());
                                 flag.setGameStatus(0);
-                                // 결과창을 띄우기 위해
-                                for(WebSocket client : webSocketServer.getConnections()){
-                                    client.send("{\"status\":3, \"result\":\""+flag.getRequestBody()+"\"}");
-                                }
                             }
                             // 5
                             if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){

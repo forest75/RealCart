@@ -9,7 +9,13 @@ axios.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    if (error.response.status === 401) {
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/accounts/auth/refresh`)
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 );
 
