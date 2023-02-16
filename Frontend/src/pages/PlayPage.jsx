@@ -9,7 +9,7 @@ import AppButton from "../components/AppButton";
 import SendIcon from "@mui/icons-material/Send";
 import kurentoUtils from "kurento-utils";
 import Stomp from "stompjs";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
 import rhombusLap from "../assets/rhombus_lab.png";

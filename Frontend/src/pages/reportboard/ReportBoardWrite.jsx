@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -12,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import axios from "../../util/axiosInstance";
 import AppButton from "../../components/AppButton";
 import AppBlackButton from "../../components/AppBlackButton";
 

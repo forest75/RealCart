@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import axios from "axios";
+import axios from "../../util/axiosInstance";
 import { betOnA, betOnB, setA } from "../../store/betSlice";
 
 // 배팅 창 컴포넌트

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
+import axios from "../../util/axiosInstance";
 // import AppButton from "../../components/AppButton";
 import AppBlackButton from "../../components/AppBlackButton";
 import ArticleBox from "../../components/ArticleBox";

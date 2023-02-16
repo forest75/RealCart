@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 // import TextField from "@mui/material/TextField";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 import AppButton from "../components/AppButton";
 import RecordTable from "../components/RecordTable";
 import AppForm from "../components/AppForm";

@@ -23,7 +23,7 @@ import TransparentImg from "../assets/img/transparent-1px.png";
 import WebRtcImg from "../assets/img/webrtc.png";
 import Spinner from "../assets/img/spinner.gif";
 import Advertise from "../assets/img/advertise.png";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 
 function OldSpectPage() {
   const [ParticipantA, setParticipantA] = useState("의권짱짱33");

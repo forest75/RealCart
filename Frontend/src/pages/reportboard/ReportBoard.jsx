@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
+import axios from "../../util/axiosInstance";
 import AppBlackButton from "../../components/AppBlackButton";
 import ReportBox from "../../components/ReportBox";
 import ReportBoxTitle from "../../components/ReportBoxTitle";
@@ -116,7 +116,7 @@ function ReportBoard() {
               }}
               board="reportboard"
               key={article.id}
-              no={article.length}
+              no={article.id}
               category={article.category}
               title={article.title}
               author={article.nickname}

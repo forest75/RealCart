@@ -7,7 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
+import axios from "../../util/axiosInstance";
 import { setQueue, setPlayer } from "../../store/queueSlice";
 
 function EntryQueue({ queue }) {

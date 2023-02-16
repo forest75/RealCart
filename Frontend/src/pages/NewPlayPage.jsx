@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import SendIcon from "@mui/icons-material/Send";
 import Stomp from "stompjs";
-import axios from "axios";
+import axios from "../util/axiosInstance";
 import tutorial from "../assets/toturial1.png";
 import RaceTime from "../components/RaceTime";
 import RectangleBest from "../assets/Rectangle_Best.png";
