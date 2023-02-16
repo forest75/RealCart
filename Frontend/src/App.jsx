@@ -12,6 +12,8 @@ import SpectPage from "./pages/SpectPage";
 // import PlayPage from "./pages/PlayPage";
 import NewPlayPage from "./pages/NewPlayPage";
 import NewPlayPage2 from "./pages/NewPlayPage2";
+import EmergencyPlay from "./pages/EmergencyPlay";
+import EmergencyPlay2 from "./pages/EmergencyPlay2";
 // import PlayPage2 from "./pages/PlayPage2";
 import NoticeBoard from "./pages/noticeboard/NoticeBoard";
 import NoticeBoardDetail from "./pages/noticeboard/NoticeBoardDetail";
@@ -61,6 +63,8 @@ function App() {
         {/* <Route path="/play/1" element={<PlayPageWithAuth />} /> */}
         <Route path="/play/1" element={<NewPlayPageWithAuth />} />
         <Route path="/play/2" element={<NewPlayPage2WithAuth />} />
+        <Route path="/play/1/1" element={<EmergencyPlay />} />
+        <Route path="/play/2/2" element={<EmergencyPlay2 />} />
         {/* <Route path="/play/2" element={<PlayPage2WithAuth />} /> */}
         <Route path="/freeBoard" element={<FreeBoard />} />
         <Route path="/freeBoard/detail" element={<FreeBoardDetailWithAuth />} />

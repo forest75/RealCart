@@ -29,7 +29,7 @@ function BetWindow() {
       .catch((error) => {
         console.error(error);
       });
-    setInterval(() => {
+    const endBet = setInterval(() => {
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
         .then((response) => {
@@ -41,6 +41,7 @@ function BetWindow() {
           console.error(error);
         });
     }, 5000);
+    return () => clearInterval(endBet);
   }, []);
 
   useEffect(() => {

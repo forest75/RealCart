@@ -23,12 +23,12 @@ import CountdownThree from "../assets/count_3.png";
 import CountdownStart from "../assets/START.png";
 import CarHandle from "../assets/car_handle.png";
 import PlayVersus from "../components/play/PlayVersus";
-import Viewer2 from "../components/video/Viewer200";
+import Viewer1 from "../components/video/Viewer100";
 import SmallViewer3 from "../components/video/SmallViewer3";
 import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
-function NewPlayPage2() {
+function EmergencyPlay() {
   const [showResult, setShowResult] = useState(false);
   const [bestTime, setBestTime] = useState("00:00:00");
   const queue = useSelector((state) => state.queue);
@@ -162,7 +162,7 @@ function NewPlayPage2() {
     });
 
     // 중계 websocket 연결
-    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8582");
+    const wssConst = new WebSocket("wss://i8a403.p.ssafy.io:8581");
 
     setStompClient(stompClientConst);
     setWss(wssConst);
@@ -970,7 +970,7 @@ function NewPlayPage2() {
                     poster={WebRtcImg}
                   />
                 </div> */}
-                <Viewer2 />
+                <Viewer1 />
                 <PlayEndModal />
               </Box>
             </Box>
@@ -981,4 +981,4 @@ function NewPlayPage2() {
   );
 }
 
-export default NewPlayPage2;
+export default EmergencyPlay;

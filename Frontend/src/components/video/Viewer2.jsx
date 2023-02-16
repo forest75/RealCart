@@ -14,7 +14,7 @@ function Viewer2() {
   function presenterResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
+      // console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -26,7 +26,7 @@ function Viewer2() {
   function viewerResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
+      // console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -57,7 +57,7 @@ function Viewer2() {
 
   function onOfferPresenter(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + 2);
+    // console.info("Invoking SDP offer callback function " + 2);
     var message = {
       id: "presenter",
       sdpOffer: offerSdp,
@@ -89,7 +89,7 @@ function Viewer2() {
 
   function onOfferViewer(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + 2);
+    // console.info("Invoking SDP offer callback function " + 2);
     var message = {
       id: "viewer",
       sdpOffer: offerSdp,
@@ -99,7 +99,7 @@ function Viewer2() {
   }
 
   function onIceCandidate(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
+    // console.log("Local candidate" + JSON.stringify(candidate));
 
     var message = {
       id: "onIceCandidate",
@@ -119,7 +119,7 @@ function Viewer2() {
 
   function sendMessage(message) {
     var jsonMessage = JSON.stringify(message);
-    console.log("Sending message: " + jsonMessage);
+    // console.log("Sending message: " + jsonMessage);
     ws.send(jsonMessage);
   }
 
@@ -154,7 +154,7 @@ function Viewer2() {
     if (ws) {
       ws.onmessage = function (message) {
         var parsedMessage = JSON.parse(message.data);
-        console.info("Received message: " + message.data);
+        // console.info("Received message: " + message.data);
 
         switch (parsedMessage.id) {
           case "presenterResponse":
@@ -173,7 +173,7 @@ function Viewer2() {
                 }
               );
             } else {
-              console.log("webRtcPeer object is not initialized.");
+              // console.log("webRtcPeer object is not initialized.");
             }
             break;
           case "stopCommunication":
