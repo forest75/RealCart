@@ -13,7 +13,7 @@ function MyPage() {
   const user = useSelector((state) => state.login.user);
   const [nickname, setNickname] = useState("");
   const [nicknameCheck, setNicknameCheck] = useState("");
-  const [pwd, setPwd] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const params = { nickname };
@@ -37,15 +37,14 @@ function MyPage() {
   });
   const handleModifyNick = () => {
     const data = {
-      nickname: { nickname },
+      email: user.email,
+      nickname,
     };
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/user/${user.email}`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/user`, data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
-        console.log(res.data);
-        console.log({ pwd });
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -74,10 +73,12 @@ function MyPage() {
 
   const handleModifyPass = () => {
     const data = {
-      password: { pwd },
+      email: user.email,
+      password,
     };
+    console.log(data);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/user/${user.email}`, data, {
+      .put(`${process.env.REACT_APP_BACKEND_URL}/user`, data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
@@ -229,7 +230,7 @@ function MyPage() {
               margin: 2,
             }}
             onInput={(e) => {
-              setPwd(e.target.value);
+              setPassword(e.target.value);
             }}
           />
 
