@@ -21,7 +21,7 @@ function NoticeBoard() {
   const [articleList, setArticleList] = useState([]);
 
   useEffect(() => {
-    if (user.nickname === "관리자") {
+    if (user && user.nickname === "관리자") {
       setDisplayWright("");
     } else {
       setDisplayWright("none");
