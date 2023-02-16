@@ -28,7 +28,7 @@ import SmallViewer3 from "../components/video/SmallViewer3";
 import PlayEndModal from "../components/play/PlayEndModal";
 import { setPlayEndOpen, setIsPlayEndClicked } from "../store/modalSlice";
 
-function NewPlayPage2() {
+function EmergencyPlay2() {
   const [showResult, setShowResult] = useState(false);
   const [bestTime, setBestTime] = useState("00:00:00");
   const queue = useSelector((state) => state.queue);
@@ -981,4 +981,4 @@ function NewPlayPage2() {
   );
 }
 
-export default NewPlayPage2;
+export default EmergencyPlay2;

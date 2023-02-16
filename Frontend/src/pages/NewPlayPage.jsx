@@ -111,17 +111,20 @@ function NewPlayPage() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      const intervalId = setInterval(() => {
-        setCurrentImage((prev) => (prev + 1) % images.length);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(intervalId);
-      }, 5800);
-    }, 5000);
-    setTimeout(() => {
-      setIsRunning(true);
-    }, 10000);
+    // 3,2, 1 테스트
+
+    // setTimeout(() => {
+    //   const intervalId = setInterval(() => {
+    //     setCurrentImage((prev) => (prev + 1) % images.length);
+    //   }, 1000);
+    //   setTimeout(() => {
+    //     clearInterval(intervalId);
+    //   }, 5800);
+    // }, 5000);
+    // setTimeout(() => {
+    //   setIsRunning(true);
+    // }, 10000);
+
     // 베스트타임 가져오기
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/record`)
@@ -180,11 +183,14 @@ function NewPlayPage() {
       wss.onmessage = (message) => {
         console.log("get message", message.data);
         const messageObj = JSON.parse(message.data);
-        if (messageObj.status === "1") {
+        console.log(messageObj);
+        console.log(messageObj.status);
+        if (messageObj.status === 1) {
           console.log("중계 서버에서 1 받는 데 성공");
           setTimeout(() => {
             setIsRunning(true);
           }, 5000);
+          console.log("nickname: ", user.nickname);
           wss.send(user.nickname);
           const intervalId = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
@@ -193,7 +199,7 @@ function NewPlayPage() {
             clearInterval(intervalId);
           }, 5800);
         }
-        if (messageObj.status === "2") {
+        if (messageObj.status === 2) {
           console.log("중계 서버에서 2 받는 데 성공");
           dispatch(setPlayEndOpen());
           setTimeout(() => {
@@ -203,11 +209,11 @@ function NewPlayPage() {
             dispatch(setIsPlayEndClicked(false));
           }, 10000);
         }
-        if (messageObj.status === "3") {
+        if (messageObj.status === 3) {
           console.log("중계 서버에서 3 받는 데 성공");
           setCarSpeed(messageObj.speed);
         }
-        if (messageObj.status === "4") {
+        if (messageObj.status === 4) {
           console.log("중계 서버에서 4 받는 데 성공");
           const result = messageObj.result.split(",");
           let winner, loser, winnerTime, loserTime;
@@ -779,7 +785,7 @@ function NewPlayPage() {
                 zIndex: 1,
               }}
             >
-              {carSpeed}
+              &nbsp;{carSpeed}
             </Typography>
             <Typography
               variant="h5"
