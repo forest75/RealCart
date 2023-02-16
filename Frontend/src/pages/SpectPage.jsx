@@ -251,8 +251,9 @@ function SpectPage() {
                             dispatch(setVideo3(false));
                           }}
                           sx={{
-                            bgcolor: "#2E4B8A",
-                            color: "white",
+                            border: "solid 1px black",
+                            borderRadius: "15px",
+                            color: "black",
                           }}
                         >
                           <span className="glyphicon glyphicon-user" /> Red
@@ -265,8 +266,9 @@ function SpectPage() {
                             dispatch(setVideo3(false));
                           }}
                           sx={{
-                            bgcolor: "#2E4B8A",
-                            color: "white",
+                            border: "solid 1px black",
+                            borderRadius: "15px",
+                            color: "black",
                           }}
                         >
                           <span className="glyphicon glyphicon-user" /> Blue
@@ -279,8 +281,9 @@ function SpectPage() {
                             dispatch(setVideo3(true));
                           }}
                           sx={{
-                            bgcolor: "#2E4B8A",
-                            color: "white",
+                            border: "solid 1px black",
+                            borderRadius: "15px",
+                            color: "black",
                           }}
                         >
                           <span className="glyphicon glyphicon-user" /> 관전
@@ -399,6 +402,7 @@ function SpectPage() {
                 borderLeft: "none",
                 borderBottomRightRadius: "15px",
                 backgroundColor: "white",
+                cursor: "pointer",
               }}
               ref={chatRef}
             >
