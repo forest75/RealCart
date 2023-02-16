@@ -1,36 +1,57 @@
-import { React, useRef } from "react";
-// useState,
+import { React, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import axios from "axios";
 import AppButton from "../components/AppButton";
 import RecordTable from "../components/RecordTable";
+import AppForm from "../components/AppForm";
 
 function MyPage() {
   const user = useSelector((state) => state.login.user);
-  const nickRef = useRef();
-  console.log(user.email);
-  console.log(user.nickname);
-  // const [nick, setNick] = useState(user.nickname);
+  const [nickname, setNickname] = useState("");
+  const [nicknameCheck, setNicknameCheck] = useState("");
+  const [pwd, setPwd] = useState("");
 
+  useEffect(() => {
+    const params = { nickname };
+    const headers = {
+      "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      Accept: "*/*",
+    };
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/user/checknickname`,
+        { params },
+        { headers }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setNicknameCheck(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
   const handleModifyNick = () => {
     const data = {
-      nickname: nickRef.current.value,
+      nickname: { nickname },
     };
     axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/user/${user.email}`, data, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
+        console.log(res.data);
+        console.log({ pwd });
         localStorage.setItem(
           "user",
           JSON.stringify({
             userId: 0,
             username: null,
-            email: "sj@naver.com",
+            email: user.email,
             nickname: res.data.nickname,
             password: null,
             salt: null,
@@ -42,6 +63,26 @@ function MyPage() {
         );
         console.log(res);
         // alert("변경이 완료되었습니다.");
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
+        //   console.log({ user });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleModifyPass = () => {
+    const data = {
+      password: { pwd },
+    };
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/user/${user.email}`, data, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((res) => {
+        alert("비밀번호 변경이 완료되었습니다.");
+        console.log(res);
         // eslint-disable-next-line no-restricted-globals
         location.reload();
         //   console.log({ user });
@@ -137,22 +178,21 @@ function MyPage() {
           >
             닉네임
           </Box>
-          <TextField
-            id="standard-basic"
-            placeholder={user.nickname}
+          <AppForm
+            content="nickname"
             variant="standard"
-            inputRef={nickRef}
-          />
-          <AppButton
+            placeholder={user.nickname}
+            nicknameCheck={nicknameCheck}
             sx={{
-              fontSize: "15px",
-              border: "solid 1px gray",
-              borderRadius: "20px",
-              marginLeft: "20px",
+              width: 200,
+              maxWidth: "90%",
+              margin: 2,
             }}
-          >
-            중복확인
-          </AppButton>
+            onInput={(e) => {
+              setNickname(e.target.value);
+              setNicknameCheck("");
+            }}
+          />
           <AppButton
             sx={{
               fontSize: "15px",
@@ -180,10 +220,17 @@ function MyPage() {
           >
             비밀번호
           </Box>
-          <TextField
-            id="standard-basic"
-            placeholder="＊*******"
+          <AppForm
+            content="password"
             variant="standard"
+            sx={{
+              width: 200,
+              maxWidth: "90%",
+              margin: 2,
+            }}
+            onInput={(e) => {
+              setPwd(e.target.value);
+            }}
           />
 
           <AppButton
@@ -193,6 +240,7 @@ function MyPage() {
               borderRadius: "20px",
               marginLeft: "20px",
             }}
+            onClick={handleModifyPass}
           >
             변경
           </AppButton>

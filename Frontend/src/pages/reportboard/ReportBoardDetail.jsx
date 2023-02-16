@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import AppButton from "../../components/AppButton";
+import AppBlackButton from "../../components/AppBlackButton";
 import Logo from "../../assets/logo.png";
 
 function ReportBoardDetail() {
@@ -137,47 +138,25 @@ function ReportBoardDetail() {
         </Box>
         <Box
           sx={{
-            height: "5%",
             width: "100%",
-
+            marginTop: "200px",
             display: "flex",
             justifyContent: "flex-end",
           }}
         >
-          <Link
-            to="/reportBoard"
-            sx={{ textDecoration: "none", color: "black" }}
-          >
+          <Link to="/reportBoard">
             <AppButton sx={{ border: "solid 1px black", marginRight: "10px" }}>
               목록
             </AppButton>
           </Link>
-          <Link
-            to={`/reportBoard/modify?no=${no}`}
-            sx={{ textDecoration: "none", color: "black" }}
-          >
-            <AppButton
-              sx={{
-                backgroundColor: "black",
-                color: "white",
-                border: "solid 1px black",
-                marginRight: "10px",
-              }}
-            >
+          <Link to={`/reportBoard/modify?no=${no}`}>
+            <AppBlackButton sx={{ borderRadius: "5px", marginRight: "10px" }}>
               수정
-            </AppButton>
+            </AppBlackButton>
           </Link>
-          <AppButton
-            sx={{
-              backgroundColor: "black",
-              color: "white",
-              border: "solid 1px black",
-              marginRight: "10px",
-            }}
-            onClick={handleDelete}
-          >
+          <AppBlackButton sx={{ borderRadius: "5px" }} onClick={handleDelete}>
             삭제
-          </AppButton>
+          </AppBlackButton>
         </Box>
       </Box>
     </Box>

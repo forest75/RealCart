@@ -254,8 +254,8 @@ function CustomPaginationActionsTable({ address, link }) {
   }
 
   return (
-    <TableContainer sx={{ width: 700, border: "solid 1px #D7D6E0" }}>
-      <Table sx={{ minWidth: 200 }} aria-label="custom pagination table">
+    <TableContainer sx={{ border: "solid 1px #D7D6E0" }}>
+      <Table aria-label="custom pagination table">
         <TableBody>
           {tableRow()}
           {emptyRows > 0 && (
