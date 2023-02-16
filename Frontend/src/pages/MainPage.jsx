@@ -171,13 +171,18 @@ function MainPage() {
 
   useEffect(() => {
     setInterval(() => {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
-        if (res.data.player1 === "" || res.data.player2 === "") {
-          setIsVideo(false);
-        } else {
-          setIsVideo(true);
-        }
-      });
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
+        .then((res) => {
+          if (res.data.player1 === "" || res.data.player2 === "") {
+            setIsVideo(false);
+          } else {
+            setIsVideo(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, 10000);
 
     if (!user) {
