@@ -72,6 +72,7 @@ function AppFooter() {
                 margin: 1,
               }}
             />
+
             <InstagramIcon
               sx={{
                 margin: 1,

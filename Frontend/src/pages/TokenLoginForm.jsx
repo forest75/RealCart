@@ -8,7 +8,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import axios from "../util/axiosInstance";
 import { login } from "../store/loginSlice";
-import RegistForm from "../components/AppForm";
+import AppForm from "../components/AppForm";
 import ArrowButton from "../components/ArrowButton";
 
 function TokenLoginForm() {
@@ -81,8 +81,8 @@ function TokenLoginForm() {
               width: "80%",
             }}
           >
-            <RegistForm content="email" />
-            <RegistForm content="password" />
+            <AppForm variant="outlined" content="email" />
+            <AppForm variant="outlined" content="password" />
           </Stack>
           <Box
             sx={{

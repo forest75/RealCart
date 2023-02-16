@@ -11,6 +11,7 @@ function ArrowButton({ children, sx, ...otherProps }) {
   };
   return (
     <Button
+      variant="outlined"
       sx={mergedSx}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...otherProps}
