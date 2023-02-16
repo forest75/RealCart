@@ -7,7 +7,7 @@ function Poster1() {
       sx={{
         width: "800px",
         height: "600px",
-        bgcolor: "black",
+        bgcolor: "#171717",
         color: "white",
         display: "flex",
         justifyContent: "center",
@@ -15,7 +15,7 @@ function Poster1() {
         fontSize: "40px",
       }}
     >
-      다음 게임을 준비 중입니다.
+      다음 게임을 준비 중입니다...
       <Box sx={{ fontSize: "100px" }}>🚗</Box>
     </Box>
   );

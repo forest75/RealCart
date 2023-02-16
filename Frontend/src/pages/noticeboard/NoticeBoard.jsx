@@ -21,12 +21,13 @@ function NoticeBoard() {
   const [articleList, setArticleList] = useState([]);
 
   useEffect(() => {
-    if (user && user.nickname === "관리자") {
+    if (user.nickname === "관리자") {
       setDisplayWright("");
     } else {
       setDisplayWright("none");
     }
-  });
+    console.log(displayWright);
+  }, []);
 
   useEffect(() => {
     axios
@@ -133,10 +134,11 @@ function NoticeBoard() {
               justifyContent: "flex-end",
             }}
           >
-            <Link to="/noticeBoard/write" sx={{ display: { displayWright } }}>
+            <Link to="/noticeBoard/write" sx={{ display: displayWright }}>
               <AppBlackButton
                 sx={{
                   marginTop: "20px",
+                  display: displayWright,
                 }}
               >
                 글쓰기

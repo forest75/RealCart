@@ -7,14 +7,15 @@ function Poster1() {
       sx={{
         width: "100%",
         height: "100%",
-        bgcolor: "black",
-        color: "white",
+        color: "#171717",
         display: "flex",
         justifyContent: "center",
         align: "center",
+        fontSize: "40px",
       }}
     >
-      <Box>다음 게임을 준비 중입니다.</Box>
+      다음 게임을 준비 중입니다...
+      <Box sx={{ fontSize: "100px" }}>🚗</Box>
     </Box>
   );
 }
