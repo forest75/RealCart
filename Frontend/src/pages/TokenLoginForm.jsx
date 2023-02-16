@@ -19,7 +19,7 @@ function TokenLoginForm() {
     e.preventDefault();
     const data = { id: e.target[0].value, password: e.target[2].value };
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/login`, data)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/accounts/auth/login`, data)
       .then((response) => {
         localStorage.setItem("token", response.data.body.token);
       })

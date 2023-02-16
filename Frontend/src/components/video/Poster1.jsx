@@ -5,8 +5,8 @@ function Poster1() {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100%",
+        width: "640px",
+        height: "480px",
         bgcolor: "black",
         color: "white",
       }}

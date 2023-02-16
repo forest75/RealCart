@@ -31,6 +31,7 @@ import { setVideo1, setVideo2, setVideo3 } from "../store/videoSlice";
 
 function SpectPage() {
   const videoSlice = useSelector((state) => state.video);
+  const [videoReady, setVideoReady] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -70,9 +71,20 @@ function SpectPage() {
   // Kurento 관련 함수 끝
 
   useEffect(() => {
-    dispatch(setVideo1(true));
-    dispatch(setVideo2(false));
-    dispatch(setVideo3(false));
+    setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+        if (res.data.player1 === "" || res.data.player2 === "") {
+          dispatch(setVideo1(false));
+          dispatch(setVideo2(false));
+          dispatch(setVideo3(false));
+          setVideoReady(true);
+        } else {
+          dispatch(setVideo1(true));
+          setVideoReady(false);
+        }
+      });
+    }, 10000);
+
     const socketConst = new WebSocket(
       `${process.env.REACT_APP_MEDIA_URL}/chat`
     );
@@ -91,17 +103,17 @@ function SpectPage() {
     };
   }, []);
 
-  useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
-      if (res.data.player1 === "" || res.data.player2 === "") {
-        dispatch(setVideo1(false));
-        dispatch(setVideo2(false));
-        dispatch(setVideo3(false));
-      } else {
-        dispatch(setVideo1(true));
-      }
-    });
-  }, [queue, dispatch, videoSlice]);
+  // useEffect(() => {
+  //   axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+  //     if (res.data.player1 === "" || res.data.player2 === "") {
+  //       dispatch(setVideo1(false));
+  //       dispatch(setVideo2(false));
+  //       dispatch(setVideo3(false));
+  //     } else {
+  //       dispatch(setVideo1(true));
+  //     }
+  //   });
+  // }, [queue, dispatch, videoSlice]);
 
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
@@ -302,9 +314,10 @@ function SpectPage() {
                     </div>
                   </div>
                   <div className="col-md-7">
-                    {videoSlice.video1 ? <Viewer1 /> : Poster1}
-                    {videoSlice.video2 ? <Viewer2 /> : Poster1}
-                    {videoSlice.video3 ? <Viewer3 /> : Poster1}
+                    {videoSlice.video1 ? <Viewer1 /> : null}
+                    {videoSlice.video2 ? <Viewer2 /> : null}
+                    {videoSlice.video3 ? <Viewer3 /> : null}
+                    {videoReady ? null : <Poster1 />}
                   </div>
                 </div>
               </div>
