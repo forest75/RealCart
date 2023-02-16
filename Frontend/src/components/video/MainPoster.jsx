@@ -9,9 +9,14 @@ function Poster1() {
         height: "600px",
         bgcolor: "black",
         color: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: "40px",
       }}
     >
       다음 게임을 준비 중입니다.
+      <Box sx={{ fontSize: "100px" }}>🚗</Box>
     </Box>
   );
 }
