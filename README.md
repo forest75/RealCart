@@ -57,11 +57,12 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
   게임을 즐기는 유저들의 자유 글을 볼 수 있는 게시판입니다.
   
   - 원하는 게시글에 댓글을 달 수 있습니다.
+  ![image](docs/img/comment.png)
   - 문의사항이 있으면 관리자와 소통할 수 있습니다.
   - 공지사항을 볼 수 있습니다.
 - ### 마이페이지
   
-  ![image](docs/img/comment.png)
+  ![image](docs/img/mypage.jpg)
   
   - 내 경기 기록 랭킹과 히스토리 열람이 가능합니다.
   - 닉네임과 패스워드 변경이 가능합니다.
@@ -70,7 +71,7 @@ REAL CART를 통해 사용자들은 쉬운 접근성으로 RC카 레이싱을 �
 
 ---
 
-![image](docs/img/maintTech.jpg)
+![image](docs/img/maintTech.png)
 
 ## :ok_man:협업 툴
 
