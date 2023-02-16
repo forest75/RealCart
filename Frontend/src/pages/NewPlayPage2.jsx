@@ -156,7 +156,6 @@ function NewPlayPage2() {
     stompClientConst.connect({}, function () {
       stompClientConst.subscribe("/subscribe", function (greeting) {
         console.log(greeting.body);
-        // const newchat = `${user.nickname} : ` + greeting.body;
         setChats((currentArray) => [...currentArray, greeting.body]);
       });
     });

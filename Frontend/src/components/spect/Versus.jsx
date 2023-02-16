@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import propTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { setPlayer } from "../../store/queueSlice";
 
+// eslint-disable-next-line no-unused-vars
 function Versus({ queue }) {
+  const queue2 = useSelector((state) => state.queue);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const endGetGame = setInterval(() => {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
+        dispatch(setPlayer(res.data));
+      });
+    }, 10000);
+    return () => {
+      clearInterval(endGetGame);
+    };
+  }, [queue2, dispatch]);
   return (
     <Box
       display="flex"
@@ -74,7 +90,7 @@ function Versus({ queue }) {
                 fontWeight: "bold",
               }}
             >
-              {queue.player1}
+              {queue2.player1}
             </Typography>
           </Box>
           {/* <h2>{queue.player1}</h2> */}
@@ -139,7 +155,7 @@ function Versus({ queue }) {
                 fontWeight: "bold",
               }}
             >
-              {queue.player2}
+              {queue2.player2}
             </Typography>
           </Box>
           {/* <h2>{queue.player2}</h2> */}
