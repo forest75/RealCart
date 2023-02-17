@@ -94,11 +94,12 @@ public class GameController {
     public ResponseEntity<String> endGame(@RequestBody String string) {
         LOGGER.info("endGame 메서드가 gameController에서 호출되었습니다.");
         System.out.println(string);
+        string = string.substring(2);
         StringTokenizer st = new StringTokenizer(string, ",");
         PlayDto playDto = new PlayDto();
         String nickname1 = st.nextToken();
         if(nickname1 != null){
-            playDto.setNickname1(nickname1.substring(2, nickname1.length()));
+            playDto.setNickname1(nickname1);
         }
         playDto.setLaptime1(Long.parseLong(st.nextToken()));
         playDto.setNickname2(st.nextToken());
