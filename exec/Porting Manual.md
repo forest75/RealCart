@@ -5,6 +5,117 @@
 - [Game Server](#game-server)
 - [IOT](#iot)
 - [Scenario](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/exec/%EC%8B%9C%EC%97%B0_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png)
+
+## NGINX
+---
+server {
+    server_name  i8a403.p.ssafy.io;
+
+    location /api/ {
+        proxy_pass http://13.125.13.39:8060/;
+    }
+
+    location / {
+        root   /home/ubuntu/ssafy/S08P12A403/Frontend/build;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/i8a403.p.ssafy.io/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/i8a403.p.ssafy.io/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = i8a403.p.ssafy.io) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen       80;
+    server_name  i8a403.p.ssafy.io;
+    return 404; # managed by Certbot
+
+}
+
+server {
+
+        listen 8581 ssl;  # websocket for player 1
+
+        server_name i8a403.p.ssafy.io;
+
+        ### ssl 인증서 관련 코드 ####
+        ssl_certificate /etc/letsencrypt/live/i8a403.p.ssafy.io/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/i8a403.p.ssafy.io/privkey.pem; # managed by Certbot
+
+        location / {
+                proxy_pass http://localhost:8886/; #실제 채팅서버의 아이피와 포트
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Accept-Encoding "";
+        }
+}
+
+server {
+
+        listen 8582 ssl;  # websocket for player 2
+
+        server_name i8a403.p.ssafy.io;
+
+        ssl_certificate /etc/letsencrypt/live/i8a403.p.ssafy.io/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/i8a403.p.ssafy.io/privkey.pem; # managed by Certbot
+
+        location / {
+                proxy_pass http://localhost:8887/; #실제 채팅서버의 아이피와 포트
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Accept-Encoding "";
+        }
+}
+
+server {
+
+        listen 8070 ssl;
+
+        server_name i8a403.p.ssafy.io;
+
+        ### ssl 인증서 관련 코드 ####
+        ssl_certificate /etc/letsencrypt/live/i8a403.p.ssafy.io/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/i8a403.p.ssafy.io/privkey.pem; # managed by Certbot
+
+        location / {
+                proxy_pass http://localhost:8090/; #실제 채팅서버의 아이피와 포트
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Accept-Encoding "";
+                proxy_connect_timeout 36000s;
+                proxy_send_timeout 36000s;
+                proxy_read_timeout 36000s;
+        }
+}
+
+
+
 ## Web BackEnd
 ---
 ### What you need
@@ -106,4 +217,20 @@ Same as MatterMost Setting in Web BackEnd
 
 ### Notice
 Signal Server must be with Media Server
+
+## Game Server
+---
+### What you need
+- Intellij (Intellij IDEA 2021.2)
+- Java 11
+- Gradle 7.6
+
+### Dependencies
+	implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation 'javax.xml.bind:jaxb-api:2.2.4'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
