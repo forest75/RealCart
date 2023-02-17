@@ -60,7 +60,7 @@
 ### package.json
 ---
 
-### env
+### 환경변수
 .env.development :
 // 개발 전용 백엔드 및 미디어 서버 URL
 REACT_APP_BACKEND_URL
