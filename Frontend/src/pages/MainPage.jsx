@@ -1,189 +1,248 @@
-/* eslint-disable */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import kurentoUtils from "kurento-utils";
-import axios from "../util/axiosInstance";
-import Stomp from "stompjs";
-import TransparentImg from "../assets/img/transparent-1px.png";
-import WebRtcImg from "../assets/img/webrtc.png";
-import Spinner from "../assets/img/spinner.gif";
-import Advertise from "../assets/img/advertise.png";
-import BoardTable from "../components/BoardTable";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+// import kurentoUtils from "kurento-utils";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import axios from "../util/axiosInstance";
+// import Stomp from "stompjs";
+// import TransparentImg from "../assets/img/transparent-1px.png";
+// import WebRtcImg from "../assets/img/webrtc.png";
+// import Spinner from "../assets/img/spinner.gif";
+// import Advertise from "../assets/img/advertise.png";
+import BoardTable from "../components/BoardTable";
 import MainPoster from "../components/video/MainPoster";
 import { login } from "../store/loginSlice";
+import { setPlayer } from "../store/queueSlice";
+import Viewer3 from "../components/video/Viewer3Main";
+// import { setVideo3 } from "../store/videoSlice";
 
 function MainPage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
+  const queue = useSelector((state) => state.queue);
   const navigate = useNavigate();
-  const [ws, setWs] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [stompClient, setStompClient] = useState(null);
-  const video = useRef(null);
-  const text = useRef(null);
+  // const [ws, setWs] = useState(null);
+  // const [socket, setSocket] = useState(null);
+  // const [stompClient, setStompClient] = useState(null);
+  // const video = useRef(null);
+  // const text = useRef(null);
   // const [loading, setLoading] = useState(true);
-  const [articleList, setArticleList] = useState([]);
-  var webRtcPeer;
-  var mediaId;
+  // const [articleList, setArticleList] = useState([]);
+  // var webRtcPeer;
+  // var mediaId;
 
   const [isVideo, setIsVideo] = useState(false);
 
-  function presenterResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
+  // function presenterResponse(message) {
+  //   if (message.response != "accepted") {
+  //     var errorMsg = message.message ? message.message : "Unknow error";
+  //     console.info("Call not accepted for the following reason: " + errorMsg);
+  //     dispose();
+  //   } else {
+  //     webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+  //       if (error) return console.error(error);
+  //     });
+  //   }
+  // }
 
-  function viewerResponse(message) {
-    if (message.response != "accepted") {
-      var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
-      dispose();
-    } else {
-      webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
-        if (error) return console.error(error);
-      });
-    }
-  }
+  // function viewerResponse(message) {
+  //   if (message.response != "accepted") {
+  //     var errorMsg = message.message ? message.message : "Unknow error";
+  //     console.info("Call not accepted for the following reason: " + errorMsg);
+  //     dispose();
+  //   } else {
+  //     webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+  //       if (error) return console.error(error);
+  //     });
+  //   }
+  // }
 
-  function presenter(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    var options = {
-      localVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    mediaId = num;
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        webRtcPeer.generateOffer(onOfferPresenter);
-      }
-    );
-  }
+  // function presenter(num) {
+  //   if (!webRtcPeer) {
+  //     showSpinner(video.current);
+  //   }
+  //   var options = {
+  //     localVideo: video.current,
+  //     onicecandidate: onIceCandidate,
+  //   };
+  //   mediaId = num;
+  //   webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
+  //     options,
+  //     function (error) {
+  //       if (error) {
+  //         return console.error(error);
+  //       }
+  //       webRtcPeer.generateOffer(onOfferPresenter);
+  //     }
+  //   );
+  // }
 
-  function onOfferPresenter(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "presenter",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
-  function viewer(num) {
-    if (!webRtcPeer) {
-      showSpinner(video.current);
-    }
-    mediaId = num;
-    console.log(num);
-    var options = {
-      remoteVideo: video.current,
-      onicecandidate: onIceCandidate,
-    };
-    webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-      options,
-      function (error) {
-        if (error) {
-          return console.error(error);
-        }
-        this.generateOffer(onOfferViewer);
-      }
-    );
-  }
+  // function onOfferPresenter(error, offerSdp) {
+  //   if (error) return console.error("Error generating the offer");
+  //   console.info("Invoking SDP offer callback function " + mediaId);
+  //   var message = {
+  //     id: "presenter",
+  //     sdpOffer: offerSdp,
+  //     mediaId: mediaId,
+  //   };
+  //   sendMessage(message);
+  // }
+  // function viewer(num) {
+  //   if (!webRtcPeer) {
+  //     showSpinner(video.current);
+  //   }
+  //   mediaId = num;
+  //   console.log(num);
+  //   var options = {
+  //     remoteVideo: video.current,
+  //     onicecandidate: onIceCandidate,
+  //   };
+  //   webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+  //     options,
+  //     function (error) {
+  //       if (error) {
+  //         return console.error(error);
+  //       }
+  //       this.generateOffer(onOfferViewer);
+  //     }
+  //   );
+  // }
 
-  function onOfferViewer(error, offerSdp) {
-    if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
-    var message = {
-      id: "viewer",
-      sdpOffer: offerSdp,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
+  // function onOfferViewer(error, offerSdp) {
+  //   if (error) return console.error("Error generating the offer");
+  //   console.info("Invoking SDP offer callback function " + mediaId);
+  //   var message = {
+  //     id: "viewer",
+  //     sdpOffer: offerSdp,
+  //     mediaId: mediaId,
+  //   };
+  //   sendMessage(message);
+  // }
 
-  function onIceCandidate(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
+  // function onIceCandidate(candidate) {
+  //   console.log("Local candidate" + JSON.stringify(candidate));
 
-    var message = {
-      id: "onIceCandidate",
-      candidate: candidate,
-      mediaId: mediaId,
-    };
-    sendMessage(message);
-  }
+  //   var message = {
+  //     id: "onIceCandidate",
+  //     candidate: candidate,
+  //     mediaId: mediaId,
+  //   };
+  //   sendMessage(message);
+  // }
 
-  function stop() {
-    var message = {
-      id: "stop",
-    };
-    sendMessage(message);
-    dispose();
-  }
+  // function stop() {
+  //   var message = {
+  //     id: "stop",
+  //   };
+  //   sendMessage(message);
+  //   dispose();
+  // }
 
-  function dispose() {
-    if (webRtcPeer) {
-      webRtcPeer.dispose();
-      webRtcPeer = null;
-    }
-    hideSpinner(video.current);
-  }
+  // function dispose() {
+  //   if (webRtcPeer) {
+  //     webRtcPeer.dispose();
+  //     webRtcPeer = null;
+  //   }
+  //   hideSpinner(video.current);
+  // }
 
-  function sendMessage(message) {
-    var jsonMessage = JSON.stringify(message);
-    console.log("Sending message: " + jsonMessage);
-    ws.send(jsonMessage);
-  }
+  // function sendMessage(message) {
+  //   var jsonMessage = JSON.stringify(message);
+  //   console.log("Sending message: " + jsonMessage);
+  //   ws.send(jsonMessage);
+  // }
 
-  function showSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].poster = TransparentImg;
-      arguments[
-        i
-      ].style.background = `center transparent url(${Spinner}) no-repeat`;
-    }
-  }
+  // function showSpinner() {
+  //   for (var i = 0; i < arguments.length; i++) {
+  //     arguments[i].poster = TransparentImg;
+  //     arguments[
+  //       i
+  //     ].style.background = `center transparent url(${Spinner}) no-repeat`;
+  //   }
+  // }
 
-  function hideSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-      arguments[i].src = "";
-      arguments[i].poster = Advertise;
-      arguments[i].style.background = "";
-    }
-  }
+  // function hideSpinner() {
+  //   for (var i = 0; i < arguments.length; i++) {
+  //     arguments[i].src = "";
+  //     arguments[i].poster = Advertise;
+  //     arguments[i].style.background = "";
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   const endGetPlayer = setInterval(() => {
+  //     axios
+  //       .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
+  //       .then((res) => {
+  //         dispatch(setPlayer(res.data));
+  //         console.log("resp: ", res.data);
+  //         if (queue.player1 === "" || queue.player2 === "") {
+  //           setIsVideo(false);
+  //         } else {
+  //           setIsVideo(true);
+  //           viewer(3);
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }, 50000);
+  //   return () => {
+  //     clearInterval(endGetPlayer);
+  //   };
+  // }, [queue]);
 
   useEffect(() => {
-    setInterval(() => {
+    // console.log("aaaaaaaaaaaaaaaaaa");
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
+      .then((res) => {
+        dispatch(setPlayer(res.data));
+        console.log("resp: ", res.data);
+        if (queue.player1 === "" || queue.player2 === "") {
+          setIsVideo(false);
+        } else {
+          setIsVideo(true);
+          // viewer(3);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    const endGetPlayer = setInterval(() => {
+      // console.log("bbbbbbbbbbbbbbbbbbb");
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
         .then((res) => {
-          if (res.data.player1 === "" || res.data.player2 === "") {
+          dispatch(setPlayer(res.data));
+          console.log("resp: ", res.data);
+          if (queue.player1 === "" || queue.player2 === "") {
             setIsVideo(false);
           } else {
             setIsVideo(true);
+            // viewer(3);
           }
         })
         .catch((err) => {
           console.log(err);
         });
-    }, 10000);
+    }, 5000);
+    // setInterval(() => {
+    //   axios
+    //     .get(`${process.env.REACT_APP_BACKEND_URL}/game`)
+    //     .then((res) => {
+    //       if (res.data.player1 === "" || res.data.player2 === "") {
+    //         setIsVideo(false);
+    //       } else {
+    //         setIsVideo(true);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }, 10000);
 
     if (!user) {
       console.log("user 없음");
@@ -212,64 +271,65 @@ function MainPage() {
       }
     }
 
-    const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
-    const socketConst = new WebSocket(
-      `${process.env.REACT_APP_MEDIA_URL}/chat`
-    );
-    const stompClientConst = Stomp.over(socketConst);
-    stompClientConst.connect({}, function () {
-      stompClientConst.subscribe("/subscribe", function (greeting) {
-        console.log(greeting.body);
-      });
-    });
+    // const wsConst = new WebSocket(`${process.env.REACT_APP_MEDIA_URL}/call`);
+    // const socketConst = new WebSocket(
+    //   `${process.env.REACT_APP_MEDIA_URL}/chat`
+    // );
+    // const stompClientConst = Stomp.over(socketConst);
+    // stompClientConst.connect({}, function () {
+    //   stompClientConst.subscribe("/subscribe", function (greeting) {
+    //     console.log(greeting.body);
+    //   });
+    // });
 
-    setWs(wsConst);
-    setSocket(socketConst);
-    setStompClient(stompClientConst);
+    // setWs(wsConst);
+    // setSocket(socketConst);
+    // setStompClient(stompClientConst);
 
     return () => {
-      wsConst.close();
-      socketConst.close();
+      clearInterval(endGetPlayer);
+      // wsConst.close();
+      // socketConst.close();
     };
   }, []);
 
-  useEffect(() => {
-    if (ws) {
-      ws.onmessage = function (message) {
-        var parsedMessage = JSON.parse(message.data);
-        console.info("Received message: " + message.data);
+  // useEffect(() => {
+  //   if (ws) {
+  //     ws.onmessage = function (message) {
+  //       var parsedMessage = JSON.parse(message.data);
+  //       console.info("Received message: " + message.data);
 
-        switch (parsedMessage.id) {
-          case "presenterResponse":
-            presenterResponse(parsedMessage);
-            break;
-          case "viewerResponse":
-            viewerResponse(parsedMessage);
-            break;
-          case "iceCandidate":
-            webRtcPeer.addIceCandidate(
-              parsedMessage.candidate,
-              function (error) {
-                if (error)
-                  return console.error("Error adding candidate: " + error);
-              }
-            );
-            break;
-          case "stopCommunication":
-            dispose();
-            break;
-          default:
-            console.error("Unrecognized message", parsedMessage);
-        }
-      };
+  //       switch (parsedMessage.id) {
+  //         case "presenterResponse":
+  //           presenterResponse(parsedMessage);
+  //           break;
+  //         case "viewerResponse":
+  //           viewerResponse(parsedMessage);
+  //           break;
+  //         case "iceCandidate":
+  //           webRtcPeer.addIceCandidate(
+  //             parsedMessage.candidate,
+  //             function (error) {
+  //               if (error)
+  //                 return console.error("Error adding candidate: " + error);
+  //             }
+  //           );
+  //           break;
+  //         case "stopCommunication":
+  //           dispose();
+  //           break;
+  //         default:
+  //           console.error("Unrecognized message", parsedMessage);
+  //       }
+  //     };
 
-      ws.onopen = () => {
-        // setTimeout(() => {
-        viewer(1);
-        // }, 1000);
-      };
-    }
-  }, [ws]);
+  //     ws.onopen = () => {
+  //       // setTimeout(() => {
+  //       viewer(1);
+  //       // }, 1000);
+  //     };
+  //   }
+  // }, [ws]);
 
   return (
     <Box
@@ -306,19 +366,20 @@ function MainPage() {
             }}
           >
             {isVideo ? (
-              <video
-                ref={video}
-                id="video"
-                autoPlay={true}
-                width="800px"
-                height="600px"
-                poster={WebRtcImg}
-                onClick={() => {
-                  navigate("/spect");
-                }}
-                muted={true}
-              />
+              <Viewer3 />
             ) : (
+              // <video
+              //   ref={video}
+              //   id="video"
+              //   autoPlay
+              //   width="800px"
+              //   height="600px"
+              //   poster={WebRtcImg}
+              //   onClick={() => {
+              //     navigate("/spect");
+              //   }}
+              //   muted
+              // />
               <MainPoster />
             )}
           </Paper>

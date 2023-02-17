@@ -238,7 +238,7 @@ function CustomPaginationActionsTable({ address, link }) {
           : rows
       ).map((row) => (
         <TableRow key={row.id}>
-          <TableCell component="th" scope="row">
+          <TableCell component="th" scope="row" style={{ width: 70 }}>
             {row.rank}
           </TableCell>
           <TableCell style={{ width: 200 }} align="center">

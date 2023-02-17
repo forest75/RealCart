@@ -40,11 +40,13 @@ export default function RegistForm() {
           )
           .then((res) => {
             console.log("토큰", res.data);
-            localStorage.setItem("token", res.data.body.token);
+            localStorage.setItem("access-token", res.data.body.token);
             axios
               .get(`https://i8a403.p.ssafy.io/api/user`, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "access-token"
+                  )}`,
                 },
               })
               .then((resp) => {

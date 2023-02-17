@@ -32,6 +32,9 @@ function ReportBoard() {
       .then((res) => {
         console.log(res);
         const articles = res.data;
+        // for (let i = 0; i < articles.length; i += 1) {
+        //   articles[articles.length - i - 1].id = i + 1;
+        // }
         if (articles.length === 0) {
           setArticleList([
             [
@@ -110,7 +113,7 @@ function ReportBoard() {
               width: "80%",
             }}
             board="reportboard"
-            // no="번호"
+            no="번호"
             title="제목"
             author="작성자"
             date="등록일"

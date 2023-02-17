@@ -171,7 +171,7 @@ function ReportBoardWrite() {
           >
             <Box flexGrow={1} />
             <Link
-              to="/FreeBoard"
+              to="/reportBoard"
               style={{ color: "black", textDecoration: "none" }}
             >
               <AppButton

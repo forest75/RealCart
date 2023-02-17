@@ -34,6 +34,9 @@ function NoticeBoard() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/board/notice`)
       .then((res) => {
         const articles = res.data;
+        // for (let i = 0; i < articles.length; i += 1) {
+        //   articles[articles.length - i - 1].id = i + 1;
+        // }
         console.log(articles);
         if (articles.length === 0) {
           setArticleList([
@@ -106,7 +109,7 @@ function NoticeBoard() {
             sx={{
               width: "80%",
             }}
-            // no="번호"
+            no="번호"
             title="제목"
             author="작성자"
             date="등록일"

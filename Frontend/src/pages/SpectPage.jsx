@@ -443,7 +443,6 @@ function SpectPage() {
                 backgroundColor: "white",
                 cursor: "pointer",
               }}
-              ref={chatRef}
             >
               <SendIcon sx={{ color: "#474747" }} />
             </button>

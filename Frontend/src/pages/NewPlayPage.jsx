@@ -771,11 +771,11 @@ function NewPlayPage() {
               sx={{
                 position: "absolute",
                 top: "73%",
-                right: "16%",
+                right: "15%",
                 zIndex: 1,
               }}
             >
-              &nbsp;{carSpeed}
+              {carSpeed}
             </Typography>
             <Typography
               variant="h5"

@@ -142,7 +142,7 @@ function FreeBoardWrite() {
           >
             <Box flexGrow={1} />
             <Link
-              to="/FreeBoard"
+              to="/freeBoard"
               style={{ color: "black", textDecoration: "none" }}
             >
               <AppButton

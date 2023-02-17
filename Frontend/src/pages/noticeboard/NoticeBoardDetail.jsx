@@ -19,7 +19,7 @@ function NoticeBoardDetail() {
   const user = useSelector((state) => state.login.user);
 
   useEffect(() => {
-    if (user.nickname === "관리자") {
+    if (user && user.nickname === "관리자") {
       setDisplayWright("");
     } else {
       setDisplayWright("none");

@@ -9,7 +9,7 @@ const AuthAdmin = (Component) => {
     if (!user) {
       return <Navigate to="/login" />;
     }
-    if (user.nickname !== "admin") {
+    if (user.nickname !== "관리자") {
       alert("관리자만 접근 가능합니다.");
       return <Navigate to="/noticeBoard" />;
     }
