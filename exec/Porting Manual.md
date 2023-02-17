@@ -66,7 +66,7 @@
 REACT_APP_BACKEND_URL
 REACT_APP_MEDIA_URL
 
-.env.production
+.env.production :
 // 빌드 전용 백엔드 및 미디어 서버 URL(NGINX 프록시 반영)
 REACT_APP_BACKEND_URL
 REACT_APP_MEDIA_URL
