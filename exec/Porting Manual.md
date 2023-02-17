@@ -6,6 +6,60 @@
 - [IOT](#iot)
 - [Scenario](https://lab.ssafy.com/s08-webmobile3-sub2/S08P12A403/-/blob/master/exec/%EC%8B%9C%EC%97%B0_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png)
 
+## Web FrontEnd
+---
+### What you need
+- Visual Studio Code 1.75.1
+- npm 8.1.2
+- Node 16.13.2
+
+### Dependencies
+	"@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@material-ui/core": "^4.12.4",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/joy": "^5.0.0-alpha.65",
+    "@mui/material": "^5.11.4",
+    "@mui/x-data-grid": "^5.17.19",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.3",
+    "bootstrap": "^5.2.3",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "express": "^4.18.2",
+    "freeice": "^2.2.2",
+    "immutable": "^4.2.2",
+    "isomorphic-ws": "^5.0.0",
+    "js-cookie": "^3.0.1",
+    "kurento-utils": "^6.18.0",
+    "net": "^1.0.2",
+    "prop": "^0.1.1",
+    "prop-types": "^15.8.1",
+    "query-string": "^8.1.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.7.0",
+    "react-dev-utils-3.3.0-bug-fixed-version": "github:WoolimRyu/react-dev-utils-3.3.0-bug-fixed-version",
+    "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.6.2",
+    "react-scripts": "5.0.1",
+    "redux-thunk": "^2.4.2",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4",
+    "tar": "^6.1.13",
+    "stompjs": "^2.3.3",
+    "types": "^0.1.1",
+    "web-vitals": "^2.1.4",
+    "ws": "^8.12.0"
+
+### package.json
+---
+
 ## NGINX
 ---
 server {
@@ -234,16 +288,3 @@ Signal Server must be with Media Server
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
-
-# IoT
----
-### What you need(SW)
-- Visual Studio Code
-- Raspberry Pi Thonny IDE
-- Python 3.11.2
-
-### What you need(HW)
-- Raspberry Pi
-- DC Motor(GA25-370 DC motor)
-- Servo Motor (Servo 9G SG90)
-- Color Sensor(TSC3200)
