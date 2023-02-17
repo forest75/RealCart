@@ -234,3 +234,16 @@ Signal Server must be with Media Server
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
+
+# IoT
+---
+### What you need(SW)
+- Visual Studio Code
+- Raspberry Pi Thonny IDE
+- Python 3.11.2
+
+### What you need(HW)
+- Raspberry Pi
+- DC Motor(GA25-370 DC motor)
+- Servo Motor (Servo 9G SG90)
+- Color Sensor(TSC3200)
