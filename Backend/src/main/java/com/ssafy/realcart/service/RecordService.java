@@ -67,7 +67,8 @@ public class RecordService implements IRecordService {
 		List<Play> list = playDAO.getAllPlay(user.getUserId());
 		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
 		List<PlayResponseDto> answer = new ArrayList<PlayResponseDto>();
-		for (Play play : list) {
+		for (int i = list.size() -1 ; i >= 0 ; i--) {
+			Play play = list.get(i);
 			PlayResponseDto playResponseDto = new PlayResponseDto();
 			Game game = play.getGame();
 			playResponseDto.setGameId(game.getId());
