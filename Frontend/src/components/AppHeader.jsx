@@ -40,12 +40,6 @@ function AppHeader() {
     setAnchorEl2(null);
   };
 
-  // const [loginComp, setLoginComp] = useState(
-  //   <Link to="/login" style={{ textDecoration: "none" }}>
-  //     <AppButton sx={{ width: 150, height: 70 }}>LOGIN</AppButton>
-  //   </Link>
-  // );
-
   const useb = () => {
     if (user) {
       return (
@@ -90,7 +84,6 @@ function AppHeader() {
               }}
             >
               <MenuItem
-                // onClick={handleClose}
                 sx={{
                   borderBottom: "solid 1px  #f2f2f2",
                   borderTop: "solid 1px  #f2f2f2",

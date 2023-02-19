@@ -19,7 +19,6 @@ export default function RegistForm() {
   const [nicknameCheck, setNicknameCheck] = useState("");
 
   const handleRegist = async (e) => {
-    console.log(e.target);
     e.preventDefault();
     const data = {
       email: e.target[0].value,
@@ -39,7 +38,6 @@ export default function RegistForm() {
             data2
           )
           .then((res) => {
-            console.log("토큰", res.data);
             localStorage.setItem("access-token", res.data.body.token);
             axios
               .get(`https://i8a403.p.ssafy.io/api/user`, {
@@ -67,7 +65,6 @@ export default function RegistForm() {
 
         // 회원가입 후 로그인 끝
         console.log(response);
-        // navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -167,7 +164,6 @@ export default function RegistForm() {
                 }}
                 onInput={(e) => {
                   setEmail(e.target.value);
-                  // setEmailCheck("");
                 }}
               />
             </div>

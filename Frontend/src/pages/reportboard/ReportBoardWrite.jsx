@@ -83,7 +83,6 @@ function ReportBoardWrite() {
           width: "80%",
           height: "15%",
           display: "flex",
-          // flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           borderTop: 2,

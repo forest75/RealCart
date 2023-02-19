@@ -84,7 +84,6 @@ function ReceptionModal() {
                       `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${user.nickname}`
                     )
                     .then((res) => {
-                      console.log(res.data);
                       if (res.data === -100) {
                         dispatch(setReceptionClose());
                         alert("게임 도중 기권했거나 유효하지 않은 유저입니다.");

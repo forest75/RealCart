@@ -22,7 +22,6 @@ function BetWindow() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
       .then((response) => {
-        console.log(response.data);
         dispatch(setA(response.data.red));
         dispatch(setB(response.data.blue));
       })
@@ -33,7 +32,6 @@ function BetWindow() {
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
         .then((response) => {
-          console.log(response.data);
           dispatch(setA(response.data.red));
           dispatch(setB(response.data.blue));
         })
@@ -127,7 +125,6 @@ function BetWindow() {
                         axios
                           .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
                           .then((response) => {
-                            console.log(response.data);
                             dispatch(setA(response.data.red));
                             dispatch(setB(response.data.blue));
                           })

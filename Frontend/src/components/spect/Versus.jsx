@@ -30,9 +30,6 @@ function Versus({ queue }) {
         alignItems: "center",
         borderTopLeftRadius: "15px",
         borderBottomLeftRadius: "15px",
-        // borderTop: "solid 1px #b8b8b8",
-        // borderBottom: "solid 1px #b8b8b8",
-        // borderLeft: "solid 1px #b8b8b8",
         boxShadow:
           "rgba(6, 24, 44, 0.4) 0px 0px 0px 1px, rgba(6, 24, 44, 0.65) 0px 2px 3px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
       }}
@@ -93,7 +90,6 @@ function Versus({ queue }) {
               {queue2.player1}
             </Typography>
           </Box>
-          {/* <h2>{queue.player1}</h2> */}
         </Box>
         <Box
           display="flex"
@@ -158,7 +154,6 @@ function Versus({ queue }) {
               {queue2.player2}
             </Typography>
           </Box>
-          {/* <h2>{queue.player2}</h2> */}
         </Box>
       </Box>
     </Box>

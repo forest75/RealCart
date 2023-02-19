@@ -5,7 +5,6 @@ import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
 import axios from "../../util/axiosInstance";
-// import AppButton from "../../components/AppButton";
 import AppBlackButton from "../../components/AppBlackButton";
 import ArticleBox from "../../components/ArticleBox";
 import ArticleBoxTitle from "../../components/ArticleBoxTitle";
@@ -21,11 +20,7 @@ function FreeBoard() {
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/board/free`).then((res) => {
-      console.log(res);
       const articles = res.data;
-      // for (let i = 0; i < articles.length; i += 1) {
-      //   articles[articles.length - i - 1].id = i + 1;
-      // }
       if (articles.length === 0) {
         setArticleList([
           [

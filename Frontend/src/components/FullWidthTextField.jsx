@@ -18,10 +18,6 @@ export default function FullWidthTextField(props) {
   const onChange = (e) => {
     setValue(e.target.value);
   };
-  // const validation = () => {
-  //   const check = /[~!#_+=-]/;
-  //   return check.test(value);
-  // };
   const verifyEmail = () => {
     if (value === "") return false;
     // eslint-disable-next-line
@@ -55,7 +51,6 @@ export default function FullWidthTextField(props) {
         required
         error={verifier[idx]()}
         onChange={onChange}
-        // helperText={verifyEmail() ? "~!# 특수기호를 입력하실 수 없습니다." : ""}
         helperText={verifier[idx]() ? msg[idx] : ""}
         value={value}
         type="email"

@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Textarea from "@mui/joy/Textarea";
 import Pagination from "@mui/material/Pagination";
-// import { convertToRaw } from "draft-js";
-// import draftToHtml from "draftjs-to-html";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import axios from "../../util/axiosInstance";
@@ -40,7 +38,6 @@ function FreeBoardDetail() {
         const article = res.data;
 
         let resContent = article.content;
-        // console.log(resContent);
         try {
           resContent = JSON.parse(resContent);
           resContent = draftToHtml(resContent);
@@ -80,7 +77,6 @@ function FreeBoardDetail() {
               )
             );
           }
-          console.log(List[0]);
           setComments(List);
         }
         setLoading(false);
@@ -114,22 +110,16 @@ function FreeBoardDetail() {
       alert("100자까지만 작성할 수 있습니다.");
     } else {
       setChat(event.target.value);
-      console.log(event.target.value);
     }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // console.log(chat);
-    // console.log(e);
     if (chat === "") return;
     const data = {
       content: e.target[0].value,
       nickname: user.nickname,
     };
-
-    console.log(data);
-
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/board/free/${no}`, data, {
         headers: {
@@ -142,16 +132,11 @@ function FreeBoardDetail() {
       .catch((error) => {
         console.log(error);
       });
-    // const data = {};
 
     setChat("");
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   };
-
-  // const MyComponent = () => {
-  //   <div dangerouslySetInnerHTML={{ __html: content }} />;
-  // };
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -232,7 +217,6 @@ function FreeBoardDetail() {
         >
           <div dangerouslySetInnerHTML={{ __html: content }} />
         </Box>
-
         <Box
           sx={{
             width: "100%",

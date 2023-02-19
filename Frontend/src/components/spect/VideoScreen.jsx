@@ -19,7 +19,7 @@ function VideoScreen() {
   function presenterResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
+      // console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -52,7 +52,7 @@ function VideoScreen() {
   function viewerResponse(message) {
     if (message.response != "accepted") {
       var errorMsg = message.message ? message.message : "Unknow error";
-      console.info("Call not accepted for the following reason: " + errorMsg);
+      // console.info("Call not accepted for the following reason: " + errorMsg);
       dispose();
     } else {
       webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -84,7 +84,7 @@ function VideoScreen() {
 
   function onOfferPresenter(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
+    // console.info("Invoking SDP offer callback function " + mediaId);
     var message = {
       id: "presenter",
       sdpOffer: offerSdp,
@@ -117,7 +117,7 @@ function VideoScreen() {
 
   function onOfferViewer(error, offerSdp) {
     if (error) return console.error("Error generating the offer");
-    console.info("Invoking SDP offer callback function " + mediaId);
+    // console.info("Invoking SDP offer callback function " + mediaId);
     var message = {
       id: "viewer",
       sdpOffer: offerSdp,
@@ -127,7 +127,7 @@ function VideoScreen() {
   }
 
   function onIceCandidate(candidate) {
-    console.log("Local candidate" + JSON.stringify(candidate));
+    // console.log("Local candidate" + JSON.stringify(candidate));
 
     var message = {
       id: "onIceCandidate",
@@ -202,7 +202,7 @@ function VideoScreen() {
     if (ws) {
       ws.onmessage = function (message) {
         var parsedMessage = JSON.parse(message.data);
-        console.info("Received message: " + message.data);
+        // console.info("Received message: " + message.data);
 
         switch (parsedMessage.id) {
           case "presenterResponse":

@@ -1,9 +1,8 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-// import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Grid } from "@mui/material";
-import FullWidthTextField from "../test/FullWidthTextField";
+import FullWidthTextField from "../components/FullWidthTextField";
 import ArrowButton from "../components/ArrowButton";
 
 export default function FormPropsTextFields() {

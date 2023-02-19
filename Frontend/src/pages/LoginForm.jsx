@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import cookie from "js-cookie";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -12,43 +11,37 @@ import { login } from "../store/loginSlice";
 import AppForm from "../components/AppForm";
 import ArrowButton from "../components/ArrowButton";
 
-function LoginForm() {
+function TokenLoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const data = { email: e.target[0].value, password: e.target[2].value };
+    const data = { id: e.target[0].value, password: e.target[2].value };
+    await axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/accounts/auth/login`, data)
+      .then((response) => {
+        localStorage.setItem("access-token", response.data.body.token);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/user`, data)
+      .get(`https://i8a403.p.ssafy.io/api/user`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+        },
+      })
       .then((response) => {
-        console.log(response.data);
-        cookie.set("refreshToken", response.data.refreshToken, {
-          secure: true,
-        });
-        localStorage.setItem("user", JSON.stringify(response.data));
-        dispatch(login(response.data));
+        dispatch(login(response.data.body.user));
+        localStorage.setItem("user", JSON.stringify(response.data.body.user));
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-  // const handleSumbit = async (e) => {
-  //   e.preventDefault();
-  //   const data = { email: e.target[0].value, password: e.target[2].value };
-
-  //   await axios
-  //     .post("http://3.34.23.91:8080/user", data)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   return (
     <Box>
@@ -116,7 +109,6 @@ function LoginForm() {
             </ArrowButton>
             <Link to="/findPass" style={{ textDecoration: "none" }}>
               <ArrowButton
-                variant="outlined"
                 sx={{
                   width: 300,
                   height: 50,
@@ -156,7 +148,6 @@ function LoginForm() {
                   <GoogleIcon />
                 </Box>
               </Box>
-              {/* <a href="https://i8a403.p.ssafy.io/api/oauth2/authorization/google?redirect_uri=https://i8a403.p.ssafy.io/oauth/redirect"> */}
               <Box
                 sx={{
                   width: "38%",
@@ -167,7 +158,6 @@ function LoginForm() {
               >
                 <Box>구글로 시작하기</Box>
               </Box>
-              {/* </a> */}
               <Box
                 sx={{
                   width: "31%",
@@ -180,7 +170,6 @@ function LoginForm() {
             </Button>
             <Link to="/regist" style={{ textDecoration: "none" }}>
               <ArrowButton
-                variant="outlined"
                 sx={{
                   width: 300,
                   height: 50,
@@ -196,4 +185,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default TokenLoginForm;

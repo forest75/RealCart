@@ -2,7 +2,6 @@ import { React, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
-// import TextField from "@mui/material/TextField";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import axios from "../util/axiosInstance";
 import AppButton from "../components/AppButton";
@@ -28,7 +27,6 @@ function MyPage() {
         { headers }
       )
       .then((res) => {
-        console.log(res.data);
         setNicknameCheck(res.data);
       })
       .catch((err) => {
@@ -45,26 +43,12 @@ function MyPage() {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            userId: 0,
-            username: null,
-            email: user.email,
-            nickname: res.data.nickname,
-            password: null,
-            salt: null,
-            intro: null,
-            profileImageUrl: null,
-            refreshToken: null,
-            providerType: null,
-          })
-        );
-        console.log(res);
-        // alert("변경이 완료되었습니다.");
+        const originalUser = localStorage.getItem("user");
+        const parsedUser = JSON.parse(originalUser);
+        parsedUser.nickname = res.data.nickname;
+        localStorage.setItem("user", JSON.stringify(parsedUser));
         // eslint-disable-next-line no-restricted-globals
         location.reload();
-        //   console.log({ user });
       })
       .catch((err) => {
         console.log(err);
@@ -76,17 +60,14 @@ function MyPage() {
       email: user.email,
       password,
     };
-    console.log(data);
     axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/user/password`, data, {
         headers: { "Content-Type": "application/json" },
       })
-      .then((res) => {
+      .then(() => {
         alert("비밀번호 변경이 완료되었습니다.");
-        console.log(res);
         // eslint-disable-next-line no-restricted-globals
         location.reload();
-        //   console.log({ user });
       })
       .catch((err) => {
         console.log(err);

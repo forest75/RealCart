@@ -96,12 +96,6 @@ function InitialContent({
                   color: "black",
                 }}
                 onClick={() => {
-                  // setWait(wait + 1);
-                  // setIsInitial(false);
-                  // setOptions([
-                  //   ...options,
-                  //   `${options.length + 1}. ${nickname}`,
-                  // ]);
                   setSelectedIndex(options.length);
                   handleWait();
                 }}

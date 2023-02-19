@@ -12,7 +12,6 @@ function AppForm({
   variant,
   ...otherProps
 }) {
-  // console.log(pwd);
   const [input, setInput] = useState("");
 
   const verifier = {

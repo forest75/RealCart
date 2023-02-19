@@ -1,5 +1,4 @@
 import queryString from "query-string";
-// import React from "react";
 
 function AuthPage() {
   const qs = queryString.parse(window.location.search);

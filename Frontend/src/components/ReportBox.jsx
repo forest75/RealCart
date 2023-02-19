@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-// import Button from "@mui/material/Button";
 
 function ArtcleBox({
   sx,

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-// import Button from "@mui/material/Button";
 
 function ArtcleBoxTitle({ sx, no, title, author, date, view, ...otherProps }) {
   const mergedSx = {

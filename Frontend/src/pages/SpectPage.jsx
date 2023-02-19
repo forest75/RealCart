@@ -116,18 +116,6 @@ function SpectPage() {
     }
   }, [videoSlice]);
 
-  // useEffect(() => {
-  //   axios.get(`${process.env.REACT_APP_BACKEND_URL}/game`).then((res) => {
-  //     if (res.data.player1 === "" || res.data.player2 === "") {
-  //       dispatch(setVideo1(false));
-  //       dispatch(setVideo2(false));
-  //       dispatch(setVideo3(false));
-  //     } else {
-  //       dispatch(setVideo1(true));
-  //     }
-  //   });
-  // }, [queue, dispatch, videoSlice]);
-
   useEffect(() => {
     chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
   }, [chats]);
@@ -145,7 +133,6 @@ function SpectPage() {
             `${process.env.REACT_APP_BACKEND_URL}/game/participate?nickname=${user.nickname}`
           )
           .then((res) => {
-            console.log(res.data);
             if (res.data === -1) {
               clearInterval(endParticipate);
               dispatch(setIsWait(false));
@@ -361,7 +348,6 @@ function SpectPage() {
             justifyContent: "center",
             alignItems: "center",
             marginTop: "40px",
-            // bgcolor: "#BAC4D9",
             border: "solid 1px #bdbdbd",
           }}
         >

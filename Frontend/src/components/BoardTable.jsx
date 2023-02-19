@@ -37,8 +37,6 @@ function TablePaginationActions(props) {
   const handleLastPageButtonClick = (event) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
-  // const [searchParams] = useSearchParams();
-  // const no = Number(searchParams.get("no"));
 
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>

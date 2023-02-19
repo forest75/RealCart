@@ -40,7 +40,6 @@ function PlayVersus() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
       .then((response) => {
-        console.log(response.data);
         dispatch(setA(response.data.red));
         dispatch(setB(response.data.blue));
       })
@@ -51,7 +50,6 @@ function PlayVersus() {
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/game/bet`)
         .then((response) => {
-          console.log(response.data);
           dispatch(setA(response.data.red));
           dispatch(setB(response.data.blue));
         })
@@ -116,7 +114,6 @@ function PlayVersus() {
                   justifyContent: "center",
                 }}
               >
-                {/* <h2>A {queue.player1}</h2> */}
                 <Box
                   display="flex"
                   sx={{
@@ -197,7 +194,6 @@ function PlayVersus() {
                   justifyContent: "center",
                 }}
               >
-                {/* <h2>B {queue.player2}</h2> */}
                 <Box
                   display="flex"
                   sx={{

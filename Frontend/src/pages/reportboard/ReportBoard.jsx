@@ -18,13 +18,6 @@ function ReportBoard() {
 
   const [loading, setLoading] = useState(true);
   const [articleList, setArticleList] = useState([]);
-  // const [no, setNo] = useState(0);
-  // let no = 0;
-
-  // const handleNo = () => {
-  //   no = { no } + 1;
-  //   return no;
-  // };
 
   useEffect(() => {
     axios
@@ -32,9 +25,6 @@ function ReportBoard() {
       .then((res) => {
         console.log(res);
         const articles = res.data;
-        // for (let i = 0; i < articles.length; i += 1) {
-        //   articles[articles.length - i - 1].id = i + 1;
-        // }
         if (articles.length === 0) {
           setArticleList([
             [
