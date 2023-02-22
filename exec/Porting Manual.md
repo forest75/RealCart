@@ -76,6 +76,7 @@ REACT_APP_MEDIA_URL
 
 ## NGINX
 ---
+```
 server {
     server_name  i8a403.p.ssafy.io;
 
@@ -181,7 +182,7 @@ server {
                 proxy_read_timeout 36000s;
         }
 }
-
+```
 
 
 ## Web BackEnd
