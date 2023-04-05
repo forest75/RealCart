@@ -1,13 +1,13 @@
 package com.ssafy.realcart.game;
 
-public class RcCarStatusDto {
+public class RcCarDto {
     int carNum;
     Long timestamp;
     int speed;
     int gateNo;
-    int status;  // 0: prepare, 1: ready, 2: start, 3: running, 4: finish
+    int status;  // 1: Ready, 2: Finish, 3: Running
 
-    public RcCarStatusDto(int carNum, Long timestamp, int speed, int gateNo, int status) {
+    public RcCarDto(int carNum, Long timestamp, int speed, int gateNo, int status) {
         this.carNum = carNum;
         this.timestamp = timestamp;
         this.speed = speed;

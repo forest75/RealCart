@@ -5,22 +5,23 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
+
+import static com.ssafy.realcart.game.GameStatus.READY;
+import static com.ssafy.realcart.game.PlayerStatus.CLOSED;
+import static com.ssafy.realcart.game.RcCarStatus.NULL;
 
 public class FlagClass {
     private String player1Nickname = "";
     private String player2Nickname = "";
-    // playerStatus 0: closed 1: onOpen(ready) 2: gaming
-    private int player1Status;
-    private int player2Status;
-    private int car1Status;
-    private int car2Status;
-    private int gameStatus;  // 0: Ready, 1: Running
-    private Long startTime;
+    private PlayerStatus player1Status;
+    private PlayerStatus player2Status;
+    private RcCarStatus car1Status=NULL;
+    private RcCarStatus car2Status=NULL;
+    private GameStatus gameStatus;
+    private Long gameStartTime;
     private Long player1Laptime;
     private Long player2Laptime;
-    private String requestBody = "";
+    private String backendRequestBody = "";
 
     private FlagClass(){}
     private static FlagClass instance = new FlagClass();
@@ -28,12 +29,11 @@ public class FlagClass {
         return instance;
     }
 
-
     public String getPlayer1Nickname() {
         return player1Nickname;
     }
 
-    public synchronized void setPlayer1Nickname(String player1Nickname) {
+    public void setPlayer1Nickname(String player1Nickname) {
         this.player1Nickname = player1Nickname;
     }
 
@@ -41,63 +41,63 @@ public class FlagClass {
         return player2Nickname;
     }
 
-    public synchronized void setPlayer2Nickname(String player2Nickname) {
+    public void setPlayer2Nickname(String player2Nickname) {
         this.player2Nickname = player2Nickname;
     }
 
-    public int getPlayer1Status() {
+    public PlayerStatus getPlayer1Status() {
         return player1Status;
     }
 
-    public synchronized void setPlayer1Status(int player1Status) {
+    public void setPlayer1Status(PlayerStatus player1Status) {
         this.player1Status = player1Status;
     }
 
-    public int getPlayer2Status() {
+    public PlayerStatus getPlayer2Status() {
         return player2Status;
     }
 
-    public synchronized void setPlayer2Status(int player2Status) {
+    public void setPlayer2Status(PlayerStatus player2Status) {
         this.player2Status = player2Status;
     }
 
-    public int getGameStatus() {
-        return gameStatus;
-    }
-
-    public synchronized void setGameStatus(int gameStatus) {
-        this.gameStatus = gameStatus;
-    }
-
-    public int getCar1Status() {
+    public RcCarStatus getCar1Status() {
         return car1Status;
     }
 
-    public synchronized void setCar1Status(int car1Status) {
+    public void setCar1Status(RcCarStatus car1Status) {
         this.car1Status = car1Status;
     }
 
-    public int getCar2Status() {
+    public RcCarStatus getCar2Status() {
         return car2Status;
     }
 
-    public synchronized void setCar2Status(int car2Status) {
+    public void setCar2Status(RcCarStatus car2Status) {
         this.car2Status = car2Status;
     }
 
-    public Long getStartTime() {
-        return startTime;
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
-    public synchronized void setStartTime(Long startTime) {
-        this.startTime = startTime;
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public Long getGameStartTime() {
+        return gameStartTime;
+    }
+
+    public void setGameStartTime(Long gameStartTime) {
+        this.gameStartTime = gameStartTime;
     }
 
     public Long getPlayer1Laptime() {
         return player1Laptime;
     }
 
-    public synchronized void setPlayer1Laptime(Long player1Laptime) {
+    public void setPlayer1Laptime(Long player1Laptime) {
         this.player1Laptime = player1Laptime;
     }
 
@@ -105,30 +105,34 @@ public class FlagClass {
         return player2Laptime;
     }
 
-    public synchronized void setPlayer2Laptime(Long player2Laptime) {
+    public void setPlayer2Laptime(Long player2Laptime) {
         this.player2Laptime = player2Laptime;
     }
 
-    public String getRequestBody() {
-        return requestBody;
+    public String getBackendRequestBody() {
+        return backendRequestBody;
     }
 
-    public synchronized void setRequestBody(String requestBody) {
-        this.requestBody = requestBody;
+    public void setBackendRequestBody(String backendRequestBody) {
+        this.backendRequestBody = backendRequestBody;
+    }
+
+    public static void setInstance(FlagClass instance) {
+        FlagClass.instance = instance;
     }
 
     public synchronized void initiateAll() {
         this.player1Nickname = "";
         this.player2Nickname = "";
-        this.player1Status = 0;
-        this.player2Status = 0;
-        this.car1Status = 0;
-        this.car2Status = 0;
-        this.gameStatus = 0;
-        this.startTime = 0L;
+        this.player1Status = CLOSED;
+        this.player2Status = CLOSED;
+        this.car1Status = NULL;
+        this.car2Status = NULL;
+        this.gameStatus = READY;
+        this.gameStartTime = 0L;
         this.player1Laptime = 0L;
         this.player2Laptime = 0L;
-        this.requestBody = "";
+        this.backendRequestBody = "";
     }
 
     @Override
@@ -141,16 +145,15 @@ public class FlagClass {
                 ", car1Status=" + car1Status +
                 ", car2Status=" + car2Status +
                 ", gameStatus=" + gameStatus +
-                ", startTime=" + startTime +
+                ", gameStartTime=" + gameStartTime +
                 ", player1Laptime=" + player1Laptime +
                 ", player2Laptime=" + player2Laptime +
-                ", requestBody='" + requestBody + '\'' +
+                ", backendRequestBody='" + backendRequestBody + '\'' +
                 '}';
     }
 
     public synchronized void sendNewGameToBackend() {
         try {
-            // EC2에서는 수정
             String url = "http://localhost:8060/game";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -179,13 +182,8 @@ public class FlagClass {
 
     public synchronized void sendResultToBackend(String requestBody) {
         try {
-            // EC2에서는 수정
-
             String url = "http://localhost:8060/game/result";
-
             URL obj = new URL(url);
-
-
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             con.setRequestMethod("POST");

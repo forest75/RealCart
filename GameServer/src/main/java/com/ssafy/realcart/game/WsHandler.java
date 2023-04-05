@@ -7,10 +7,13 @@ import org.java_websocket.server.WebSocketServer;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 
+import static com.ssafy.realcart.game.PlayerStatus.CLOSED;
+import static com.ssafy.realcart.game.PlayerStatus.ONOPEN;
+
 class WsHandler extends WebSocketServer {
 
-    PrintWriter pw = null;
-    int port = 0;
+    int port;
+    PrintWriter pw;
     FlagClass flag = FlagClass.getInstance();
 
     public WsHandler(int port, PrintWriter pw){
@@ -23,11 +26,9 @@ class WsHandler extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         System.out.println(conn.getLocalSocketAddress() + " is on open.");
         if(port == 8886){
-            flag.setPlayer1Status(1);
-            System.out.println(flag);
+            flag.setPlayer1Status(ONOPEN);
         } else if (port == 8887){
-            flag.setPlayer2Status(1);
-            System.out.println(flag);
+            flag.setPlayer2Status(ONOPEN);
         } else {
             System.out.println("Invalidate port is opened");
         }
@@ -35,61 +36,63 @@ class WsHandler extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println(conn.getLocalSocketAddress() + " closed connection.");
-        System.out.println("code: " + code + ", Reason: " + reason);
         if(port == 8886){
             // 게임 시작 전에 한명이 나가면
-            if(flag.getPlayer1Status() == 1){
-                if(flag.getPlayer1Status() == 0 || flag.getPlayer2Status() == 0){
-                    flag.sendNewGameToBackend();
-                }
-            // 게임 중에 나가면
-            } else if(flag.getPlayer1Status() == 2){
-                // 2
-                Long endTime = 0L;
-                Long labTime = endTime - flag.getStartTime();
-                // 3
-                String bodySeg = "";
-                bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
-                if (flag.getRequestBody() == "") {
-                    flag.setRequestBody(flag.getRequestBody() + bodySeg);
-                } else {
-                    flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
-                    flag.sendResultToBackend(flag.getRequestBody());
-                }
-                flag.setPlayer1Status(0);
-                if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
-                    flag.initiateAll();
-                }
-            }
-            flag.setPlayer1Status(0);
-            System.out.println("websocket closed on " + port + " >>> " + flag);
-        } else if (port == 8887){
-            // 게임 시작 전에 한명이 나가면
-            if(flag.getPlayer2Status() == 1){
-                if(flag.getPlayer1Status() == 0 || flag.getPlayer2Status() == 0){
+            if(flag.getPlayer1Status().equals(ONOPEN)){
+                if(flag.getPlayer1Status().equals(CLOSED)
+                        || flag.getPlayer2Status().equals(CLOSED)){
                     flag.sendNewGameToBackend();
                 }
                 // 게임 중에 나가면
-            } else if(flag.getPlayer2Status() == 2){
+            } else if(flag.getPlayer1Status().equals(PlayerStatus.GAMING)){
                 // 2
                 Long endTime = 0L;
-                Long labTime = endTime - flag.getStartTime();
+                Long labTime = endTime - flag.getGameStartTime();
                 // 3
                 String bodySeg = "";
-                bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
-                if (flag.getRequestBody() == "") {
-                    flag.setRequestBody(flag.getRequestBody() + bodySeg);
+                bodySeg = flag.getPlayer1Nickname() + "," + Long.toString(labTime);
+                if (flag.getBackendRequestBody() == "") {
+                    flag.setBackendRequestBody(flag.getBackendRequestBody() + bodySeg);
                 } else {
-                    flag.setRequestBody(flag.getRequestBody() + "," + bodySeg);
-                    flag.sendResultToBackend(flag.getRequestBody());
+                    flag.setBackendRequestBody(flag.getBackendRequestBody() + "," + bodySeg);
+                    flag.sendResultToBackend(flag.getBackendRequestBody());
                 }
-                flag.setPlayer2Status(0);
-                if(flag.getPlayer1Status() == 0 && flag.getPlayer2Status() == 0){
+                flag.setPlayer1Status(CLOSED);
+                if(flag.getPlayer1Status().equals(CLOSED)
+                        && flag.getPlayer2Status().equals(CLOSED)){
                     flag.initiateAll();
                 }
             }
-            flag.setPlayer2Status(0);
+            flag.setPlayer1Status(CLOSED);
+            System.out.println("websocket closed on " + port + " >>> " + flag);
+        } else if (port == 8887){
+            // 게임 시작 전에 한명이 나가면
+            if(flag.getPlayer2Status().equals(ONOPEN)){
+                if(flag.getPlayer1Status().equals(CLOSED)
+                        || flag.getPlayer2Status().equals(CLOSED)){
+                    flag.sendNewGameToBackend();
+                }
+                // 게임 중에 나가면
+            } else if(flag.getPlayer2Status().equals(CLOSED)){
+                // 2
+                Long endTime = 0L;
+                Long labTime = endTime - flag.getGameStartTime();
+                // 3
+                String bodySeg = "";
+                bodySeg = flag.getPlayer2Nickname() + "," + Long.toString(labTime);
+                if (flag.getBackendRequestBody() == "") {
+                    flag.setBackendRequestBody(flag.getBackendRequestBody() + bodySeg);
+                } else {
+                    flag.setBackendRequestBody(flag.getBackendRequestBody() + "," + bodySeg);
+                    flag.sendResultToBackend(flag.getBackendRequestBody());
+                }
+                flag.setPlayer2Status(CLOSED);
+                if(flag.getPlayer1Status().equals(CLOSED)
+                        && flag.getPlayer2Status().equals(CLOSED)){
+                    flag.initiateAll();
+                }
+            }
+            flag.setPlayer2Status(CLOSED);
             System.out.println("websocket closed on " + port + " >>> " + flag);
         } else {
             System.out.println("Invalidate port is closed");
@@ -98,22 +101,14 @@ class WsHandler extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        if(flag.getGameStatus() == 1){
-            if(message.length() <= 2) {
-                pw.write(Integer.parseInt(message));
-                pw.flush();
-            }
+        if(flag.getGameStatus().equals(GameStatus.RUNNING)){
+            pw.write(Integer.parseInt(message));
+            pw.flush();
         } else {
-            if(message.length() >= 3){
-                if(port == 8886){
-                    flag.setPlayer1Nickname(message);
-                    System.out.println("flag.setPlayer1Nickname " + message);
-                    System.out.println(flag);
-                } else if(port == 8887){
-                    flag.setPlayer2Nickname(message);
-                    System.out.println("flag.setPlayer2Nickname " + message);
-                    System.out.println(flag);
-                }
+            if(port == 8886){
+                flag.setPlayer1Nickname(message);
+            } else if(port == 8887){
+                flag.setPlayer2Nickname(message);
             }
         }
     }
